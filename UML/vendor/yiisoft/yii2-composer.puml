@@ -1,0 +1,40 @@
+@startuml
+skinparam handwritten true
+class yii.composer.Installer {
+    +{static}EXTENSION_FILE = "yiisoft/extensions.php"
+    +{static}EXTRA_BOOTSTRAP = "bootstrap"
+    #addPackage(package : Composer.Package.PackageInterface)
+    +{static}copyFiles(paths : array)
+    +{static}generateCookieValidationKey()
+    #generateDefaultAlias(package : Composer.Package.PackageInterface)
+    #{static}generateRandomString()
+    +install(repo : Composer.Repository.InstalledRepositoryInterface, package : Composer.Package.PackageInterface)
+    #linkBaseYiiFiles()
+    #loadExtensions()
+    +{static}postCreateProject(event : Event)
+    +{static}postInstall(event : Event)
+    #removeBaseYiiFiles()
+    #removePackage(package : Composer.Package.PackageInterface)
+    #{static}runCommands(event : Event, extraKey : string)
+    #saveExtensions(extensions)
+    +{static}setPermission(paths : array)
+    +supports(packageType)
+    +uninstall(repo : Composer.Repository.InstalledRepositoryInterface, package : Composer.Package.PackageInterface)
+    +update(repo : Composer.Repository.InstalledRepositoryInterface, initial : Composer.Package.PackageInterface, target : Composer.Package.PackageInterface)
+}
+class yii.composer.Installer extends Composer.Installer.LibraryInstaller
+class yii.composer.Plugin {
+    -_packageUpdates : array = []
+    -_vendorDir : string
+    +activate(composer : Composer.Composer, io : Composer.IO.IOInterface)
+    +checkPackageUpdates(event : Composer.Installer.PackageEvent)
+    -findUpgradeNotes(packageName : string, fromVersion : string) : array|false
+    +{static}getSubscribedEvents() : array
+    -isNumericVersion(version : string) : int|false
+    -printUpgradeIntro(io : IOInterface, package : array)
+    -printUpgradeLink(io : IOInterface, package : array)
+    +showUpgradeNotes(event : Composer.Script.Event)
+}
+class yii.composer.Plugin implements Composer.Plugin.PluginInterface
+class yii.composer.Plugin implements Composer.EventDispatcher.EventSubscriberInterface
+@enduml

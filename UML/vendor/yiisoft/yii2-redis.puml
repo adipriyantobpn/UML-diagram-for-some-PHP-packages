@@ -1,0 +1,117 @@
+@startuml
+skinparam handwritten true
+class yii.redis.ActiveQuery {
+    +{static}EVENT_INIT = "init"
+    +all(db : Connection = null) : array|ActiveRecord[]
+    +average(column : string, db : Connection = null) : int
+    +column(column : string, db : Connection = null) : array
+    +count(q : string = "*", db : Connection = null) : int
+    #executeScript(db : Connection|null, type : string, columnName : string = null) : array|bool|null|string
+    +exists(db : Connection = null) : bool
+    -findByPk(db : Connection, type : string, columnName : string = null) : array|bool|null|string
+    +init()
+    +max(column : string, db : Connection = null) : int
+    +min(column : string, db : Connection = null) : int
+    +one(db : Connection = null) : ActiveRecord|array|null
+    +scalar(attribute : string, db : Connection = null) : string
+    +sum(column : string, db : Connection = null) : int
+    +__construct(modelClass : array, config : array = [])
+}
+class yii.redis.ActiveQuery extends yii.base.Component
+class yii.redis.ActiveQuery implements yii.db.ActiveQueryInterface
+class yii.redis.ActiveRecord {
+    +attributes() : array
+    +{static}buildKey(key : mixed) : string
+    +{static}deleteAll(condition : array = null) : int
+    -{static}fetchPks(condition)
+    +{static}find() : ActiveQuery
+    +{static}getDb() : Connection
+    +insert(runValidation = true, attributes = null)
+    +{static}keyPrefix() : string
+    +{static}primaryKey() : string[]
+    +{static}updateAll(attributes : array, condition : array = null) : int
+    +{static}updateAllCounters(counters : array, condition : array = null) : int
+}
+class yii.redis.ActiveRecord extends yii.db.BaseActiveRecord
+class yii.redis.Cache {
+    +redis : Connection|string|array = "redis"
+    #addValue(key, value, expire)
+    #deleteValue(key)
+    +exists(key : mixed) : bool
+    #flushValues()
+    #getValue(key)
+    #getValues(keys)
+    +init()
+    #setValue(key, value, expire)
+    #setValues(data, expire)
+}
+class yii.redis.Cache extends yii.caching.Cache
+class yii.redis.Connection {
+    +{static}EVENT_AFTER_OPEN = "afterOpen"
+    +connectionTimeout : float
+    +database : integer = 0
+    +dataTimeout : float
+    +hostname : string = "localhost"
+    +password : string
+    +port : integer = 6379
+    +redisCommands : array = ["APPEND", "AUTH", "BGREWRITEAOF", "BGSAVE", "BITCOUNT", "BITFIELD", "BITOP", "BITPOS", "BLPOP", "BRPOP", "BRPOPLPUSH", "CLIENT KILL", "CLIENT LIST", "CLIENT GETNAME", "CLIENT PAUSE", "CLIENT REPLY", "CLIENT SETNAME", "CLUSTER ADDSLOTS", "CLUSTER COUNTKEYSINSLOT", "CLUSTER DELSLOTS", "CLUSTER FAILOVER", "CLUSTER FORGET", "CLUSTER GETKEYSINSLOT", "CLUSTER INFO", "CLUSTER KEYSLOT", "CLUSTER MEET", "CLUSTER NODES", "CLUSTER REPLICATE", "CLUSTER RESET", "CLUSTER SAVECONFIG", "CLUSTER SETSLOT", "CLUSTER SLAVES", "CLUSTER SLOTS", "COMMAND", "COMMAND COUNT", "COMMAND GETKEYS", "COMMAND INFO", "CONFIG GET", "CONFIG REWRITE", "CONFIG SET", "CONFIG RESETSTAT", "DBSIZE", "DEBUG OBJECT", "DEBUG SEGFAULT", "DECR", "DECRBY", "DEL", "DISCARD", "DUMP", "ECHO", "EVAL", "EVALSHA", "EXEC", "EXISTS", "EXPIRE", "EXPIREAT", "FLUSHALL", "FLUSHDB", "GEOADD", "GEOHASH", "GEOPOS", "GEODIST", "GEORADIUS", "GEORADIUSBYMEMBER", "GET", "GETBIT", "GETRANGE", "GETSET", "HDEL", "HEXISTS", "HGET", "HGETALL", "HINCRBY", "HINCRBYFLOAT", "HKEYS", "HLEN", "HMGET", "HMSET", "HSET", "HSETNX", "HSTRLEN", "HVALS", "INCR", "INCRBY", "INCRBYFLOAT", "INFO", "KEYS", "LASTSAVE", "LINDEX", "LINSERT", "LLEN", "LPOP", "LPUSH", "LPUSHX", "LRANGE", "LREM", "LSET", "LTRIM", "MGET", "MIGRATE", "MONITOR", "MOVE", "MSET", "MSETNX", "MULTI", "OBJECT", "PERSIST", "PEXPIRE", "PEXPIREAT", "PFADD", "PFCOUNT", "PFMERGE", "PING", "PSETEX", "PSUBSCRIBE", "PUBSUB", "PTTL", "PUBLISH", "PUNSUBSCRIBE", "QUIT", "RANDOMKEY", "READONLY", "READWRITE", "RENAME", "RENAMENX", "RESTORE", "ROLE", "RPOP", "RPOPLPUSH", "RPUSH", "RPUSHX", "SADD", "SAVE", "SCARD", "SCRIPT DEBUG", "SCRIPT EXISTS", "SCRIPT FLUSH", "SCRIPT KILL", "SCRIPT LOAD", "SDIFF", "SDIFFSTORE", "SELECT", "SET", "SETBIT", "SETEX", "SETNX", "SETRANGE", "SHUTDOWN", "SINTER", "SINTERSTORE", "SISMEMBER", "SLAVEOF", "SLOWLOG", "SMEMBERS", "SMOVE", "SORT", "SPOP", "SRANDMEMBER", "SREM", "STRLEN", "SUBSCRIBE", "SUNION", "SUNIONSTORE", "SWAPDB", "SYNC", "TIME", "TOUCH", "TTL", "TYPE", "UNSUBSCRIBE", "UNLINK", "UNWATCH", "WAIT", "WATCH", "ZADD", "ZCARD", "ZCOUNT", "ZINCRBY", "ZINTERSTORE", "ZLEXCOUNT", "ZRANGE", "ZRANGEBYLEX", "ZREVRANGEBYLEX", "ZRANGEBYSCORE", "ZRANK", "ZREM", "ZREMRANGEBYLEX", "ZREMRANGEBYRANK", "ZREMRANGEBYSCORE", "ZREVRANGE", "ZREVRANGEBYSCORE", "ZREVRANK", "ZSCORE", "ZUNIONSTORE", "SCAN", "SSCAN", "HSCAN", "ZSCAN"]
+    +socketClientFlags : integer = 4
+    +unixSocket : string
+    -_socket : resource = false
+    +close()
+    +executeCommand(name : string, params : array = []) : array|bool|null|string
+    +getDriverName() : string
+    +getIsActive() : bool
+    +getLuaScriptBuilder() : LuaScriptBuilder
+    #initConnection()
+    +open()
+    -parseResponse(command : string) : mixed
+    +__call(name : string, params : array) : mixed
+    +__sleep() : array
+}
+class yii.redis.Connection extends yii.base.Component
+class yii.redis.LuaScriptBuilder {
+    -addColumn(column : string, columns : array) : string
+    -build(query : ActiveQuery, buildResult : string, return : string) : string
+    +buildAll(query : ActiveQuery) : string
+    -buildAndCondition(operator, operands, columns)
+    +buildAverage(query : ActiveQuery, column : string) : string
+    -buildBetweenCondition(operator, operands, columns)
+    +buildColumn(query : ActiveQuery, column : string) : string
+    #buildCompositeInCondition(operator, inColumns, values, columns)
+    +buildCondition(condition : string|array, columns : array) : string
+    +buildCount(query : ActiveQuery) : string
+    -buildHashCondition(condition, columns)
+    -buildInCondition(operator, operands, columns)
+    -buildLikeCondition(operator, operands, columns)
+    +buildMax(query : ActiveQuery, column : string) : string
+    +buildMin(query : ActiveQuery, column : string) : string
+    -buildNotCondition(operator, operands, params)
+    +buildOne(query : ActiveQuery) : string
+    +buildSum(query : ActiveQuery, column : string) : string
+    -quoteValue(str : string) : string
+}
+class yii.redis.LuaScriptBuilder extends yii.base.Object
+class yii.redis.Mutex {
+    +expire : int = 30
+    +keyPrefix : string
+    +redis : Connection|string|array = "redis"
+    -_lockValues : array = []
+    #acquireLock(name : string, timeout : int = 0) : bool
+    #calculateKey(name : string) : string
+    +init()
+    #releaseLock(name : string) : bool
+}
+class yii.redis.Mutex extends yii.mutex.Mutex
+class yii.redis.Session {
+    +keyPrefix : string
+    +redis : Connection|string|array = "redis"
+    #calculateKey(id : string) : string
+    +destroySession(id : string) : bool
+    +getUseCustomStorage() : bool
+    +init()
+    +readSession(id : string) : string
+    +writeSession(id : string, data : string) : bool
+}
+class yii.redis.Session extends yii.web.Session
+@enduml

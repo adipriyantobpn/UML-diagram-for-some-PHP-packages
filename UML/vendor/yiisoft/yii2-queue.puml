@@ -1,0 +1,485 @@
+@startuml
+skinparam handwritten true
+abstract class yii.queue.cli.Action {
+    +controller : Command|ConsoleController
+    +queue : Queue
+    #format(string : string) : string
+    +init()
+}
+class yii.queue.cli.Action extends yii.base.Action
+abstract class yii.queue.cli.Command {
+    +isolate : bool = true
+    +queue : Queue
+    +verbose : bool = false
+    +actionExec(id : string|null, ttr : int, attempt : int) : int
+    +beforeAction(action)
+    #handleMessage(id : string|null, message : string, ttr : int, attempt : int) : bool
+    +optionAliases()
+    +options(actionID)
+    #useIsolateOption(actionID : string) : bool
+    #useVerboseOption(actionID : string) : bool
+}
+class yii.queue.cli.Command extends yii.console.Controller
+abstract class yii.queue.cli.Queue {
+    +{static}EVENT_AFTER_ERROR = "afterError"
+    +{static}EVENT_AFTER_EXEC = "afterExec"
+    +{static}EVENT_AFTER_PUSH = "afterPush"
+    +{static}EVENT_BEFORE_EXEC = "beforeExec"
+    +{static}EVENT_BEFORE_PUSH = "beforePush"
+    +{static}STATUS_DONE = 3
+    +{static}STATUS_RESERVED = 2
+    +{static}STATUS_WAITING = 1
+    +commandClass : string = "yii\queue\cli\Command"
+    +commandOptions : array = []
+    +messageHandler : callable|null
+    +bootstrap(app)
+    +execute(id : string|null, message : string, ttr : int, attempt : int) : bool
+    #getCommandId() : string
+    #handleMessage(id, message, ttr, attempt)
+}
+class yii.queue.cli.Queue extends yii.queue.Queue
+class yii.queue.cli.Queue implements yii.base.BootstrapInterface
+class yii.queue.cli.Signal {
+    -exit = false
+    +{static}isExit() : bool
+    +{static}setExitFlag()
+}
+class yii.queue.cli.Verbose {
+}
+class yii.queue.cli.Verbose extends yii.queue.cli.VerboseBehavior
+class yii.queue.cli.VerboseBehavior {
+    +command : yii.console.Controller
+    +owner : Queue
+    -start
+    +afterError(event : yii.queue.ErrorEvent)
+    +afterExec(event : yii.queue.ExecEvent)
+    +beforeExec(event : yii.queue.ExecEvent)
+    +events()
+    #formatTime(time : float) : string
+    #formatTitle(event : yii.queue.ExecEvent) : string
+}
+class yii.queue.cli.VerboseBehavior extends yii.base.Behavior
+class yii.queue.closure.Behavior {
+    +owner : yii.queue.Queue
+    +beforePush(event : yii.queue.PushEvent)
+    +events()
+}
+class yii.queue.closure.Behavior extends yii.base.Behavior
+class yii.queue.closure.Job {
+    +serialized : string
+    +execute(queue)
+}
+class yii.queue.closure.Job implements yii.queue.JobInterface
+class yii.queue.debug.Panel {
+    -_jobs = []
+    +getDetail()
+    +getName()
+    #getPushData(event : yii.queue.PushEvent) : array
+    +getSummary()
+    +getViewPath()
+    +init()
+    +save()
+}
+class yii.queue.debug.Panel extends yii.debug.Panel
+class yii.queue.debug.Panel implements yii.base.ViewContextInterface
+class yii.queue.amqp.Command {
+    +queue : Queue
+    +actionListen()
+}
+class yii.queue.amqp.Command extends yii.queue.cli.Command
+class yii.queue.amqp.Queue {
+    +{static}EVENT_AFTER_ERROR = "afterError"
+    +{static}EVENT_AFTER_EXEC = "afterExec"
+    +{static}EVENT_AFTER_PUSH = "afterPush"
+    +{static}EVENT_BEFORE_EXEC = "beforeExec"
+    +{static}EVENT_BEFORE_PUSH = "beforePush"
+    +{static}STATUS_DONE = 3
+    +{static}STATUS_RESERVED = 2
+    +{static}STATUS_WAITING = 1
+    #channel : PhpAmqpLib.Channel.AMQPChannel
+    +commandClass : string = "yii\queue\amqp\Command"
+    #connection : PhpAmqpLib.Connection.AMQPStreamConnection
+    +exchangeName = "exchange"
+    +host = "localhost"
+    +password = "guest"
+    +port = 5672
+    +queueName = "queue"
+    +user = "guest"
+    +vhost = "/"
+    #close()
+    +init()
+    +listen()
+    #open()
+    #pushMessage(message, ttr, delay, priority)
+    +status(id)
+}
+class yii.queue.amqp.Queue extends yii.queue.cli.Queue
+class yii.queue.beanstalk.Command {
+    +defaultAction : string = "info"
+    +queue : Queue
+    +actionListen()
+    +actionRemove(id : int) : int
+    +actionRun()
+    +actions()
+}
+class yii.queue.beanstalk.Command extends yii.queue.cli.Command
+class yii.queue.beanstalk.InfoAction {
+    +queue : Queue
+    +run()
+}
+class yii.queue.beanstalk.InfoAction extends yii.queue.cli.Action
+class yii.queue.beanstalk.Queue {
+    +{static}EVENT_AFTER_ERROR = "afterError"
+    +{static}EVENT_AFTER_EXEC = "afterExec"
+    +{static}EVENT_AFTER_PUSH = "afterPush"
+    +{static}EVENT_BEFORE_EXEC = "beforeExec"
+    +{static}EVENT_BEFORE_PUSH = "beforePush"
+    +{static}STATUS_DONE = 3
+    +{static}STATUS_RESERVED = 2
+    +{static}STATUS_WAITING = 1
+    +commandClass : string = "yii\queue\beanstalk\Command"
+    +host : string = "localhost"
+    +port : int = "~~NOT RESOLVED~~"
+    +tube : string = "queue"
+    -_pheanstalk
+    #getPheanstalk() : Pheanstalk.Pheanstalk
+    +getStatsTube() : array
+    +listen()
+    #pushMessage(message, ttr, delay, priority)
+    +remove(id : int) : bool
+    +run()
+    +status(id)
+}
+class yii.queue.beanstalk.Queue extends yii.queue.cli.Queue
+class yii.queue.db.Command {
+    +defaultAction : string = "info"
+    +queue : Queue
+    +actionClear()
+    +actionListen(delay : int = 3)
+    +actionRemove(id : int) : int
+    +actionRun()
+    +actions()
+}
+class yii.queue.db.Command extends yii.queue.cli.Command
+class yii.queue.db.InfoAction {
+    +queue : Queue
+    #getDelayed() : yii.db.Query
+    #getDone() : yii.db.Query
+    #getReserved() : yii.db.Query
+    #getWaiting() : yii.db.Query
+    +run()
+}
+class yii.queue.db.InfoAction extends yii.queue.cli.Action
+class yii.queue.db.Queue {
+    +{static}EVENT_AFTER_ERROR = "afterError"
+    +{static}EVENT_AFTER_EXEC = "afterExec"
+    +{static}EVENT_AFTER_PUSH = "afterPush"
+    +{static}EVENT_BEFORE_EXEC = "beforeExec"
+    +{static}EVENT_BEFORE_PUSH = "beforePush"
+    +{static}STATUS_DONE = 3
+    +{static}STATUS_RESERVED = 2
+    +{static}STATUS_WAITING = 1
+    +channel : string = "queue"
+    +commandClass : string = "yii\queue\db\Command"
+    +db : Connection|array|string = "db"
+    +deleteReleased : boolean = true
+    +mutex : Mutex|array|string = "mutex"
+    +mutexTimeout : int = 3
+    -reserveTime
+    +tableName : string = "{{%queue}}"
+    +clear()
+    +init()
+    +listen(delay : int)
+    -moveExpired()
+    #pushMessage(message, ttr, delay, priority)
+    #release(payload : array)
+    +remove(id : int) : bool
+    #reserve() : array|false
+    +run()
+    +status(id)
+}
+class yii.queue.db.Queue extends yii.queue.cli.Queue
+class yii.queue.db.migrations.M161119140200Queue {
+    +tableName = "{{%queue}}"
+    +tableOptions
+    +down()
+    +up()
+}
+class yii.queue.db.migrations.M161119140200Queue extends yii.db.Migration
+class yii.queue.db.migrations.M170307170300Later {
+    +tableName = "{{%queue}}"
+    +down()
+    +up()
+}
+class yii.queue.db.migrations.M170307170300Later extends yii.db.Migration
+class yii.queue.db.migrations.M170509001400Retry {
+    +tableName = "{{%queue}}"
+    +down()
+    +up()
+}
+class yii.queue.db.migrations.M170509001400Retry extends yii.db.Migration
+class yii.queue.db.migrations.M170601155600Priority {
+    +tableName = "{{%queue}}"
+    +down()
+    +up()
+}
+class yii.queue.db.migrations.M170601155600Priority extends yii.db.Migration
+class yii.queue.file.Command {
+    +defaultAction : string = "info"
+    +queue : Queue
+    +actionClear()
+    +actionListen(delay : int = 3)
+    +actionRemove(id : int) : int
+    +actionRun()
+    +actions()
+}
+class yii.queue.file.Command extends yii.queue.cli.Command
+class yii.queue.file.InfoAction {
+    +queue : Queue
+    #getDelayedCount() : int
+    #getDoneCount() : int
+    #getIndexData()
+    #getReservedCount() : int
+    #getWaitingCount() : int
+    +run()
+}
+class yii.queue.file.InfoAction extends yii.queue.cli.Action
+class yii.queue.file.Queue {
+    +{static}EVENT_AFTER_ERROR = "afterError"
+    +{static}EVENT_AFTER_EXEC = "afterExec"
+    +{static}EVENT_AFTER_PUSH = "afterPush"
+    +{static}EVENT_BEFORE_EXEC = "beforeExec"
+    +{static}EVENT_BEFORE_PUSH = "beforePush"
+    +{static}STATUS_DONE = 3
+    +{static}STATUS_RESERVED = 2
+    +{static}STATUS_WAITING = 1
+    +commandClass : string = "yii\queue\file\Command"
+    +dirMode : int = 493
+    +fileMode : int|null
+    +indexDeserializer : callable = "unserialize"
+    +indexSerializer : callable = "serialize"
+    +path : string = "@runtime/queue"
+    +clear()
+    #delete(payload : array)
+    +init()
+    +listen(delay : int)
+    #pushMessage(message, ttr, delay, priority)
+    +remove(id : int) : bool
+    #reserve() : string|null
+    +run()
+    +status(id)
+    -touchIndex(callback : callable)
+}
+class yii.queue.file.Queue extends yii.queue.cli.Queue
+class yii.queue.gearman.Command {
+    +queue : Queue
+    +actionListen()
+    +actionRun()
+}
+class yii.queue.gearman.Command extends yii.queue.cli.Command
+class yii.queue.gearman.Queue {
+    +{static}EVENT_AFTER_ERROR = "afterError"
+    +{static}EVENT_AFTER_EXEC = "afterExec"
+    +{static}EVENT_AFTER_PUSH = "afterPush"
+    +{static}EVENT_BEFORE_EXEC = "beforeExec"
+    +{static}EVENT_BEFORE_PUSH = "beforePush"
+    +{static}STATUS_DONE = 3
+    +{static}STATUS_RESERVED = 2
+    +{static}STATUS_WAITING = 1
+    +channel = "queue"
+    +commandClass : string = "yii\queue\gearman\Command"
+    +host = "localhost"
+    +port = 4730
+    -_client
+    #getClient() : GearmanClient
+    +listen()
+    #pushMessage(message, ttr, delay, priority)
+    +run()
+    +status(id)
+}
+class yii.queue.gearman.Queue extends yii.queue.cli.Queue
+class yii.queue.redis.Command {
+    +defaultAction : string = "info"
+    +queue : Queue
+    +actionClear()
+    +actionListen(wait : int = 3)
+    +actionRemove(id : int) : int
+    +actionRun()
+    +actions()
+}
+class yii.queue.redis.Command extends yii.queue.cli.Command
+class yii.queue.redis.InfoAction {
+    +queue : Queue
+    #getWorkersInfo() : array
+    +run()
+}
+class yii.queue.redis.InfoAction extends yii.queue.cli.Action
+class yii.queue.redis.Queue {
+    +{static}EVENT_AFTER_ERROR = "afterError"
+    +{static}EVENT_AFTER_EXEC = "afterExec"
+    +{static}EVENT_AFTER_PUSH = "afterPush"
+    +{static}EVENT_BEFORE_EXEC = "beforeExec"
+    +{static}EVENT_BEFORE_PUSH = "beforePush"
+    +{static}STATUS_DONE = 3
+    +{static}STATUS_RESERVED = 2
+    +{static}STATUS_WAITING = 1
+    +channel : string = "queue"
+    +commandClass : string = "yii\queue\redis\Command"
+    +redis : Connection|array|string = "redis"
+    +clear()
+    #closeWorker()
+    #delete(id : int)
+    +init()
+    +listen(wait : int)
+    #moveExpired(from : string)
+    #openWorker()
+    #pushMessage(message, ttr, delay, priority)
+    +remove(id : int) : bool
+    #reserve(wait : int) : array|null
+    +run()
+    +status(id)
+}
+class yii.queue.redis.Queue extends yii.queue.cli.Queue
+class yii.queue.sync.Queue {
+    +{static}EVENT_AFTER_ERROR = "afterError"
+    +{static}EVENT_AFTER_EXEC = "afterExec"
+    +{static}EVENT_AFTER_PUSH = "afterPush"
+    +{static}EVENT_BEFORE_EXEC = "beforeExec"
+    +{static}EVENT_BEFORE_PUSH = "beforePush"
+    +{static}STATUS_DONE = 3
+    +{static}STATUS_RESERVED = 2
+    +{static}STATUS_WAITING = 1
+    -finishedId : int = 0
+    +handle : bool = false
+    -payloads : array = []
+    -pushedId : int = 0
+    -startedId : int = 0
+    +init()
+    #pushMessage(message, ttr, delay, priority)
+    +run()
+    +status(id)
+}
+class yii.queue.sync.Queue extends yii.queue.Queue
+class yii.queue.ErrorEvent {
+    +error : Exception|.Throwable
+    +retry : bool
+}
+class yii.queue.ErrorEvent extends yii.queue.ExecEvent
+class yii.queue.ExecEvent {
+    +attempt : int
+}
+class yii.queue.ExecEvent extends yii.queue.JobEvent
+interface yii.queue.Job {
+}
+interface yii.queue.Job implements yii.queue.JobInterface
+class yii.queue.JobEvent {
+    +id : string|null
+    +job : JobInterface
+    +ttr : int
+}
+class yii.queue.JobEvent extends yii.base.Event
+interface yii.queue.JobInterface {
+    +execute(queue : Queue)
+}
+class yii.queue.LogBehavior {
+    +autoFlush : bool = true
+    +owner : Queue
+    +afterError(event : yii.queue.ExecEvent)
+    +afterExec(event : yii.queue.ExecEvent)
+    +afterPush(event : yii.queue.PushEvent)
+    +beforeExec(event : yii.queue.ExecEvent)
+    +events()
+    #getEventTitle(event : yii.queue.JobEvent)
+}
+class yii.queue.LogBehavior extends yii.base.Behavior
+class yii.queue.PushEvent {
+    +delay : int
+    +priority : mixed
+}
+class yii.queue.PushEvent extends yii.queue.JobEvent
+abstract class yii.queue.Queue {
+    +{static}EVENT_AFTER_ERROR = "afterError"
+    +{static}EVENT_AFTER_EXEC = "afterExec"
+    +{static}EVENT_AFTER_PUSH = "afterPush"
+    +{static}EVENT_BEFORE_EXEC = "beforeExec"
+    +{static}EVENT_BEFORE_PUSH = "beforePush"
+    +{static}STATUS_DONE = 3
+    +{static}STATUS_RESERVED = 2
+    +{static}STATUS_WAITING = 1
+    +attempts : int = 1
+    -pushDelay
+    -pushPriority
+    -pushTtr
+    +serializer : SerializerInterface|array = "yii\queue\serializers\PhpSerializer"
+    +strictJobType : bool = true
+    +ttr : int = 300
+    +delay(value : int|mixed) : $this
+    +handleError(id : string|null, job : JobInterface, ttr : int, attempt : int, error : Exception|.Throwable) : bool
+    #handleMessage(id : string|null, message : string, ttr : int, attempt : int) : bool
+    +init()
+    +isDone(id : string) : bool
+    +isReserved(id : string) : bool
+    +isWaiting(id : string) : bool
+    +priority(value : mixed) : $this
+    +push(job : JobInterface|mixed) : string|null
+    #pushMessage(message : string, ttr : int, delay : int, priority : mixed) : string|null
+    +status(id : string) : int
+    +ttr(value : int|mixed) : $this
+}
+class yii.queue.Queue extends yii.base.Component
+interface yii.queue.RetryableJob {
+}
+interface yii.queue.RetryableJob implements yii.queue.RetryableJobInterface
+interface yii.queue.RetryableJobInterface {
+    +canRetry(attempt : int, error : Exception|.Throwable) : bool
+    +getTtr() : int
+}
+interface yii.queue.RetryableJobInterface implements yii.queue.JobInterface
+class yii.queue.gii.Generator {
+    +baseClass = "yii\base\BaseObject"
+    +jobClass
+    +ns = "app\jobs"
+    +properties
+    +retryable = false
+    +attributeLabels()
+    +generate()
+    +getDescription()
+    +getName()
+    +hints()
+    +requiredTemplates()
+    +rules()
+    +stickyAttributes()
+    +validateJobClass(attribute)
+    +validateNamespace(attribute : string)
+}
+class yii.queue.gii.Generator extends yii.gii.Generator
+class yii.queue.serializers.IgbinarySerializer {
+    +serialize(job)
+    +unserialize(serialized)
+}
+class yii.queue.serializers.IgbinarySerializer extends yii.base.BaseObject
+class yii.queue.serializers.IgbinarySerializer implements yii.queue.serializers.SerializerInterface
+class yii.queue.serializers.JsonSerializer {
+    +classKey : string = "class"
+    +options : int = 0
+    #fromArray(data : array) : mixed
+    +serialize(job)
+    #toArray(data : mixed) : array|mixed
+    +unserialize(serialized)
+}
+class yii.queue.serializers.JsonSerializer extends yii.base.BaseObject
+class yii.queue.serializers.JsonSerializer implements yii.queue.serializers.SerializerInterface
+class yii.queue.serializers.PhpSerializer {
+    +serialize(job)
+    +unserialize(serialized)
+}
+class yii.queue.serializers.PhpSerializer extends yii.base.BaseObject
+class yii.queue.serializers.PhpSerializer implements yii.queue.serializers.SerializerInterface
+interface yii.queue.serializers.Serializer {
+}
+interface yii.queue.serializers.Serializer implements yii.queue.serializers.SerializerInterface
+interface yii.queue.serializers.SerializerInterface {
+    +serialize(job : JobInterface|mixed) : string
+    +unserialize(serialized : string) : yii.queue.JobInterface
+}
+@enduml

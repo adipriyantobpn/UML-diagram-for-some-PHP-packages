@@ -1,0 +1,150 @@
+@startuml
+skinparam handwritten true
+class yii.jui.Accordion {
+    +headerOptions : array = []
+    +itemOptions : array = []
+    +items : array = []
+    +options : array = []
+    #renderItems() : string
+    +run()
+}
+class yii.jui.Accordion extends yii.jui.Widget
+class yii.jui.AutoComplete {
+    +renderWidget() : string
+    +run()
+}
+class yii.jui.AutoComplete extends yii.jui.InputWidget
+class yii.jui.DatePicker {
+    +attribute : string
+    +containerOptions : array = []
+    +dateFormat : string
+    +inline : boolean = false
+    +language : string
+    +value : string
+    +init()
+    #renderWidget() : string
+    +run()
+}
+class yii.jui.DatePicker extends yii.jui.InputWidget
+class yii.jui.DatePickerLanguageAsset {
+    +autoGenerate : boolean = true
+    +depends = ["yii\jui\JuiAsset"]
+    +language : string
+    +sourcePath = "@bower/jquery-ui"
+    +registerAssetFiles(view)
+}
+class yii.jui.DatePickerLanguageAsset extends yii.web.AssetBundle
+class yii.jui.Dialog {
+    +init()
+    +run()
+}
+class yii.jui.Dialog extends yii.jui.Widget
+class yii.jui.Draggable {
+    #clientEventMap = ["dragcreate", "drag", "dragstop", "dragstart"]
+    +init()
+    +run()
+}
+class yii.jui.Draggable extends yii.jui.Widget
+class yii.jui.Droppable {
+    #clientEventMap = ["dropactivate", "dropcreate", "dropdeactivate", "drop", "dropout", "dropover"]
+    +init()
+    +run()
+}
+class yii.jui.Droppable extends yii.jui.Widget
+class yii.jui.InputWidget {
+    +attribute : string
+    +model : yii.base.Model
+    +name : string
+    +value : string
+    #hasModel() : bool
+    +init()
+}
+class yii.jui.InputWidget extends yii.jui.Widget
+class yii.jui.JuiAsset {
+    +css = ["themes/smoothness/jquery-ui.css"]
+    +depends = ["yii\web\JqueryAsset"]
+    +js = ["jquery-ui.js"]
+    +sourcePath = "@bower/jquery-ui"
+}
+class yii.jui.JuiAsset extends yii.web.AssetBundle
+class yii.jui.Menu {
+    +clientEvents : array = []
+    +clientOptions : array = []
+    +init()
+    +run()
+}
+class yii.jui.Menu extends yii.widgets.Menu
+class yii.jui.ProgressBar {
+    +init()
+    +run()
+}
+class yii.jui.ProgressBar extends yii.jui.Widget
+class yii.jui.Resizable {
+    #clientEventMap = ["resizecreate", "resize", "resizestart", "resizestop"]
+    +init()
+    +run()
+}
+class yii.jui.Resizable extends yii.jui.Widget
+class yii.jui.Selectable {
+    +{static}MODE_BEGIN = "MODE_BEGIN"
+    +{static}MODE_DEFAULT = "MODE_DEFAULT"
+    +itemOptions : array = []
+    +items : array = []
+    +mode : string = "MODE_DEFAULT"
+    +options : array = []
+    +{static}begin(config : array = []) : static
+    +init()
+    +renderItems() : string
+    +run()
+}
+class yii.jui.Selectable extends yii.jui.Widget
+class yii.jui.Slider {
+    #clientEventMap = ["slidechange", "slidecreate", "slide", "slidestart", "slidestop"]
+    +run()
+}
+class yii.jui.Slider extends yii.jui.Widget
+class yii.jui.SliderInput {
+    #clientEventMap = ["slidechange", "slidecreate", "slide", "slidestart", "slidestop"]
+    +containerOptions : array = []
+    +init()
+    +run()
+}
+class yii.jui.SliderInput extends yii.jui.InputWidget
+class yii.jui.Sortable {
+    #clientEventMap = ["sortactivate", "sortbeforestop", "sortchange", "sortcreate", "sortdeactivate", "sortout", "sortover", "sortreceive", "sortremove", "sort", "sortstart", "sortstop", "sortupdate"]
+    +itemOptions : array = []
+    +items : array = []
+    +options : array = []
+    +renderItems() : string
+    +run()
+}
+class yii.jui.Sortable extends yii.jui.Widget
+class yii.jui.Spinner {
+    #clientEventMap = ["spin", "spinchange", "spincreate", "spinstart", "spinstop"]
+    +renderWidget() : string
+    +run()
+}
+class yii.jui.Spinner extends yii.jui.InputWidget
+class yii.jui.Tabs {
+    +encodeLabels : boolean = true
+    +headerOptions : array = []
+    +itemOptions : array = []
+    +items : array = []
+    +linkTemplate : string = "<a href="{url}">{label}</a>"
+    +options : array = []
+    #renderItems() : string
+    +run()
+}
+class yii.jui.Tabs extends yii.jui.Widget
+class yii.jui.Widget {
+    #clientEventMap : array = []
+    +clientEvents : array = []
+    +clientOptions : array = []
+    +options : array = []
+    +init()
+    #registerClientEvents(name : string, id : string)
+    #registerClientOptions(name : string, id : string)
+    #registerWidget(name : string, id : string = null)
+}
+class yii.jui.Widget extends yii.base.Widget
+@enduml

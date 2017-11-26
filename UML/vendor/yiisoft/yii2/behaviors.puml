@@ -1,0 +1,82 @@
+@startuml
+skinparam handwritten true
+class yii.behaviors.AttributeBehavior {
+    +attributes : array = []
+    +preserveNonEmptyValues : bool = false
+    +skipUpdateOnClean : bool = true
+    +value : mixed
+    +evaluateAttributes(event : Event)
+    +events()
+    #getValue(event : Event) : mixed
+}
+class yii.behaviors.AttributeBehavior extends yii.base.Behavior
+class yii.behaviors.AttributesBehavior {
+    +attributes : array = []
+    +order : array = []
+    +preserveNonEmptyValues : bool = false
+    +skipUpdateOnClean : bool = true
+    +evaluateAttributes(event : Event)
+    +events()
+    #getValue(attribute : string, event : Event) : mixed
+}
+class yii.behaviors.AttributesBehavior extends yii.base.Behavior
+class yii.behaviors.AttributeTypecastBehavior {
+    +{static}TYPE_BOOLEAN = "boolean"
+    +{static}TYPE_FLOAT = "float"
+    +{static}TYPE_INTEGER = "integer"
+    +{static}TYPE_STRING = "string"
+    +attributeTypes : array
+    -autoDetectedAttributeTypes : array = []
+    +owner : Model|BaseActiveRecord
+    +skipOnNull : bool = true
+    +typecastAfterFind : bool = false
+    +typecastAfterValidate : bool = true
+    +typecastBeforeSave : bool = false
+    +afterFind(event : yii.base.Event)
+    +afterValidate(event : yii.base.Event)
+    +attach(owner)
+    +beforeSave(event : yii.base.Event)
+    +{static}clearAutoDetectedAttributeTypes()
+    #detectAttributeTypes() : array
+    +events()
+    +typecastAttributes(attributeNames : array = null)
+    #typecastValue(value : mixed, type : string|callable) : mixed
+}
+class yii.behaviors.AttributeTypecastBehavior extends yii.base.Behavior
+class yii.behaviors.BlameableBehavior {
+    +createdByAttribute : string = "created_by"
+    +updatedByAttribute : string = "updated_by"
+    +value
+    #getValue(event)
+    +init()
+}
+class yii.behaviors.BlameableBehavior extends yii.behaviors.AttributeBehavior
+class yii.behaviors.SluggableBehavior {
+    +attribute : string|array|null
+    +ensureUnique : bool = false
+    +immutable : bool = false
+    +skipOnEmpty : bool = false
+    +slugAttribute : string = "slug"
+    +uniqueSlugGenerator : callable
+    +uniqueValidator : array = []
+    +value : callable|string|null
+    #generateSlug(slugParts : array) : string
+    #generateUniqueSlug(baseSlug : string, iteration : int) : string
+    #getValue(event)
+    +init()
+    #isEmpty(slugPart : string) : bool
+    #isNewSlugNeeded() : bool
+    #makeUnique(slug : string) : string
+    #validateSlug(slug : string) : bool
+}
+class yii.behaviors.SluggableBehavior extends yii.behaviors.AttributeBehavior
+class yii.behaviors.TimestampBehavior {
+    +createdAtAttribute : string = "created_at"
+    +updatedAtAttribute : string = "updated_at"
+    +value
+    #getValue(event)
+    +init()
+    +touch(attribute : string)
+}
+class yii.behaviors.TimestampBehavior extends yii.behaviors.AttributeBehavior
+@enduml

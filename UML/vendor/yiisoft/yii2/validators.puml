@@ -1,0 +1,342 @@
+@startuml
+skinparam handwritten true
+class yii.validators.BooleanValidator {
+    +falseValue : mixed = 0
+    +strict : bool = false
+    +trueValue : mixed = 1
+    +clientValidateAttribute(model, attribute, view)
+    +getClientOptions(model, attribute)
+    +init()
+    #validateValue(value)
+}
+class yii.validators.BooleanValidator extends yii.validators.Validator
+class yii.validators.CompareValidator {
+    +{static}TYPE_NUMBER = "number"
+    +{static}TYPE_STRING = "string"
+    +compareAttribute : string
+    +compareValue : mixed
+    +message : string
+    +operator : string = "=="
+    +type : string = "string"
+    +clientValidateAttribute(model, attribute, view)
+    #compareValues(operator : string, type : string, value : mixed, compareValue : mixed) : bool
+    +getClientOptions(model, attribute)
+    +init()
+    +validateAttribute(model, attribute)
+    #validateValue(value)
+}
+class yii.validators.CompareValidator extends yii.validators.Validator
+class yii.validators.DateValidator {
+    +{static}TYPE_DATE = "date"
+    +{static}TYPE_DATETIME = "datetime"
+    +{static}TYPE_TIME = "time"
+    +format : string
+    +locale : string
+    +max : int|string
+    +maxString : string
+    +min : int|string
+    +minString : string
+    +timestampAttribute : string
+    +timestampAttributeFormat : string
+    +timestampAttributeTimeZone : string = "UTC"
+    +timeZone : string
+    +tooBig : string
+    +tooSmall : string
+    +type : string = "date"
+    -_dateFormats : array = [3, 2, 1, 0]
+    -formatTimestamp(timestamp : int, format : string) : string
+    +init()
+    #parseDateValue(value : string) : int|false
+    -parseDateValueFormat(value : string, format : string) : int|false
+    -parseDateValueIntl(value : string, format : string) : int|bool
+    -parseDateValuePHP(value : string, format : string) : int|bool
+    +validateAttribute(model, attribute)
+    #validateValue(value)
+}
+class yii.validators.DateValidator extends yii.validators.Validator
+class yii.validators.DefaultValueValidator {
+    +skipOnEmpty : bool = false
+    +value : mixed
+    +validateAttribute(model, attribute)
+}
+class yii.validators.DefaultValueValidator extends yii.validators.Validator
+class yii.validators.EachValidator {
+    +allowMessageFromRule : bool = true
+    +rule : array|Validator
+    +stopOnFirstError : bool = true
+    -_validator : Validator
+    -createEmbeddedValidator(model : Model|null) : Validator
+    -getValidator(model : Model|null = null) : Validator
+    +init()
+    +validateAttribute(model, attribute)
+    #validateValue(value)
+}
+class yii.validators.EachValidator extends yii.validators.Validator
+class yii.validators.EmailValidator {
+    +allowName : bool = false
+    +checkDNS : bool = false
+    +enableIDN : bool = false
+    +fullPattern : string = "/^[^@]*<[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?>$/"
+    +pattern : string = "/^[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+(?:\.[a-zA-Z0-9!#$%&'*+\/=?^_`{|}~-]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?\.)+[a-zA-Z0-9](?:[a-zA-Z0-9-]*[a-zA-Z0-9])?$/"
+    +clientValidateAttribute(model, attribute, view)
+    +getClientOptions(model, attribute)
+    -idnToAscii(idn)
+    +init()
+    #validateValue(value)
+}
+class yii.validators.EmailValidator extends yii.validators.Validator
+class yii.validators.ExistValidator {
+    +allowArray : bool = false
+    +filter : string|array|.Closure
+    +targetAttribute : string|array
+    +targetAttributeJunction : string = "and"
+    +targetClass : string
+    -applyTableAlias(query : ActiveQuery, conditions : array, alias : null|string = null) : array
+    #createQuery(targetClass : string, condition : mixed) : yii.db.ActiveQueryInterface
+    -getTargetClass(model : Model) : string
+    +init()
+    -prepareConditions(targetAttribute, model : yii.base.Model, attribute : string) : array
+    +validateAttribute(model, attribute)
+    #validateValue(value)
+}
+class yii.validators.ExistValidator extends yii.validators.Validator
+class yii.validators.FileValidator {
+    +checkExtensionByMimeType : bool = true
+    +extensions : array|string
+    +maxFiles : int = 1
+    +maxSize : int
+    +message : string
+    +mimeTypes : array|string
+    +minSize : int
+    +tooBig : string
+    +tooMany : string
+    +tooSmall : string
+    +uploadRequired : string
+    +wrongExtension : string
+    +wrongMimeType : string
+    -buildMimeTypeRegexp(mask : string) : string
+    +clientValidateAttribute(model, attribute, view)
+    +getClientOptions(model, attribute)
+    +getSizeLimit() : int
+    +init()
+    +isEmpty(value, trim : bool = false)
+    -sizeToBytes(sizeStr : string) : int
+    +validateAttribute(model, attribute)
+    #validateExtension(file : UploadedFile) : bool
+    #validateMimeType(file : UploadedFile) : bool
+    #validateValue(value)
+}
+class yii.validators.FileValidator extends yii.validators.Validator
+class yii.validators.FilterValidator {
+    +filter : callable
+    +skipOnArray : bool = false
+    +skipOnEmpty : bool = false
+    +clientValidateAttribute(model, attribute, view)
+    +getClientOptions(model, attribute)
+    +init()
+    +validateAttribute(model, attribute)
+}
+class yii.validators.FilterValidator extends yii.validators.Validator
+class yii.validators.ImageValidator {
+    +maxHeight : int
+    +maxWidth : int
+    +minHeight : int
+    +minWidth : int
+    +notImage : string
+    +overHeight : string
+    +overWidth : string
+    +underHeight : string
+    +underWidth : string
+    +clientValidateAttribute(model, attribute, view)
+    +getClientOptions(model, attribute)
+    +init()
+    #validateImage(image : UploadedFile) : array|null
+    #validateValue(value)
+}
+class yii.validators.ImageValidator extends yii.validators.FileValidator
+class yii.validators.InlineValidator {
+    +clientValidate : string|.Closure
+    +method : string|.Closure
+    +params : mixed
+    +clientValidateAttribute(model, attribute, view)
+    +validateAttribute(model, attribute)
+}
+class yii.validators.InlineValidator extends yii.validators.Validator
+class yii.validators.IpValidator {
+    +{static}IPV4_ADDRESS_LENGTH = 32
+    +{static}IPV6_ADDRESS_LENGTH = 128
+    +{static}NEGATION_CHAR = "!"
+    +expandIPv6 : bool = false
+    +hasSubnet : string
+    +ipv4 : bool = true
+    +ipv4NotAllowed : string
+    +ipv4Pattern : string = "/^(?:(?:2(?:[0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9])\.){3}(?:(?:2([0-4][0-9]|5[0-5])|[0-1]?[0-9]?[0-9]))$/"
+    +ipv6 : bool = true
+    +ipv6NotAllowed : string
+    +ipv6Pattern : string = "/^(([0-9a-fA-F]{1,4}:){7,7}[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,7}:|([0-9a-fA-F]{1,4}:){1,6}:[0-9a-fA-F]{1,4}|([0-9a-fA-F]{1,4}:){1,5}(:[0-9a-fA-F]{1,4}){1,2}|([0-9a-fA-F]{1,4}:){1,4}(:[0-9a-fA-F]{1,4}){1,3}|([0-9a-fA-F]{1,4}:){1,3}(:[0-9a-fA-F]{1,4}){1,4}|([0-9a-fA-F]{1,4}:){1,2}(:[0-9a-fA-F]{1,4}){1,5}|[0-9a-fA-F]{1,4}:((:[0-9a-fA-F]{1,4}){1,6})|:((:[0-9a-fA-F]{1,4}){1,7}|:)|fe80:(:[0-9a-fA-F]{0,4}){0,4}%[0-9a-zA-Z]{1,}|::(ffff(:0{1,4}){0,1}:){0,1}((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])|([0-9a-fA-F]{1,4}:){1,4}:((25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9])\.){3,3}(25[0-5]|(2[0-4]|1{0,1}[0-9]){0,1}[0-9]))$/"
+    +message : string
+    +negation : bool = false
+    +networks : array = [["any"], ["0.0.0.0/0", "::/0"], ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16", "fd00::/8"], ["224.0.0.0/4", "ff00::/8"], ["169.254.0.0/16", "fe80::/10"], ["127.0.0.0/8", "::1"], ["192.0.2.0/24", "198.51.100.0/24", "203.0.113.0/24", "2001:db8::/32"], ["multicast", "linklocal", "localhost", "documentation"]]
+    +normalize : bool = false
+    +noSubnet : string
+    +notInRange : string
+    +subnet : bool = false
+    +wrongCidr : string
+    -_ranges : array = []
+    +clientValidateAttribute(model, attribute, view)
+    -expandIPv6(ip : string) : string
+    +getClientOptions(model, attribute)
+    -getIpParsePattern() : string
+    -getIpVersion(ip : string) : int
+    +getRanges() : array
+    +init()
+    -inRange(ip : string, cidr : int, range : string) : bool
+    -ip2bin(ip : string) : string
+    -isAllowed(ip : string, cidr : int) : bool
+    -parseNegatedRange(string) : array
+    -prepareRanges(ranges) : array
+    +setRanges(ranges : array)
+    +validateAttribute(model, attribute)
+    #validateIPv4(value : string) : bool
+    #validateIPv6(value : string) : bool
+    -validateSubnet(ip) : string|array
+    #validateValue(value)
+}
+class yii.validators.IpValidator extends yii.validators.Validator
+class yii.validators.NumberValidator {
+    +integerOnly : bool = false
+    +integerPattern : string = "/^\s*[+-]?\d+\s*$/"
+    +max : int|float
+    +min : int|float
+    +numberPattern : string = "/^\s*[-+]?[0-9]*\.?[0-9]+([eE][-+]?[0-9]+)?\s*$/"
+    +tooBig : string
+    +tooSmall : string
+    +clientValidateAttribute(model, attribute, view)
+    +getClientOptions(model, attribute)
+    +init()
+    +validateAttribute(model, attribute)
+    #validateValue(value)
+}
+class yii.validators.NumberValidator extends yii.validators.Validator
+class yii.validators.PunycodeAsset {
+    +js = ["punycode.js"]
+    +sourcePath = "@bower/punycode"
+}
+class yii.validators.PunycodeAsset extends yii.web.AssetBundle
+class yii.validators.RangeValidator {
+    +allowArray : bool = false
+    +not : bool = false
+    +range : array|.Traversable|.Closure
+    +strict : bool = false
+    +clientValidateAttribute(model, attribute, view)
+    +getClientOptions(model, attribute)
+    +init()
+    +validateAttribute(model, attribute)
+    #validateValue(value)
+}
+class yii.validators.RangeValidator extends yii.validators.Validator
+class yii.validators.RegularExpressionValidator {
+    +not : bool = false
+    +pattern : string
+    +clientValidateAttribute(model, attribute, view)
+    +getClientOptions(model, attribute)
+    +init()
+    #validateValue(value)
+}
+class yii.validators.RegularExpressionValidator extends yii.validators.Validator
+class yii.validators.RequiredValidator {
+    +message : string
+    +requiredValue : mixed
+    +skipOnEmpty : bool = false
+    +strict : bool = false
+    +clientValidateAttribute(model, attribute, view)
+    +getClientOptions(model, attribute)
+    +init()
+    #validateValue(value)
+}
+class yii.validators.RequiredValidator extends yii.validators.Validator
+class yii.validators.SafeValidator {
+    +validateAttribute(model, attribute)
+    +validateAttributes(model, attributes = null)
+}
+class yii.validators.SafeValidator extends yii.validators.Validator
+class yii.validators.StringValidator {
+    +encoding : string
+    +length : int|array
+    +max : int
+    +message : string
+    +min : int
+    +notEqual : string
+    +tooLong : string
+    +tooShort : string
+    +clientValidateAttribute(model, attribute, view)
+    +getClientOptions(model, attribute)
+    +init()
+    +validateAttribute(model, attribute)
+    #validateValue(value)
+}
+class yii.validators.StringValidator extends yii.validators.Validator
+class yii.validators.UniqueValidator {
+    +comboNotUnique : string
+    +filter : string|array|.Closure
+    +message : string
+    +targetAttribute : string|array
+    +targetAttributeJunction : string = "and"
+    +targetClass : string
+    -addComboNotUniqueError(model : yii.base.Model, attribute : string)
+    -applyTableAlias(query : ActiveQuery, conditions : array, alias : null|string = null) : array
+    -getTargetClass(model : Model) : string
+    +init()
+    -modelExists(targetClass : string, conditions : array, model : Model) : bool
+    -prepareConditions(targetAttribute : string|array, model : Model, attribute : string) : array
+    -prepareQuery(targetClass : ActiveRecordInterface, conditions : array) : ActiveQueryInterface|ActiveQuery
+    +validateAttribute(model, attribute)
+}
+class yii.validators.UniqueValidator extends yii.validators.Validator
+class yii.validators.UrlValidator {
+    +defaultScheme : string
+    +enableIDN : bool = false
+    +pattern : string = "/^{schemes}:\/\/(([A-Z0-9][A-Z0-9_-]*)(\.[A-Z0-9][A-Z0-9_-]*)+)(?::\d{1,5})?(?:$|[?\/#])/i"
+    +validSchemes : array = ["http", "https"]
+    +clientValidateAttribute(model, attribute, view)
+    +getClientOptions(model, attribute)
+    -idnToAscii(idn)
+    +init()
+    +validateAttribute(model, attribute)
+    #validateValue(value)
+}
+class yii.validators.UrlValidator extends yii.validators.Validator
+class yii.validators.ValidationAsset {
+    +depends = ["yii\web\YiiAsset"]
+    +js = ["yii.validation.js"]
+    +sourcePath = "@yii/assets"
+}
+class yii.validators.ValidationAsset extends yii.web.AssetBundle
+class yii.validators.Validator {
+    +attributes : array|string = []
+    +builtInValidators : array = ["yii\validators\BooleanValidator", "yii\captcha\CaptchaValidator", "yii\validators\CompareValidator", "yii\validators\DateValidator", ["yii\validators\DateValidator", "datetime"], ["yii\validators\DateValidator", "time"], "yii\validators\DefaultValueValidator", "yii\validators\NumberValidator", "yii\validators\EachValidator", "yii\validators\EmailValidator", "yii\validators\ExistValidator", "yii\validators\FileValidator", "yii\validators\FilterValidator", "yii\validators\ImageValidator", "yii\validators\RangeValidator", ["yii\validators\NumberValidator", true], "yii\validators\RegularExpressionValidator", "yii\validators\NumberValidator", "yii\validators\RequiredValidator", "yii\validators\SafeValidator", "yii\validators\StringValidator", ["yii\validators\FilterValidator", "trim", true], "yii\validators\UniqueValidator", "yii\validators\UrlValidator", "yii\validators\IpValidator"]
+    +enableClientValidation : bool = true
+    +except : array|string = []
+    +isEmpty : callable
+    +message : string
+    +on : array|string = []
+    +skipOnEmpty : bool = true
+    +skipOnError : bool = true
+    +when : callable
+    +whenClient : string
+    +addError(model : yii.base.Model, attribute : string, message : string, params : array = [])
+    +clientValidateAttribute(model : yii.base.Model, attribute : string, view : yii.web.View) : string|null
+    +{static}createValidator(type : string|.Closure, model : yii.base.Model, attributes : array|string, params : array = []) : Validator
+    #formatMessage(message : string, params : array) : string
+    +getAttributeNames() : array
+    +getClientOptions(model : yii.base.Model, attribute : string) : array
+    +init()
+    +isActive(scenario : string) : bool
+    +isEmpty(value : mixed) : bool
+    +validate(value : mixed, error : string = null) : bool
+    +validateAttribute(model : yii.base.Model, attribute : string)
+    +validateAttributes(model : yii.base.Model, attributes : array|null = null)
+    #validateValue(value : mixed) : array|null
+}
+class yii.validators.Validator extends yii.base.Component
+@enduml

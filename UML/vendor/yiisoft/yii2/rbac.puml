@@ -1,0 +1,237 @@
+@startuml
+skinparam handwritten true
+class yii.rbac.Assignment {
+    +createdAt : int
+    +roleName : string
+    +userId : string|int
+}
+class yii.rbac.Assignment extends yii.base.BaseObject
+abstract class yii.rbac.BaseManager {
+    +defaultRoles : array = []
+    +add(object)
+    #addItem(item : Item) : bool
+    #addRule(rule : Rule) : bool
+    +createPermission(name)
+    +createRole(name)
+    #executeRule(user : string|int, item : Item, params : array) : bool
+    +getDefaultRoleInstances() : Role[]
+    #getItem(name : string) : Item
+    #getItems(type : int) : Item[]
+    +getPermission(name)
+    +getPermissions()
+    +getRole(name)
+    +getRoles()
+    #hasNoAssignments(assignments : Assignment[]) : bool
+    +remove(object)
+    #removeItem(item : Item) : bool
+    #removeRule(rule : Rule) : bool
+    +update(name, object)
+    #updateItem(name : string, item : Item) : bool
+    #updateRule(name : string, rule : Rule) : bool
+}
+class yii.rbac.BaseManager extends yii.base.Component
+class yii.rbac.BaseManager implements yii.rbac.ManagerInterface
+interface yii.rbac.CheckAccessInterface {
+    +checkAccess(userId : string|int, permissionName : string, params : array = []) : bool
+}
+class yii.rbac.DbManager {
+    +assignmentTable : string = "{{%auth_assignment}}"
+    +cache : CacheInterface|array|string
+    +cacheKey : string = "rbac"
+    +db : Connection|array|string = "db"
+    +itemChildTable : string = "{{%auth_item_child}}"
+    #items : Item[]
+    +itemTable : string = "{{%auth_item}}"
+    #parents : array
+    #rules : Rule[]
+    +ruleTable : string = "{{%auth_rule}}"
+    -_checkAccessAssignments = []
+    +addChild(parent, child)
+    #addItem(item)
+    #addRule(rule)
+    +assign(role, userId)
+    +canAddChild(parent, child)
+    +checkAccess(userId, permissionName, params = [])
+    #checkAccessFromCache(user : string|int, itemName : string, params : array, assignments : Assignment[]) : bool
+    #checkAccessRecursive(user : string|int, itemName : string, params : array, assignments : Assignment[]) : bool
+    #detectLoop(parent : Item, child : Item) : bool
+    +getAssignment(roleName, userId)
+    +getAssignments(userId)
+    +getChildren(name)
+    #getChildrenList() : array
+    #getChildrenRecursive(name : string, childrenList : array, result : array)
+    +getChildRoles(roleName)
+    #getDirectPermissionsByUser(userId : string|int) : Permission[]
+    #getInheritedPermissionsByUser(userId : string|int) : Permission[]
+    #getItem(name)
+    #getItems(type)
+    +getPermissionsByRole(roleName)
+    +getPermissionsByUser(userId)
+    +getRolesByUser(userId)
+    +getRule(name)
+    +getRules()
+    +getUserIdsByRole(roleName : string) : string[]
+    +hasChild(parent, child)
+    +init()
+    +invalidateCache()
+    -isEmptyUserId(userId : mixed) : bool
+    +loadFromCache()
+    #populateItem(row : array) : Item
+    +removeAll()
+    +removeAllAssignments()
+    #removeAllItems(type : int)
+    +removeAllPermissions()
+    +removeAllRoles()
+    +removeAllRules()
+    +removeChild(parent, child)
+    +removeChildren(parent)
+    #removeItem(item)
+    #removeRule(rule)
+    +revoke(role, userId)
+    +revokeAll(userId)
+    #supportsCascadeUpdate() : bool
+    #updateItem(name, item)
+    #updateRule(name, rule)
+}
+class yii.rbac.DbManager extends yii.rbac.BaseManager
+class yii.rbac.Item {
+    +{static}TYPE_PERMISSION = 2
+    +{static}TYPE_ROLE = 1
+    +createdAt : int
+    +data : mixed
+    +description : string
+    +name : string
+    +ruleName : string
+    +type : int
+    +updatedAt : int
+}
+class yii.rbac.Item extends yii.base.BaseObject
+interface yii.rbac.ManagerInterface {
+    +add(object : Role|Permission|Rule) : bool
+    +addChild(parent : Item, child : Item) : bool
+    +assign(role : Role|Permission, userId : string|int) : Assignment
+    +canAddChild(parent : Item, child : Item) : bool
+    +createPermission(name : string) : Permission
+    +createRole(name : string) : Role
+    +getAssignment(roleName : string, userId : string|int) : null|Assignment
+    +getAssignments(userId : string|int) : Assignment[]
+    +getChildren(name : string) : Item[]
+    +getChildRoles(roleName : string) : Role[]
+    +getPermission(name : string) : null|Permission
+    +getPermissions() : Permission[]
+    +getPermissionsByRole(roleName : string) : Permission[]
+    +getPermissionsByUser(userId : string|int) : Permission[]
+    +getRole(name : string) : null|Role
+    +getRoles() : Role[]
+    +getRolesByUser(userId : string|int) : Role[]
+    +getRule(name : string) : null|Rule
+    +getRules() : Rule[]
+    +getUserIdsByRole(roleName : string) : array
+    +hasChild(parent : Item, child : Item) : bool
+    +remove(object : Role|Permission|Rule) : bool
+    +removeAll()
+    +removeAllAssignments()
+    +removeAllPermissions()
+    +removeAllRoles()
+    +removeAllRules()
+    +removeChild(parent : Item, child : Item) : bool
+    +removeChildren(parent : Item) : bool
+    +revoke(role : Role|Permission, userId : string|int) : bool
+    +revokeAll(userId : mixed) : bool
+    +update(name : string, object : Role|Permission|Rule) : bool
+}
+interface yii.rbac.ManagerInterface implements yii.rbac.CheckAccessInterface
+class yii.rbac.Permission {
+    +{static}TYPE_PERMISSION = 2
+    +{static}TYPE_ROLE = 1
+    +type = 2
+}
+class yii.rbac.Permission extends yii.rbac.Item
+class yii.rbac.PhpManager {
+    +assignmentFile : string = "@app/rbac/assignments.php"
+    #assignments : array = []
+    #children : array = []
+    +itemFile : string = "@app/rbac/items.php"
+    #items : Item[] = []
+    +ruleFile : string = "@app/rbac/rules.php"
+    #rules : Rule[] = []
+    +addChild(parent, child)
+    #addItem(item)
+    #addRule(rule)
+    +assign(role, userId)
+    +canAddChild(parent, child)
+    +checkAccess(userId, permissionName, params = [])
+    #checkAccessRecursive(user : string|int, itemName : string, params : array, assignments : Assignment[]) : bool
+    #detectLoop(parent : Item, child : Item) : bool
+    +getAssignment(roleName, userId)
+    +getAssignments(userId)
+    +getChildren(name)
+    #getChildrenRecursive(name : string, result : array)
+    +getChildRoles(roleName)
+    #getDirectPermissionsByUser(userId : string|int) : Permission[]
+    #getInheritedPermissionsByUser(userId : string|int) : Permission[]
+    +getItem(name)
+    +getItems(type)
+    +getPermissionsByRole(roleName)
+    +getPermissionsByUser(userId)
+    +getRolesByUser(userId)
+    +getRule(name)
+    +getRules()
+    +getUserIdsByRole(roleName)
+    +hasChild(parent, child)
+    +init()
+    #invalidateScriptCache(file : string)
+    #load()
+    #loadFromFile(file : string) : array
+    +removeAll()
+    +removeAllAssignments()
+    #removeAllItems(type : int)
+    +removeAllPermissions()
+    +removeAllRoles()
+    +removeAllRules()
+    +removeChild(parent, child)
+    +removeChildren(parent)
+    +removeItem(item)
+    #removeRule(rule)
+    +revoke(role, userId)
+    +revokeAll(userId)
+    #save()
+    #saveAssignments()
+    #saveItems()
+    #saveRules()
+    #saveToFile(data : array, file : string)
+    #updateItem(name, item)
+    +updateRule(name, rule)
+}
+class yii.rbac.PhpManager extends yii.rbac.BaseManager
+class yii.rbac.Role {
+    +{static}TYPE_PERMISSION = 2
+    +{static}TYPE_ROLE = 1
+    +type = 1
+}
+class yii.rbac.Role extends yii.rbac.Item
+abstract class yii.rbac.Rule {
+    +createdAt : int
+    +name : string
+    +updatedAt : int
+    +execute(user : string|int, item : Item, params : array) : bool
+}
+class yii.rbac.Rule extends yii.base.BaseObject
+class m140506_102106_rbac_init {
+    #buildFkClause(delete = "", update = "")
+    +down()
+    #getAuthManager() : yii.rbac.DbManager
+    #isMSSQL() : bool
+    #isOracle()
+    +up()
+}
+class m140506_102106_rbac_init extends yii.db.Migration
+class m170907_052038_rbac_add_index_on_auth_assignment_user_id {
+    +column = "user_id"
+    +index = "auth_assignment_user_id_idx"
+    +down()
+    #getAuthManager() : yii.rbac.DbManager
+    +up()
+}
+class m170907_052038_rbac_add_index_on_auth_assignment_user_id extends yii.db.Migration
+@enduml

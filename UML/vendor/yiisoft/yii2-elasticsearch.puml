@@ -1,0 +1,237 @@
+@startuml
+skinparam handwritten true
+class yii.elasticsearch.ActiveFixture {
+    +dataFile : string|boolean
+    +db : Connection|string = "elasticsearch"
+    +index : string
+    +type : string
+    #getData() : array
+    +init()
+    +load()
+    #resetIndex()
+}
+class yii.elasticsearch.ActiveFixture extends yii.test.BaseActiveFixture
+class yii.elasticsearch.ActiveQuery {
+    +{static}EVENT_INIT = "init"
+    +all(db : Connection = null) : array
+    +column(field, db = null)
+    +createCommand(db : Connection = null) : Command
+    -createModels(rows : array) : array|ActiveRecord[]
+    +init()
+    +one(db : Connection = null) : ActiveRecord|array|null
+    +populate(rows)
+    +search(db = null, options = [])
+    +__construct(modelClass : array, config : array = [])
+}
+class yii.elasticsearch.ActiveQuery extends yii.elasticsearch.Query
+class yii.elasticsearch.ActiveQuery implements yii.db.ActiveQueryInterface
+class yii.elasticsearch.ActiveRecord {
+    -_highlight
+    -_id
+    -_score
+    -_version
+    +arrayAttributes() : string[]
+    +attributes() : string[]
+    +delete(options : array = []) : integer|boolean
+    +{static}deleteAll(condition : array = []) : integer
+    +{static}find() : ActiveQuery
+    +{static}findAll(condition)
+    +{static}findOne(condition)
+    +{static}get(primaryKey : mixed, options : array = []) : static|null
+    +{static}getDb() : Connection
+    +getHighlight() : array|null
+    +getOldPrimaryKey(asArray = false)
+    +getPrimaryKey(asArray = false)
+    +getScore() : float
+    +{static}index() : string
+    +insert(runValidation : boolean = true, attributes : array = null, options : array = ["create"]) : boolean
+    +{static}instantiate(row : array) : static
+    +{static}mget(primaryKeys : array, options : array = []) : array
+    +optimisticLock()
+    +{static}populateRecord(record : ActiveRecord, row : array)
+    +{static}primaryKey() : string[]
+    #{static}primaryKeysByCondition(condition : array) : array
+    +setPrimaryKey(value : mixed)
+    +{static}type() : string
+    +unlinkAll(name, delete = false)
+    +update(runValidation : boolean = true, attributeNames : array = null, options : array = []) : integer|boolean
+    +{static}updateAll(attributes : array, condition : array = []) : integer
+    +{static}updateAllCounters(counters : array, condition : string|array = []) : integer
+    #updateInternal(attributes : array = null, options : array = []) : integer|boolean
+}
+class yii.elasticsearch.ActiveRecord extends yii.db.BaseActiveRecord
+class yii.elasticsearch.BatchQueryResult {
+    +db : Connection
+    +each : boolean = false
+    +query : Query
+    +scrollWindow : string = "1m"
+    -_batch : array
+    -_dataReader : DataReader
+    -_key : string|integer
+    -_lastScrollId
+    -_value : mixed
+    +current() : mixed
+    #fetchData() : array
+    +key() : integer
+    +next()
+    +reset()
+    +rewind()
+    +valid() : boolean
+    +__destruct()
+}
+class yii.elasticsearch.BatchQueryResult extends yii.base.Object
+class yii.elasticsearch.BatchQueryResult implements Iterator
+class yii.elasticsearch.Command {
+    +db : Connection
+    +index : string|array
+    +options : array = []
+    +queryParts : array
+    +type : string|array
+    +clearIndexCache(index) : mixed
+    +clearScroll(options : array = []) : mixed
+    +closeIndex(index) : mixed
+    +createIndex(index, configuration : array = null) : mixed
+    +createTemplate(name, pattern, settings, mappings, order : integer = 0) : mixed
+    +delete(index, type, id, options : array = []) : mixed
+    +deleteAllIndexes() : mixed
+    +deleteByQuery(options : array = []) : mixed
+    +deleteIndex(index) : mixed
+    +deleteMapping(index, type) : mixed
+    +deleteTemplate(name) : mixed
+    +exists(index, type, id) : mixed
+    +flushIndex(index = "_all") : mixed
+    +get(index, type, id, options : array = []) : mixed
+    +getIndexStatus(index = "_all") : mixed
+    +getMapping(index : string = "_all", type : string = null) : mixed
+    +getSource(index, type, id) : mixed
+    +getTemplate(name) : mixed
+    +indexExists(index) : mixed
+    +insert(index : string, type : string, data : string|array, id : null = null, options : array = []) : mixed
+    +mget(index, type, ids, options : array = []) : mixed
+    +openIndex(index) : mixed
+    +refreshIndex(index) : mixed
+    +scroll(options : array = []) : mixed
+    +search(options : array = []) : mixed
+    +setMapping(index : string, type : string, mapping : string|array, options : array = []) : mixed
+    +suggest(suggester : string|array, options : array = []) : mixed
+    +typeExists(index, type) : mixed
+    +update(index, type, id, data, options : array = []) : mixed
+    +updateAnalyzers(index : string, setting : string|array, options : array = []) : mixed
+    +updateSettings(index : string, setting : string|array, options : array = []) : mixed
+}
+class yii.elasticsearch.Command extends yii.base.Component
+class yii.elasticsearch.Connection {
+    +{static}EVENT_AFTER_OPEN = "afterOpen"
+    +activeNode : string
+    +auth : array = []
+    +autodetectCluster : boolean = true
+    +connectionTimeout : float
+    +dataTimeout : float
+    +nodes : array = [["inet[/127.0.0.1:9200]"]]
+    -_curl : resource
+    +close()
+    +createCommand(config : array = []) : Command
+    -createUrl(path : string|array, options : array = []) : array
+    #decodeErrorBody(body) : mixed
+    +delete(url : string|array, options : array = [], body : string = null, raw : boolean = false) : mixed
+    +get(url : string|array, options : array = [], body : string = null, raw : boolean = false) : mixed
+    +getClusterState()
+    +getDriverName() : string
+    +getIsActive() : boolean
+    +getNodeInfo()
+    +getQueryBuilder() : QueryBuilder
+    +head(url : string|array, options : array = [], body : string = null) : mixed
+    #httpRequest(method : string, url : string, requestBody : string = null, raw : boolean = false) : mixed
+    +init()
+    #initConnection()
+    +open()
+    #populateNodes()
+    +post(url : string|array, options : array = [], body : string = null, raw : boolean = false) : mixed
+    +put(url : string|array, options : array = [], body : string = null, raw : boolean = false) : mixed
+    -resetCurlHandle()
+    #selectActiveNode()
+    +__sleep() : array
+}
+class yii.elasticsearch.Connection extends yii.base.Component
+class yii.elasticsearch.DebugAction {
+    +controller : yii.debug.controllers.DefaultController
+    +db : string
+    +panel : DebugPanel
+    +run(logId, tag)
+}
+class yii.elasticsearch.DebugAction extends yii.base.Action
+class yii.elasticsearch.DebugPanel {
+    +db = "elasticsearch"
+    -_timings
+    +calculateTimings()
+    +getDetail()
+    +getName()
+    +getSummary()
+    +init()
+    +save()
+}
+class yii.elasticsearch.DebugPanel extends yii.debug.Panel
+class yii.elasticsearch.Exception {
+    +getName() : string
+}
+class yii.elasticsearch.Exception extends yii.db.Exception
+class yii.elasticsearch.Query {
+    +aggregations : array = []
+    +fields : array
+    +filter : array|string
+    +highlight : array
+    +index : string|array
+    +minScore : float
+    +options : array = []
+    +query : array|string
+    +source : array
+    +stats : array = []
+    +suggest : array = []
+    +timeout : integer
+    +type : string|array
+    +addAgg(name : string, type : string, options : string|array) : $this
+    +addAggregation(name : string, type : string, options : string|array) : $this
+    +addOptions(options : array) : $this
+    +addSuggester(name : string, definition : string|array) : $this
+    +all(db : Connection = null) : array
+    +batch(scrollWindow : string = "1m", db : Connection = null) : BatchQueryResult
+    +column(field : string, db : Connection = null) : array
+    +count(q : string = "*", db : Connection = null) : integer
+    +createCommand(db : Connection = null) : Command
+    +delete(db : Connection = null, options : array = []) : array
+    +each(scrollWindow : string = "1m", db : Connection = null) : BatchQueryResult
+    +exists(db : Connection = null) : boolean
+    +fields(fields : array) : $this
+    +filter(filter : string) : $this
+    +from(index : string|array, type : string|array = null) : $this
+    +highlight(highlight : array) : $this
+    +init()
+    +minScore(minScore : float) : static
+    +one(db : Connection = null) : array|boolean
+    +options(options : array) : $this
+    +populate(rows : array) : array
+    +query(query : string) : $this
+    +scalar(field : string, db : Connection = null) : string
+    +search(db : Connection = null, options : array = []) : array
+    +source(source : array) : $this
+    +stats(groups : array) : $this
+    +timeout(timeout : integer) : $this
+}
+class yii.elasticsearch.Query extends yii.base.Component
+class yii.elasticsearch.Query implements yii.db.QueryInterface
+class yii.elasticsearch.QueryBuilder {
+    +db : Connection
+    +build(query : Query) : array
+    -buildAndCondition(operator, operands)
+    -buildBetweenCondition(operator, operands)
+    #buildCompositeInCondition(operator, columns, values)
+    +buildCondition(condition : string|array) : string
+    -buildHashCondition(condition)
+    -buildInCondition(operator, operands)
+    -buildLikeCondition(operator, operands)
+    -buildNotCondition(operator, operands)
+    +buildOrderBy(columns)
+    +__construct(connection : Connection, config : array = [])
+}
+class yii.elasticsearch.QueryBuilder extends yii.base.Object
+@enduml

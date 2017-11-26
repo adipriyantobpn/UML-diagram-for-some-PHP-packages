@@ -1,0 +1,343 @@
+@startuml
+skinparam handwritten true
+class yii.sphinx.ActiveDataProvider {
+    -_facets : array
+    -_meta : array
+    +getFacet(name : string) : array
+    +getFacets() : array
+    +getMeta() : array
+    #prepareModels()
+    #prepareTotalCount()
+    +setFacets(facets : array)
+    +setMeta(meta : array)
+}
+class yii.sphinx.ActiveDataProvider extends yii.data.ActiveDataProvider
+class yii.sphinx.ActiveFixture {
+    +dataFile : string|bool
+    +db : Connection|array|string = "sphinx"
+    +indexName : string
+    -_index : IndexSchema
+    #getData() : array
+    +getIndexSchema() : IndexSchema
+    +init()
+    +load()
+    #resetIndex()
+}
+class yii.sphinx.ActiveFixture extends yii.test.BaseActiveFixture
+class yii.sphinx.ActiveQuery {
+    +{static}EVENT_INIT = "init"
+    +sql : string
+    +all(db : Connection = null) : array
+    #callSnippets(source)
+    +createCommand(db : Connection = null) : Command
+    #defaultConnection()
+    #fetchSnippetSourceFromModels(models : ActiveRecord[]) : array
+    +init()
+    +one(db : Connection = null) : ActiveRecord|array|null
+    +populate(rows)
+    +snippetByModel() : $this
+    +__construct(modelClass : array, config : array = [])
+}
+class yii.sphinx.ActiveQuery extends yii.sphinx.Query
+class yii.sphinx.ActiveQuery implements yii.db.ActiveQueryInterface
+abstract class yii.sphinx.ActiveRecord {
+    +{static}OP_ALL = 7
+    +{static}OP_DELETE = 4
+    +{static}OP_INSERT = 1
+    +{static}OP_UPDATE = 2
+    -_snippet : string
+    +attributes() : array
+    +{static}callKeywords(text : string, fetchStatistic : bool = false) : array
+    +{static}callSnippets(source : string|array, match : string, options : array = []) : string|array
+    +delete() : int|false
+    +{static}deleteAll(condition : string|array = "", params : array = []) : int
+    +equals(record : ActiveRecord) : bool
+    #fetchSnippet(match : string, options : array = []) : string
+    +{static}find() : ActiveQuery
+    +{static}findBySql(sql : string, params : array = []) : ActiveQuery
+    +{static}getDb() : Connection
+    +{static}getIndexSchema() : IndexSchema
+    +getSnippet(match : string = null, options : array = []) : string
+    +getSnippetSource() : string
+    +{static}indexName() : string
+    +insert(runValidation : bool = true, attributes : array = null) : bool
+    -insertInternal(attributes = null)
+    +isTransactional(operation : int) : bool
+    +{static}populateRecord(record, row)
+    +{static}primaryKey() : string[]
+    +setSnippet(snippet : string)
+    +transactions() : array
+    +update(runValidation : bool = true, attributeNames : array = null) : int|false
+    +{static}updateAll(attributes : array, condition : string|array = "", params : array = []) : int
+    #updateInternal(attributes = null)
+}
+class yii.sphinx.ActiveRecord extends yii.db.BaseActiveRecord
+class yii.sphinx.ColumnSchema {
+    +dbType : string
+    +isAttribute : bool
+    +isField : bool
+    +isMva : bool
+    +isPrimaryKey : bool
+    +name : string
+    +phpType : string
+    +type : string
+    +dbTypecast(value : mixed) : mixed
+    +phpTypecast(value : mixed) : mixed
+    #typecast(value : mixed) : mixed
+}
+class yii.sphinx.ColumnSchema extends yii.base.BaseObject
+class yii.sphinx.Command {
+    +db : yii.sphinx.Connection
+    -floatParams : array = []
+    +addColumn(table, column, type)
+    +addForeignKey(name, table, columns, refTable, refColumns, delete = null, update = null)
+    +addPrimaryKey(name, table, columns)
+    +alterColumn(table, column, type)
+    +batchInsert(index : string, columns : array, rows : array) : $this
+    +batchReplace(index : string, columns : array, rows : array) : $this
+    +bindValue(name, value, dataType = null)
+    +bindValues(values)
+    +callKeywords(index : string, text : string, fetchStatistic : bool = false) : $this
+    +callSnippets(index : string, source : string|array, match : string, options : array = []) : $this
+    +checkIntegrity(check = true, schema = "", table = "")
+    +createIndex(name, table, columns, unique = false)
+    +createTable(table, columns, options = null)
+    +dropColumn(table, column)
+    +dropForeignKey(name, table)
+    +dropIndex(name, table)
+    +dropPrimaryKey(name, table)
+    +dropTable(table)
+    +getRawSql()
+    -parseFloatParams(sql : string) : string
+    +prepare(forRead = null)
+    +renameColumn(table, oldName, newName)
+    +renameTable(table, newName)
+    +replace(index : string, columns : array) : $this
+    +resetSequence(table, value = null)
+    +truncateIndex(index : string) : $this
+    +truncateTable(table)
+    +update(index : string, columns : array, condition : string|array = "", params : array = [], options : array = []) : $this
+}
+class yii.sphinx.Command extends yii.db.Command
+class yii.sphinx.Connection {
+    +enableFloatConversion : bool = true
+    +schemaMap = ["yii\sphinx\Schema", "yii\sphinx\Schema"]
+    +createCommand(sql : string = null, params : array = []) : Command
+    +escapeMatchValue(str : string) : string
+    +getIndexSchema(name : string, refresh : bool = false) : IndexSchema
+    +getLastInsertID(sequenceName : string = "") : string
+    +quoteIndexName(name : string) : string
+    +quoteTableName(name : string) : string
+}
+class yii.sphinx.Connection extends yii.db.Connection
+class yii.sphinx.IndexSchema {
+    +columns : ColumnSchema[] = []
+    +isRt : bool
+    +name : string
+    +primaryKey : string
+    +type : string
+    +getColumn(name : string) : ColumnSchema
+    +getColumnNames() : array
+    +isIsRuntime() : bool
+    +setIsRuntime(isRuntime : bool)
+}
+class yii.sphinx.IndexSchema extends yii.base.BaseObject
+class yii.sphinx.MatchBuilder {
+    +{static}PARAM_PREFIX = ":mp"
+    +db : Connection
+    #matchBuilders : array = ["buildAndMatch", "buildAndMatch", "buildIgnoreMatch", "buildProximityMatch", "buildMultipleMatch", "buildMultipleMatch", "buildMultipleMatch", "buildZoneMatch", "buildZoneMatch"]
+    #matchOperators : array = [" ", " | ", " !", " "]
+    +build(match : MatchExpression) : string
+    +buildAndMatch(operator : string, operands : array, params : array) : string
+    +buildHashMatch(match : array, params : array) : string
+    +buildIgnoreMatch(operator : string, operands : array, params) : string
+    +buildMatch(match : string|array, params : array) : string
+    #buildMatchColumn(column : string, ignored : bool = false) : string
+    #buildMatchValue(value : string|array|Expression, params : array) : string
+    +buildMultipleMatch(operator : string, operands : array, params) : string
+    +buildProximityMatch(operator : string, operands : array, params) : string
+    +buildSimpleMatch(operator : string, operands : array, params : array) : string
+    +buildZoneMatch(operator : string, operands : array, params) : string
+    #parseParams(expression : string, params : array) : string
+    +__construct(connection : Connection, config : array = [])
+}
+class yii.sphinx.MatchBuilder extends yii.base.BaseObject
+class yii.sphinx.MatchExpression {
+    +match : string|array|Expression
+    +params : array = []
+    +addParams(params : array) : $this
+    +andFilterMatch(condition : array) : $this
+    +andMatch(condition : string|array|Expression, params : array = []) : $this
+    #filterCondition(condition : array) : array
+    +filterMatch(condition : array) : $this
+    #isEmpty(value : mixed) : bool
+    +match(condition : string|array|Expression, params : array = []) : $this
+    +orFilterMatch(condition : array) : $this
+    +orMatch(condition : string|array|Expression, params : array = []) : $this
+    +params(params : array) : $this
+    +__construct(match : string = null, params : array = [], config : array = [])
+}
+class yii.sphinx.MatchExpression extends yii.base.BaseObject
+class yii.sphinx.Query {
+    +facets : array = []
+    +groupLimit : int
+    +match : string|Expression
+    +options : array
+    +showMeta : bool|string|Expression
+    +snippetCallback : callable
+    +snippetOptions : array
+    +within : string
+    -_connection : Connection
+    +addFacets(facets : array) : $this
+    +addOptions(options : array) : $this
+    +addWithin(columns : string|array) : $this
+    #callSnippets(source : array) : array
+    #callSnippetsInternal(source : array, from : string) : array
+    +{static}create(from : Query) : Query
+    +createCommand(db : Connection = null) : Command
+    #defaultConnection() : Connection
+    +facets(facets : array) : $this
+    #fillUpSnippets(rows : array) : array|ActiveRecord[]
+    +getConnection() : Connection
+    +getTablesUsedInFrom()
+    +groupLimit(limit : int) : $this
+    +innerJoin(table, on = "", params = [])
+    +join(type, table, on = "", params = [])
+    +leftJoin(table, on = "", params = [])
+    +match(query : string|Expression|MatchExpression) : $this
+    +one(db = null)
+    +options(options : array) : $this
+    +populate(rows)
+    #queryScalar(selectExpression, db)
+    +rightJoin(table, on = "", params = [])
+    +search(db : Connection = null) : array
+    +setConnection(connection : Connection) : $this
+    +showMeta(showMeta : bool|string|Expression) : $this
+    +snippetCallback(callback : callable) : $this
+    +snippetOptions(options : array) : $this
+    +within(columns : string|array) : $this
+}
+class yii.sphinx.Query extends yii.db.Query
+class yii.sphinx.QueryBuilder {
+    +{static}PARAM_PREFIX = ":qp"
+    #conditionBuilders : array = ["buildAndCondition", "buildAndCondition", "buildBetweenCondition", "buildBetweenCondition", "buildInCondition", "buildInCondition", "buildLikeCondition", "buildLikeCondition", "buildLikeCondition", "buildLikeCondition", "buildNotCondition"]
+    +db : Connection
+    +querySeparator : string = "; "
+    +separator : string = " "
+    -_matchBuilder : MatchBuilder
+    +batchInsert(index : string, columns : array, rows : array, params : array) : string
+    +batchReplace(index : string, columns : array, rows : array, params : array) : string
+    +build(query : Query, params : array = []) : array
+    +buildAndCondition(indexes : IndexSchema[], operator : string, operands : array, params : array) : string
+    +buildBetweenCondition(indexes : IndexSchema[], operator : string, operands : array, params : array) : string
+    +buildColumns(columns : string|array) : string
+    #buildCompositeInCondition(indexes : IndexSchema[], operator : string, columns : array, values : array, params : array) : string
+    +buildCondition(indexes : IndexSchema[], condition : string|array, params : array) : string
+    #buildFacets(facets : array, params : array) : string
+    +buildFrom(indexes : array, params : array) : string
+    +buildGroupBy(columns : array, limit : int) : string
+    +buildHashCondition(indexes : IndexSchema[], condition : array, params : array) : string
+    +buildHaving(indexes : string[], condition : string|array, params : array) : string
+    +buildInCondition(indexes : IndexSchema[], operator : string, operands : array, params : array) : string
+    +buildLikeCondition(indexes : IndexSchema[], operator : string, operands : array, params : array) : string
+    +buildLimit(limit : int, offset : int) : string
+    +buildMatch(match : string|Expression|MatchExpression, params : array) : string
+    +buildNotCondition(indexes : IndexSchema[], operator : string, operands : array, params : array) : string
+    +buildOption(options : array, params : array) : string
+    +buildOrderBy(columns : array) : string
+    +buildOrderByAndLimit(sql : string, orderBy : array, limit : int, offset : int) : string
+    +buildSelect(columns : array, params : array, distinct : bool = false, selectOption : string = null) : string
+    -buildSelectFields(columns : array, params : array) : string
+    #buildShowMeta(showMeta : bool|string|Expression, params : array) : string
+    +buildSimpleCondition(indexes : IndexSchema[], operator : string, operands : array, params : array) : string
+    +buildWhere(indexes : string[], condition : string|array, params : array, match : string|Expression|null = null) : string
+    +buildWithin(columns : array) : string
+    +callKeywords(index : string, text : string, fetchStatistic : bool, params : array) : string
+    +callSnippets(index : string, source : string|array, match : string, options : array, params : array) : string
+    #composeColumnValue(indexes : IndexSchema[], columnName : string, value : mixed, params : array) : string
+    +delete(index : string, condition : array|string, params : array) : string
+    #generateBatchInsertReplace(statement : string, index : string, columns : array, rows : array, params : array) : string
+    #generateInsertReplace(statement : string, index : string, columns : array, params : array) : string
+    -getIndexSchemas(indexes : array) : IndexSchema[]
+    +getMatchBuilder() : MatchBuilder
+    +insert(index : string, columns : array, params : array) : string
+    +replace(index : string, columns : array, params : array) : string
+    +truncateIndex(index : string) : string
+    +update(index : string, columns : array, condition : array|string, params : array, options : array) : string
+    +__construct(connection : Connection, config : array = [])
+}
+class yii.sphinx.QueryBuilder extends yii.base.BaseObject
+class yii.sphinx.Schema {
+    +{static}TYPE_BIGINT = "bigint"
+    +{static}TYPE_BOOLEAN = "boolean"
+    +{static}TYPE_FLOAT = "float"
+    +{static}TYPE_INTEGER = "integer"
+    +{static}TYPE_PK = "pk"
+    +{static}TYPE_STRING = "string"
+    +{static}TYPE_TIMESTAMP = "timestamp"
+    +db : Connection
+    +typeMap : array = ["~~NOT RESOLVED~~", "~~NOT RESOLVED~~", "~~NOT RESOLVED~~", "~~NOT RESOLVED~~", "~~NOT RESOLVED~~", "~~NOT RESOLVED~~", "~~NOT RESOLVED~~", "~~NOT RESOLVED~~", "~~NOT RESOLVED~~", "~~NOT RESOLVED~~", "integer"]
+    -_builder : QueryBuilder
+    -_indexes : array = []
+    -_indexNames : array
+    -_indexTypes : array
+    #applyDefaultColumns(index : IndexSchema)
+    +convertException(e : Exception, rawSql : string) : yii.db.Exception
+    +createQueryBuilder() : QueryBuilder
+    #findColumns(index : IndexSchema) : bool
+    #findIndexes() : array
+    #getCacheKey(name : string) : mixed
+    #getCacheTag() : string
+    #getColumnPhpType(column : ColumnSchema) : string
+    +getIndexNames(refresh : bool = false) : string[]
+    +getIndexSchema(name : string, refresh : bool = false) : IndexSchema|null
+    +getIndexSchemas(refresh : bool = false) : IndexSchema[]
+    +getIndexTypes(refresh : bool = false) : array
+    +getPdoType(data : mixed) : int
+    +getQueryBuilder() : QueryBuilder
+    +getRawIndexName(name : string) : string
+    #initIndexesInfo()
+    +isReadQuery(sql : string) : bool
+    #loadColumnSchema(info : array) : ColumnSchema
+    #loadIndexSchema(name : string) : IndexSchema|null
+    +quoteColumnName(name : string) : string
+    +quoteIndexName(name : string) : string
+    +quoteSimpleColumnName(name : string) : string
+    +quoteSimpleIndexName(name : string) : string
+    +quoteValue(str : string) : string
+    +refresh()
+    #resolveIndexNames(index : IndexSchema, name : string)
+    #resolveIndexType(index : IndexSchema)
+}
+class yii.sphinx.Schema extends yii.base.BaseObject
+class yii.sphinx.gii.model.Generator {
+    +baseClass = "yii\sphinx\ActiveRecord"
+    +db = "sphinx"
+    +indexName
+    +modelClass
+    +ns = "app\models"
+    +useIndexPrefix = false
+    -_classNames
+    -_indexNames
+    +attributeLabels()
+    +autoCompleteData()
+    +generate()
+    #generateClassName(indexName : string) : string
+    +generateIndexName(indexName : string) : string
+    +generateLabels(table : yii.db.TableSchema) : array
+    +generateRules(index : yii.sphinx.IndexSchema) : array
+    #getDbConnection() : yii.sphinx.Connection
+    +getDescription()
+    #getIndexNames() : array
+    +getName()
+    +hints()
+    +requiredTemplates()
+    +rules()
+    +stickyAttributes()
+    +validateDb()
+    +validateIndexName()
+    +validateModelClass()
+    +validateNamespace()
+}
+class yii.sphinx.gii.model.Generator extends yii.gii.Generator
+@enduml

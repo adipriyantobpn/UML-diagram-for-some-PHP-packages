@@ -1,0 +1,39 @@
+@startuml
+skinparam handwritten true
+class yii.smarty.Extension {
+    #smarty : Smarty
+    #viewRenderer : ViewRenderer
+    +blockCss(params, content, template : Smarty_Internal_Template, repeat) : string
+    +blockDescription(params, content, template : Smarty_Internal_Template, repeat) : string
+    +blockJavaScript(params, content, template : Smarty_Internal_Template, repeat) : string
+    +blockTitle(params, content, template : Smarty_Internal_Template, repeat) : string
+    +compilerUse(params, template : Smarty_Internal_Template) : string
+    +functionMeta(params, template : Smarty_Internal_Template) : string
+    +functionPath(params : array, template : Smarty_Internal_Template) : string
+    +functionRegisterCssFile(params, template : Smarty_Internal_Template) : string
+    +functionRegisterJsFile(params, template : Smarty_Internal_Template) : string
+    +functionSet(params, template : Smarty_Internal_Template) : string
+    +functionUrl(params : array, template : Smarty_Internal_Template) : string
+    #getViewConstVal(string : string, default : int) : mixed
+    +modifierVoid(arg : mixed) : string
+    +__construct(viewRenderer : ViewRenderer, smarty : Smarty)
+}
+class yii.smarty.ViewRenderer {
+    +cachePath : string = "@runtime/Smarty/cache"
+    +compilePath : string = "@runtime/Smarty/compile"
+    +extensionClass : string = "\yii\smarty\Extension"
+    +imports : array = []
+    +options : array = []
+    +pluginDirs : array = []
+    #smarty : Smarty
+    +widgets : array = [[], []]
+    +aliasHandler(type : string, name : string, content : string, modified : string, smarty : Smarty) : bool|string
+    +init()
+    +render(view : View, file : string, params : array) : string
+    #resolveTemplateDir(dir : string) : string
+    -widgetBlock(class, params, content, template : Smarty_Internal_Template, repeat)
+    -widgetFunction(class, params, template : Smarty_Internal_Template)
+    +__call(method : string, args : array) : string
+}
+class yii.smarty.ViewRenderer extends yii.base.ViewRenderer
+@enduml

@@ -1,0 +1,245 @@
+@startuml
+skinparam handwritten true
+class yii.bootstrap.ActiveField {
+    +checkboxTemplate : string = "<div class="checkbox">\\n{beginLabel}\\n{input}\\n{labelTitle}\\n{endLabel}\\n{error}\\n{hint}\\n</div>"
+    +enableError : boolean = true
+    +enableLabel : boolean = true
+    +horizontalCheckboxTemplate : string = "{beginWrapper}\\n<div class="checkbox">\\n{beginLabel}\\n{input}\\n{labelTitle}\\n{endLabel}\\n</div>\\n{error}\\n{endWrapper}\\n{hint}"
+    +horizontalCssClasses : null|array
+    +horizontalRadioTemplate : string = "{beginWrapper}\\n<div class="radio">\\n{beginLabel}\\n{input}\\n{labelTitle}\\n{endLabel}\\n</div>\\n{error}\\n{endWrapper}\\n{hint}"
+    +inline : boolean = false
+    +inlineCheckboxListTemplate : string = "{label}\\n{beginWrapper}\\n{input}\\n{error}\\n{endWrapper}\\n{hint}"
+    +inlineRadioListTemplate : string = "{label}\\n{beginWrapper}\\n{input}\\n{error}\\n{endWrapper}\\n{hint}"
+    +inputTemplate : string|null
+    +radioTemplate : string = "<div class="radio">\\n{beginLabel}\\n{input}\\n{labelTitle}\\n{endLabel}\\n{error}\\n{hint}\\n</div>"
+    +wrapperOptions : array = []
+    +checkbox(options = [], enclosedByLabel = true)
+    +checkboxList(items, options = [])
+    #createLayoutConfig(instanceConfig : array) : array
+    +inline(value : bool = true) : $this
+    +label(label = null, options = [])
+    +radio(options = [], enclosedByLabel = true)
+    +radioList(items, options = [])
+    +render(content = null)
+    #renderLabelParts(label : string|null = null, options : array = [])
+    +staticControl(options : array = []) : $this
+    +__construct(config = [])
+}
+class yii.bootstrap.ActiveField extends yii.widgets.ActiveField
+class yii.bootstrap.ActiveForm {
+    +fieldClass : string = "yii\bootstrap\ActiveField"
+    +layout : string = "default"
+    +options : array = []
+    +field(model, attribute, options = []) : ActiveField
+    +init()
+}
+class yii.bootstrap.ActiveForm extends yii.widgets.ActiveForm
+class yii.bootstrap.Alert {
+    +body : string
+    +closeButton : array|false = []
+    +init()
+    #initOptions()
+    #renderBodyBegin() : string
+    #renderBodyEnd() : string
+    #renderCloseButton() : string
+    +run()
+}
+class yii.bootstrap.Alert extends yii.bootstrap.Widget
+class yii.bootstrap.BaseHtml {
+    +{static}activeStaticControl(model : yii.base.Model, attribute : string, options : array = []) : string
+    +{static}icon(name : string, options : array = []) : string
+    +{static}staticControl(value : string, options : array = []) : string
+}
+class yii.bootstrap.BaseHtml extends yii.helpers.Html
+class yii.bootstrap.BootstrapAsset {
+    +css = ["css/bootstrap.css"]
+    +sourcePath = "@bower/bootstrap/dist"
+}
+class yii.bootstrap.BootstrapAsset extends yii.web.AssetBundle
+class yii.bootstrap.BootstrapPluginAsset {
+    +depends = ["yii\web\JqueryAsset", "yii\bootstrap\BootstrapAsset"]
+    +js = ["js/bootstrap.js"]
+    +sourcePath = "@bower/bootstrap/dist"
+}
+class yii.bootstrap.BootstrapPluginAsset extends yii.web.AssetBundle
+class yii.bootstrap.BootstrapThemeAsset {
+    +css = ["css/bootstrap-theme.css"]
+    +depends = ["yii\bootstrap\BootstrapAsset"]
+    +sourcePath = "@bower/bootstrap/dist"
+}
+class yii.bootstrap.BootstrapThemeAsset extends yii.web.AssetBundle
+abstract class yii.bootstrap.BootstrapWidgetTrait {
+    +clientEvents : array = []
+    +clientOptions : array = []
+    +getView() : yii.web.View
+    +init()
+    #registerClientEvents()
+    #registerPlugin(name : string)
+}
+class yii.bootstrap.Button {
+    +encodeLabel : boolean = true
+    +label : string = "Button"
+    +tagName : string = "button"
+    +init()
+    +run()
+}
+class yii.bootstrap.Button extends yii.bootstrap.Widget
+class yii.bootstrap.ButtonDropdown {
+    +containerOptions : array = []
+    +dropdown : array = []
+    +dropdownClass : string = "yii\bootstrap\Dropdown"
+    +encodeLabel : boolean = true
+    +label : string = "Button"
+    +options : array = []
+    +split : boolean = false
+    +tagName : string = "button"
+    #renderButton() : string
+    #renderDropdown() : string
+    +run()
+}
+class yii.bootstrap.ButtonDropdown extends yii.bootstrap.Widget
+class yii.bootstrap.ButtonGroup {
+    +buttons : array = []
+    +encodeLabels : boolean = true
+    +init()
+    #renderButtons() : string
+    +run()
+}
+class yii.bootstrap.ButtonGroup extends yii.bootstrap.Widget
+class yii.bootstrap.Carousel {
+    +controls : array|boolean = ["&lsaquo;", "&rsaquo;"]
+    +items : array = []
+    +showIndicators : boolean = true
+    +init()
+    +renderControls()
+    +renderIndicators() : string
+    +renderItem(item : string|array, index : int) : string
+    +renderItems() : string
+    +run()
+}
+class yii.bootstrap.Carousel extends yii.bootstrap.Widget
+class yii.bootstrap.Collapse {
+    +autoCloseItems : boolean = true
+    +encodeLabels : boolean = true
+    +items : array = []
+    +init()
+    +renderItem(header : string, item : array, index : int) : string
+    +renderItems() : string
+    +run()
+}
+class yii.bootstrap.Collapse extends yii.bootstrap.Widget
+class yii.bootstrap.Dropdown {
+    +encodeLabels : boolean = true
+    +items : array = []
+    +submenuOptions : array|null
+    +init()
+    #renderItems(items : array, options : array = []) : string
+    +run()
+}
+class yii.bootstrap.Dropdown extends yii.bootstrap.Widget
+class yii.bootstrap.Html {
+}
+class yii.bootstrap.Html extends yii.bootstrap.BaseHtml
+class yii.bootstrap.InputWidget {
+}
+class yii.bootstrap.InputWidget extends yii.widgets.InputWidget
+class yii.bootstrap.Modal {
+    +{static}SIZE_DEFAULT = ""
+    +{static}SIZE_LARGE = "modal-lg"
+    +{static}SIZE_SMALL = "modal-sm"
+    +bodyOptions : array = ["modal-body"]
+    +closeButton : array|false = []
+    +footer : string
+    +footerOptions : string
+    +header : string
+    +headerOptions : string
+    +size : string
+    +toggleButton : array = false
+    +init()
+    #initOptions()
+    #renderBodyBegin() : string
+    #renderBodyEnd() : string
+    #renderCloseButton() : string
+    #renderFooter() : string
+    #renderHeader() : string
+    #renderToggleButton() : string
+    +run()
+}
+class yii.bootstrap.Modal extends yii.bootstrap.Widget
+class yii.bootstrap.Nav {
+    +activateItems : boolean = true
+    +activateParents : boolean = false
+    +dropDownCaret : string
+    +dropdownClass : string = "yii\bootstrap\Dropdown"
+    +encodeLabels : boolean = true
+    +items : array = []
+    +params : array
+    +route : string
+    +init()
+    #isChildActive(items : array, active : bool) : array
+    #isItemActive(item : array) : bool
+    #renderDropdown(items : array, parentItem : array) : string
+    +renderItem(item : string|array) : string
+    +renderItems()
+    +run()
+}
+class yii.bootstrap.Nav extends yii.bootstrap.Widget
+class yii.bootstrap.NavBar {
+    +brandLabel : string|boolean = false
+    +brandOptions : array = []
+    +brandUrl : array|string|boolean = false
+    +containerOptions : array = []
+    +innerContainerOptions : array = []
+    +options : array = []
+    +renderInnerContainer : boolean = true
+    +screenReaderToggleText : string = "Toggle navigation"
+    +init()
+    #renderToggleButton() : string
+    +run()
+}
+class yii.bootstrap.NavBar extends yii.bootstrap.Widget
+class yii.bootstrap.Progress {
+    +barOptions : array = []
+    +bars : array
+    +label : string
+    +percent : integer = 0
+    +init()
+    #renderBar(percent : int, label = "", options : array = []) : string
+    #renderProgress() : string
+    +run()
+}
+class yii.bootstrap.Progress extends yii.bootstrap.Widget
+class yii.bootstrap.Tabs {
+    +dropdownClass : string = "yii\bootstrap\Dropdown"
+    +encodeLabels : boolean = true
+    +headerOptions : array = []
+    +itemOptions : array = []
+    +items : array = []
+    +linkOptions : array = []
+    +navType : string = "nav-tabs"
+    +renderTabContent : boolean = true
+    +tabContentOptions : array = []
+    #activateFirstVisibleTab()
+    #hasActiveTab() : bool
+    +init()
+    #renderDropdown(itemNumber : string, items : array, panes : array) : bool
+    #renderItems() : string
+    +renderPanes(panes : array) : string
+    +run()
+}
+class yii.bootstrap.Tabs extends yii.bootstrap.Widget
+class yii.bootstrap.ToggleButtonGroup {
+    +encodeLabels : boolean = true
+    +items : array = []
+    +labelOptions : array, = []
+    +type : string
+    +init()
+    +renderItem(index : int, label : string, name : string, checked : bool, value : string) : string
+    +run()
+}
+class yii.bootstrap.ToggleButtonGroup extends yii.bootstrap.InputWidget
+class yii.bootstrap.Widget {
+    +options : array = []
+}
+class yii.bootstrap.Widget extends yii.base.Widget
+@enduml

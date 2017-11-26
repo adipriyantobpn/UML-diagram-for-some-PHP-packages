@@ -1,0 +1,224 @@
+@startuml
+skinparam handwritten true
+class yii.httpclient.Client {
+    +{static}EVENT_AFTER_SEND = "afterSend"
+    +{static}EVENT_BEFORE_SEND = "beforeSend"
+    +{static}FORMAT_JSON = "json"
+    +{static}FORMAT_RAW_URLENCODED = "raw-urlencoded"
+    +{static}FORMAT_URLENCODED = "urlencoded"
+    +{static}FORMAT_XML = "xml"
+    +baseUrl : string
+    +contentLoggingMaxSize : int = 2000
+    +formatters : array = []
+    +parsers : array = []
+    +requestConfig : array = []
+    +responseConfig : array = []
+    -_transport : Transport|array|string|callable = "yii\httpclient\StreamTransport"
+    +afterSend(request : Request, response : Response)
+    +batchSend(requests : Request[]) : Response[]
+    +beforeSend(request : Request)
+    +createRequest() : Request
+    +createRequestLogToken(method : string, url : string, headers : array, content : string) : string
+    -createRequestShortcut(method : string, url : array|string, data : array|string, headers : array, options : array) : Request
+    +createResponse(content : string = null, headers : array = []) : Response
+    +delete(url : array|string, data : array|string = null, headers : array = [], options : array = []) : Request
+    +get(url : array|string, data : array|string = null, headers : array = [], options : array = []) : Request
+    +getFormatter(format : string) : FormatterInterface
+    +getParser(format : string) : ParserInterface
+    +getTransport() : Transport
+    +head(url : array|string, headers : array = [], options : array = []) : Request
+    +options(url : array|string, options : array = []) : Request
+    +patch(url : array|string, data : array|string = null, headers : array = [], options : array = []) : Request
+    +post(url : array|string, data : array|string = null, headers : array = [], options : array = []) : Request
+    +put(url : array|string, data : array|string = null, headers : array = [], options : array = []) : Request
+    +send(request : Request) : Response
+    +setTransport(transport : Transport|array|string)
+}
+class yii.httpclient.Client extends yii.base.Component
+class yii.httpclient.CurlTransport {
+    +batchSend(requests)
+    -composeCurlOptions(options : array) : array
+    -initCurl(curlOptions : array) : resource
+    -prepare(request : Request) : array
+    +send(request)
+    -setHeaderOutput(curlResource : resource, output : array)
+}
+class yii.httpclient.CurlTransport extends yii.httpclient.Transport
+class yii.httpclient.Exception {
+    +getName() : string
+}
+class yii.httpclient.Exception extends yii.base.Exception
+interface yii.httpclient.FormatterInterface {
+    +format(request : yii.httpclient.Request) : Request
+}
+class yii.httpclient.JsonFormatter {
+    +encodeOptions : int = 0
+    +format(request : yii.httpclient.Request)
+}
+class yii.httpclient.JsonFormatter extends yii.base.BaseObject
+class yii.httpclient.JsonFormatter implements yii.httpclient.FormatterInterface
+class yii.httpclient.JsonParser {
+    +parse(response : yii.httpclient.Response)
+}
+class yii.httpclient.JsonParser extends yii.base.BaseObject
+class yii.httpclient.JsonParser implements yii.httpclient.ParserInterface
+class yii.httpclient.Message {
+    +client : Client
+    -_content : string|null
+    -_cookies : yii.web.CookieCollection
+    -_data : mixed
+    -_format : string
+    -_headers : yii.web.HeaderCollection
+    +addCookies(cookies : Cookie[]|array) : $this
+    +addData(data : array) : $this
+    +addHeaders(headers : array) : $this
+    +composeHeaderLines() : array
+    #defaultFormat() : string
+    +getContent() : string
+    +getCookies() : CookieCollection|Cookie[]
+    +getData() : mixed
+    +getFormat() : string
+    +getHeaders() : yii.web.HeaderCollection
+    +hasCookies() : bool
+    +hasHeaders() : bool
+    +setContent(content : string) : $this
+    +setCookies(cookies : CookieCollection|Cookie[]|array) : $this
+    +setData(data : mixed) : $this
+    +setFormat(format : string) : $this
+    +setHeaders(headers : array|HeaderCollection) : $this
+    +toString() : string
+    +__toString() : string
+}
+class yii.httpclient.Message extends yii.base.Component
+interface yii.httpclient.ParserInterface {
+    +parse(response : yii.httpclient.Response) : array
+}
+class yii.httpclient.Request {
+    +{static}EVENT_AFTER_SEND = "afterSend"
+    +{static}EVENT_BEFORE_SEND = "beforeSend"
+    -isPrepared : bool = false
+    -_fullUrl : string|null
+    -_method : string = "get"
+    -_options : array = []
+    -_url : string|array
+    +addContent(name : string, content : string, options : array = []) : $this
+    +addData(data)
+    +addFile(name : string, fileName : string, options : array = []) : $this
+    +addFileContent(name : string, content : string, options : array = []) : $this
+    +addOptions(options : array) : $this
+    +afterSend(response : Response)
+    +beforeSend()
+    -composeCookieHeader() : string
+    -composeFormInputs(data : array, baseKey : string = "") : array
+    +composeHeaderLines()
+    -createFullUrl(url : array|string) : string
+    -getFormatter() : FormatterInterface
+    +getFullUrl() : string
+    +getMethod() : string
+    +getOptions() : array
+    +getUrl() : string|array
+    +prepare() : $this
+    -prepareMultiPartContent(content : array)
+    +send() : Response
+    +setData(data)
+    +setFullUrl(fullUrl : string)
+    +setMethod(method : string) : $this
+    +setOptions(options : array) : $this
+    +setUrl(url : string|array) : $this
+    +toString()
+}
+class yii.httpclient.Request extends yii.httpclient.Message
+class yii.httpclient.RequestEvent {
+    +request : Request
+    +response : Response|null
+}
+class yii.httpclient.RequestEvent extends yii.base.Event
+class yii.httpclient.Response {
+    #defaultFormat() : string|null
+    #detectFormatByContent(content : string) : null|string
+    #detectFormatByHeaders(headers : yii.web.HeaderCollection) : null|string
+    +getCookies()
+    +getData()
+    +getIsOk() : bool
+    -getParser() : ParserInterface
+    +getStatusCode() : string
+    -normalizeCookieParamName(rawName : string) : string
+    -parseCookie(cookieString : string) : yii.web.Cookie
+}
+class yii.httpclient.Response extends yii.httpclient.Message
+class yii.httpclient.StreamTransport {
+    -composeContextOptions(options : array) : array
+    +send(request)
+}
+class yii.httpclient.StreamTransport extends yii.httpclient.Transport
+abstract class yii.httpclient.Transport {
+    +batchSend(requests : Request[]) : Response[]
+    +send(request : Request) : Response
+}
+class yii.httpclient.Transport extends yii.base.Component
+class yii.httpclient.UrlEncodedFormatter {
+    +charset : string
+    +encodingType : int = 1
+    +format(request : yii.httpclient.Request)
+}
+class yii.httpclient.UrlEncodedFormatter extends yii.base.BaseObject
+class yii.httpclient.UrlEncodedFormatter implements yii.httpclient.FormatterInterface
+class yii.httpclient.UrlEncodedParser {
+    +parse(response : yii.httpclient.Response)
+}
+class yii.httpclient.UrlEncodedParser extends yii.base.BaseObject
+class yii.httpclient.UrlEncodedParser implements yii.httpclient.ParserInterface
+class yii.httpclient.XmlFormatter {
+    +contentType : string = "application/xml"
+    +encoding : string
+    +itemTag : string = "item"
+    +rootTag : string = "request"
+    +useTraversableAsArray : bool = true
+    +version : string = 1.0
+    #buildXml(element : DOMElement, data : mixed)
+    +format(request : yii.httpclient.Request)
+}
+class yii.httpclient.XmlFormatter extends yii.base.BaseObject
+class yii.httpclient.XmlFormatter implements yii.httpclient.FormatterInterface
+class yii.httpclient.XmlParser {
+    #convertXmlToArray(xml : string|.SimpleXMLElement) : array
+    +parse(response : yii.httpclient.Response)
+}
+class yii.httpclient.XmlParser extends yii.base.BaseObject
+class yii.httpclient.XmlParser implements yii.httpclient.ParserInterface
+class yii.httpclient.debug.HttpClientPanel {
+    -_httpClient : yii.httpclient.Client|array|string = "yii\httpclient\Client"
+    -_models : array
+    -_timings : array
+    +calculateTimings() : array
+    +getDetail()
+    +getHttpClient() : yii.httpclient.Client
+    +getMethods() : array
+    #getModels() : array
+    +getName()
+    #getRequestMethod(timing : string) : string
+    #getRequestType(category : string) : string
+    +getSummary()
+    #getTotalRequestTime(timings : array) : int
+    +getTypes() : array
+    +init()
+    +save()
+    +setHttpClient(httpClient : array)
+}
+class yii.httpclient.debug.HttpClientPanel extends yii.debug.Panel
+class yii.httpclient.debug.RequestExecuteAction {
+    +panel : HttpClientPanel
+    #createRequestFromLog(requestLog : string) : yii.httpclient.Request
+    +run(seq : string, tag : string, passthru : bool = false) : yii.web.Response
+}
+class yii.httpclient.debug.RequestExecuteAction extends yii.base.Action
+class yii.httpclient.debug.SearchModel {
+    +method : string
+    +request : int
+    +type : string
+    +attributeLabels()
+    +rules()
+    +search(params : array, models : array) : yii.data.ArrayDataProvider
+}
+class yii.httpclient.debug.SearchModel extends yii.debug.models.search.Base
+@enduml

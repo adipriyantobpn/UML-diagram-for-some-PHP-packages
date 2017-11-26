@@ -1,0 +1,66 @@
+@startuml
+skinparam handwritten true
+class yii.swiftmailer.Logger {
+    +add(entry)
+    +clear()
+    +dump()
+}
+class yii.swiftmailer.Logger implements Swift_Plugins_Logger
+class yii.swiftmailer.Mailer {
+    +enableSwiftMailerLogging : bool = false
+    +messageClass : string = "yii\swiftmailer\Message"
+    -_swiftMailer : Swift_Mailer
+    -_transport : Swift_Transport|array = []
+    #createSwiftMailer() : Swift_Mailer
+    #createSwiftObject(config : array) : Object
+    #createTransport(config : array) : Swift_Transport
+    +getSwiftMailer() : array|.Swift_Mailer
+    +getTransport() : array|.Swift_Transport
+    #sendMessage(message)
+    +setTransport(transport : array|.Swift_Transport)
+}
+class yii.swiftmailer.Mailer extends yii.mail.BaseMailer
+class yii.swiftmailer.Message {
+    -signers : Swift_Signer[] = []
+    -_swiftMessage : Swift_Message
+    +addHeader(name : string, value : string) : $this
+    +addSignature(signature : array|callable|.Swift_Signer) : $this
+    +attach(fileName, options = [])
+    +attachContent(content, options = [])
+    #createSwiftMessage() : Swift_Message
+    #createSwiftSigner(signature : array) : Swift_Signer
+    +embed(fileName, options = [])
+    +embedContent(content, options = [])
+    +getBcc()
+    +getCc()
+    +getCharset()
+    +getFrom()
+    +getHeader(name : string) : array
+    +getPriority() : int
+    +getReadReceiptTo() : string
+    +getReplyTo()
+    +getReturnPath() : string
+    +getSubject()
+    +getSwiftMessage() : Swift_Message
+    +getTo()
+    +setBcc(bcc)
+    #setBody(body : string, contentType : string)
+    +setCc(cc)
+    +setCharset(charset)
+    +setFrom(from)
+    +setHeader(name : string, value : string|array) : $this
+    +setHeaders(headers : array) : $this
+    +setHtmlBody(html)
+    +setPriority(priority : int) : $this
+    +setReadReceiptTo(addresses : string|array) : $this
+    +setReplyTo(replyTo)
+    +setReturnPath(address : string) : $this
+    +setSignature(signature : array|callable|.Swift_Signer) : $this
+    +setSubject(subject)
+    +setTextBody(text)
+    +setTo(to)
+    +toString()
+    +__clone()
+}
+class yii.swiftmailer.Message extends yii.mail.BaseMessage
+@enduml

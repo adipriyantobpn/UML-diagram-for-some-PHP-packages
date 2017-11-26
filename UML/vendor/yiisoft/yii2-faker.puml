@@ -1,0 +1,29 @@
+@startuml
+skinparam handwritten true
+class yii.faker.FixtureController {
+    +count : integer = 2
+    +fixtureDataPath : string = "@tests/unit/fixtures/data"
+    +language : string
+    +providers : array = []
+    +templatePath : string = "@tests/unit/templates/fixtures"
+    -_generator : Faker.Generator
+    +actionGenerate()
+    +actionGenerateAll()
+    +actionTemplates()
+    +addProviders()
+    +beforeAction(action)
+    +checkPaths()
+    +confirmGeneration(files : array) : boolean
+    +exportFixtures(fixtures : array) : string
+    -findTemplatesFiles(templatesNames : array = []) : array
+    +generateFixture(_template_ : string, index : integer) : array
+    +generateFixtureFile(templateName : string, templatePath : string, fixtureDataPath : string)
+    +getGenerator() : Faker.Generator
+    -notifyNoTemplatesFound()
+    -notifyNotFoundTemplates(templatesNames : array)
+    -notifyTemplatesCanBeGenerated(templatesNames)
+    -notifyTemplatesGenerated(templatesNames : array)
+    +options(actionID)
+}
+class yii.faker.FixtureController extends yii.console.controllers.FixtureController
+@enduml

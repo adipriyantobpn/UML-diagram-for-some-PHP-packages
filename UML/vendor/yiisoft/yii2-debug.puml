@@ -1,0 +1,450 @@
+@startuml
+skinparam handwritten true
+class yii.debug.actions.db.ExplainAction {
+    +panel : yii.debug.panels.DbPanel
+    +run(seq, tag)
+}
+class yii.debug.actions.db.ExplainAction extends yii.base.Action
+class yii.debug.components.search.Filter {
+    #rules : array = []
+    +addMatcher(name : string, rule : yii.debug.components.search.matchers.MatcherInterface)
+    +filter(data : array) : array
+    -passesFilter(row : array) : bool
+}
+class yii.debug.components.search.Filter extends yii.base.Component
+abstract class yii.debug.components.search.matchers.Base {
+    #baseValue : mixed
+    +hasValue()
+    +setValue(value)
+}
+class yii.debug.components.search.matchers.Base extends yii.base.Component
+class yii.debug.components.search.matchers.Base implements yii.debug.components.search.matchers.MatcherInterface
+class yii.debug.components.search.matchers.GreaterThan {
+    +match(value)
+}
+class yii.debug.components.search.matchers.GreaterThan extends yii.debug.components.search.matchers.Base
+class yii.debug.components.search.matchers.GreaterThanOrEqual {
+    +match(value)
+}
+class yii.debug.components.search.matchers.GreaterThanOrEqual extends yii.debug.components.search.matchers.Base
+class yii.debug.components.search.matchers.LowerThan {
+    +match(value)
+}
+class yii.debug.components.search.matchers.LowerThan extends yii.debug.components.search.matchers.Base
+interface yii.debug.components.search.matchers.MatcherInterface {
+    +hasValue() : bool
+    +match(value : mixed) : bool
+    +setValue(value : mixed)
+}
+class yii.debug.components.search.matchers.SameAs {
+    +partial : boolean = false
+    +match(value)
+}
+class yii.debug.components.search.matchers.SameAs extends yii.debug.components.search.matchers.Base
+class yii.debug.controllers.DefaultController {
+    +layout = "main"
+    +module : yii.debug.Module
+    +summary : array
+    -_manifest
+    +actionDownloadMail(file)
+    +actionIndex()
+    +actions()
+    +actionToolbar(tag)
+    +actionView(tag = null, panel = null)
+    +beforeAction(action)
+    #getManifest(forceReload = false)
+    +loadData(tag, maxRetry = 0)
+}
+class yii.debug.controllers.DefaultController extends yii.web.Controller
+class yii.debug.controllers.UserController {
+    +actionResetIdentity() : yii.web.User
+    +actionSetIdentity() : yii.web.User
+    +beforeAction(action)
+}
+class yii.debug.controllers.UserController extends yii.web.Controller
+class yii.debug.DebugAsset {
+    +css = ["main.css", "toolbar.css"]
+    +depends = ["yii\web\YiiAsset", "yii\bootstrap\BootstrapAsset"]
+    +sourcePath = "@yii/debug/assets"
+}
+class yii.debug.DebugAsset extends yii.web.AssetBundle
+class yii.debug.FlattenException {
+    #code : mixed|int
+    #file : string
+    #line : int
+    #message : string
+    -_class : string
+    -_previous : FlattenException|null
+    -_toString : string
+    -_trace : array
+    -flattenArgs(args : array, level : int = 0, count : int = 0) : array
+    +getClass() : string
+    -getClassNameFromIncomplete(value : __PHP_Incomplete_Class) : string
+    +getCode() : mixed|int
+    +getFile() : string
+    +getLine() : int
+    +getMessage() : string
+    +getPrevious() : FlattenException
+    +getTrace() : array
+    +getTraceAsString() : string
+    #setClass(class : string)
+    #setCode(code : mixed|int)
+    #setFile(file : string)
+    #setLine(line : int)
+    #setMessage(message : string)
+    #setPrevious(previous : yii.debug.FlattenException)
+    #setToString(string : string)
+    #setTrace(trace : array)
+    +__construct(exception : Exception)
+    +__toString() : string
+}
+class yii.debug.LogTarget {
+    +module : Module
+    +tag
+    +collect(messages : array, final : bool)
+    #collectSummary() : array
+    +export()
+    #gc(manifest : array)
+    #getSqlTotalCount() : int
+    -updateIndexFile(indexFile : string, summary : array)
+    +__construct(module : yii.debug.Module, config : array = [])
+}
+class yii.debug.LogTarget extends yii.log.Target
+class yii.debug.Module {
+    +{static}DEFAULT_IDE_TRACELINE = "<a href="ide://open?url=file://{file}&line={line}">{text}</a>"
+    +allowedHosts : array = []
+    +allowedIPs : array = ["127.0.0.1", "::1"]
+    +controllerNamespace = "yii\debug\controllers"
+    +dataPath : string = "@runtime/debug"
+    +defaultPanel : string = "log"
+    +dirMode : integer = 509
+    +enableDebugLogs : boolean = false
+    +fileMode : integer
+    +historySize : integer = 50
+    +logTarget : LogTarget
+    +panels : array|Panel[] = []
+    +traceLine : mixed = "<a href="ide://open?url=file://{file}&line={line}">{text}</a>"
+    -_yiiLogo : string = "data:image/png;base64,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"
+    +beforeAction(action)
+    +bootstrap(app)
+    #checkAccess() : bool
+    #corePanels() : array
+    #defaultVersion()
+    +getToolbarHtml()
+    +{static}getYiiLogo() : string
+    +init()
+    #initPanels()
+    +renderToolbar(event : yii.base.Event)
+    #resetGlobalSettings()
+    +setDebugHeaders(event : yii.base.Event)
+    +{static}setYiiLogo(logo : string)
+}
+class yii.debug.Module extends yii.base.Module
+class yii.debug.Module implements yii.base.BootstrapInterface
+class yii.debug.Panel {
+    +actions : array = []
+    +data : mixed
+    #error : FlattenException|null
+    +id : string
+    +module : Module
+    +tag : string
+    +getDetail() : string
+    +getError() : FlattenException|null
+    +getName() : string
+    +getSummary() : string
+    +getTraceLine(options : array) : string
+    +getUrl(additionalParams : null|array = null) : string
+    +hasError() : bool
+    +isEnabled() : bool
+    +load(data : mixed)
+    +save() : mixed
+    +setError(error : yii.debug.FlattenException)
+}
+class yii.debug.Panel extends yii.base.Component
+class yii.debug.TimelineAsset {
+    +css = ["timeline.css"]
+    +js = ["timeline.js"]
+    +sourcePath = "@yii/debug/assets"
+}
+class yii.debug.TimelineAsset extends yii.web.AssetBundle
+class yii.debug.UserswitchAsset {
+    +js = ["userswitch.js"]
+    +sourcePath = "@yii/debug/assets"
+}
+class yii.debug.UserswitchAsset extends yii.web.AssetBundle
+class yii.debug.models.Router {
+    +count : int = 0
+    +hasMatch : bool = false
+    +logs : array = []
+    +message : string|null
+    +messages : array = []
+    +init()
+}
+class yii.debug.models.Router extends yii.base.Model
+class yii.debug.models.UserSwitch {
+    -_mainUser : yii.web.User
+    -_user : yii.web.User
+    +attributeLabels() : array
+    +getMainUser() : yii.web.User
+    +getUser() : null|User
+    +isMainUser() : bool
+    +reset()
+    +rules()
+    +setUser(user : yii.web.User)
+    +setUserByIdentity(identity : yii.web.IdentityInterface)
+}
+class yii.debug.models.UserSwitch extends yii.base.Model
+class yii.debug.models.search.Base {
+    +addCondition(filter : yii.debug.components.search.Filter, attribute : string, partial : bool = false)
+}
+class yii.debug.models.search.Base extends yii.base.Model
+class yii.debug.models.search.Db {
+    +query : integer
+    +type : string
+    +attributeLabels()
+    +rules()
+    +search(models : array) : yii.data.ArrayDataProvider
+}
+class yii.debug.models.search.Db extends yii.debug.models.search.Base
+class yii.debug.models.search.Debug {
+    +ajax : integer
+    +criticalCodes : array = [400, 404, 500]
+    +ip : string
+    +mailCount : integer
+    +method : string
+    +sqlCount : integer
+    +statusCode : string
+    +tag : string
+    +url : string
+    +attributeLabels()
+    +isCodeCritical(code : int) : bool
+    +rules()
+    +search(params : array, models : array) : yii.data.ArrayDataProvider
+}
+class yii.debug.models.search.Debug extends yii.debug.models.search.Base
+class yii.debug.models.search.Log {
+    +category : string
+    +level : string
+    +message : integer
+    +attributeLabels()
+    +rules()
+    +search(params : array, models : array) : yii.data.ArrayDataProvider
+}
+class yii.debug.models.search.Log extends yii.debug.models.search.Base
+class yii.debug.models.search.Mail {
+    +bcc : string
+    +body : string
+    +cc : string
+    +charset : string
+    +file : string
+    +from : string
+    +headers : string
+    +reply : string
+    +subject : string
+    +to : string
+    +attributeLabels()
+    +rules()
+    +search(params : array, models : array) : yii.data.ArrayDataProvider
+}
+class yii.debug.models.search.Mail extends yii.debug.models.search.Base
+class yii.debug.models.search.Profile {
+    +category : string
+    +info : integer
+    +attributeLabels()
+    +rules()
+    +search(params : array, models : array) : yii.data.ArrayDataProvider
+}
+class yii.debug.models.search.Profile extends yii.debug.models.search.Base
+class yii.debug.models.search.User {
+    +identityImplement : yii.base.Model
+    +attributes()
+    +init()
+    +rules()
+    +search(params)
+    -serachActiveDataProvider(params : array) : yii.data.ActiveDataProvider
+    +__get(name)
+    +__set(name, value)
+}
+class yii.debug.models.search.User extends yii.base.Model
+interface yii.debug.models.search.UserSearchInterface {
+    +search(params : array) : yii.data.DataProviderInterface
+}
+interface yii.debug.models.search.UserSearchInterface implements yii.web.IdentityInterface
+class yii.debug.models.timeline.DataProvider {
+    #panel : yii.debug.panels.TimelinePanel
+    +getColor(model : array) : string
+    +getCssClass(model : array) : string
+    +getLeft(model : array) : float
+    +getMemory(model : array) : array|null
+    +getRulers(line : int = 10) : array
+    +getTime(model : array) : float
+    +getWidth(model : array) : float
+    #prepareModels()
+    +__construct(panel : yii.debug.panels.TimelinePanel, config : array = [])
+}
+class yii.debug.models.timeline.DataProvider extends yii.data.ArrayDataProvider
+class yii.debug.models.timeline.Search {
+    +category : string
+    +duration : integer = 0
+    +attributeLabels()
+    +rules()
+    +search(params : array, panel : TimeLinePanel) : DataProvider
+}
+class yii.debug.models.timeline.Search extends yii.debug.models.search.Base
+class yii.debug.models.timeline.Svg {
+    +gradient : array = ["#d6e685", "#8cc665", "#44a340", "#1e6823"]
+    +listenMessages : array = ["log", "profiling"]
+    #panel : yii.debug.panels.TimelinePanel
+    #points : array = []
+    +stroke : string = "#1e6823"
+    +template : string = "<svg width="{x}" height="{y}" viewBox="0 0 {x} {y}" preserveAspectRatio="none"><defs>{linearGradient}</defs><g><polygon points="{polygon}" fill="url(#gradient)"/><polyline points="{polyline}" fill="none" stroke="{stroke}" stroke-width="1"/></g></svg>"
+    +x : int = 1920
+    +y : int = 40
+    #addPoints(messages : array) : int
+    +hasPoints() : bool
+    #linearGradient() : string
+    #polygon() : string
+    #polyline() : string
+    +__construct(panel : yii.debug.panels.TimelinePanel, config = [])
+    +__toString() : string
+}
+class yii.debug.models.timeline.Svg extends yii.base.Object
+class yii.debug.panels.AssetPanel {
+    #format(bundles : AssetBundle[]) : AssetBundle[]
+    #formatOptions(params : array) : array
+    +getDetail()
+    +getName()
+    +getSummary()
+    +isEnabled()
+    +save()
+}
+class yii.debug.panels.AssetPanel extends yii.debug.Panel
+class yii.debug.panels.ConfigPanel {
+    +getDetail()
+    +getExtensions() : array
+    +getName()
+    +getPhpInfo() : array
+    +getSummary()
+    +save()
+}
+class yii.debug.panels.ConfigPanel extends yii.debug.Panel
+class yii.debug.panels.DbPanel {
+    +criticalQueryThreshold : integer
+    +db : string = "db"
+    +defaultFilter : array = []
+    +defaultOrder : array = [4]
+    -_models : array
+    -_timings : array
+    +calculateTimings() : array
+    +{static}canBeExplained(type : string) : bool
+    +getDb() : yii.db.Connection
+    +getDetail()
+    #getModels() : array
+    +getName()
+    +getProfileLogs() : array
+    #getQueryType(timing : string) : string
+    +getSummary()
+    +getSummaryName() : string
+    #getTotalQueryTime(timings : array) : int
+    +getTypes() : array
+    #hasExplain() : bool
+    +init()
+    +isEnabled()
+    +isQueryCountCritical(count : int) : bool
+    +save()
+}
+class yii.debug.panels.DbPanel extends yii.debug.Panel
+class yii.debug.panels.LogPanel {
+    -_models : array
+    +getDetail()
+    #getModels(refresh : bool = false) : array
+    +getName()
+    +getSummary()
+    +save()
+}
+class yii.debug.panels.LogPanel extends yii.debug.Panel
+class yii.debug.panels.MailPanel {
+    +mailPath : string = "@runtime/debug/mail"
+    -_messages : array = []
+    -convertParams(attr : mixed) : string
+    +getDetail()
+    +getMessages() : array
+    +getName()
+    +getSummary()
+    +init()
+    +save()
+}
+class yii.debug.panels.MailPanel extends yii.debug.Panel
+class yii.debug.panels.ProfilingPanel {
+    -_models : array
+    +getDetail()
+    #getModels() : array
+    +getName()
+    +getSummary()
+    +save()
+}
+class yii.debug.panels.ProfilingPanel extends yii.debug.Panel
+class yii.debug.panels.RequestPanel {
+    +displayVars : array = ["_SERVER", "_GET", "_POST", "_COOKIE", "_FILES", "_SESSION"]
+    +getDetail()
+    #getFlashes() : array
+    +getName()
+    +getSummary()
+    +save()
+}
+class yii.debug.panels.RequestPanel extends yii.debug.Panel
+class yii.debug.panels.RouterPanel {
+    -_categories : array = ["yii\web\UrlManager::parseRequest", "yii\web\UrlRule::parseRequest", "yii\web\CompositeUrlRule::parseRequest", "yii\rest\UrlRule::parseRequest"]
+    +getCategories() : array
+    +getDetail()
+    +getName()
+    +save()
+    +setCategories(values : string|array)
+}
+class yii.debug.panels.RouterPanel extends yii.debug.Panel
+class yii.debug.panels.TimelinePanel {
+    -_colors : array = ["#1e6823", "#44a340", "#8cc665"]
+    -_duration : float
+    -_end : float
+    -_memory : int
+    -_models : array
+    -_start : float
+    -_svg : Svg|null
+    -_svgOptions : array = ["yii\debug\models\timeline\Svg"]
+    +getColors() : array
+    +getDetail()
+    +getDuration() : float
+    +getMemory() : int
+    #getModels(refresh : bool = false) : array
+    +getName()
+    +getStart() : float
+    +getSvg() : yii.debug.models.timeline.Svg
+    +getSvgOptions() : array
+    +init()
+    +load(data)
+    +save()
+    +setColors(colors : array)
+    +setSvgOptions(options : array)
+}
+class yii.debug.panels.TimelinePanel extends yii.debug.Panel
+class yii.debug.panels.UserPanel {
+    +filterColumns : array = []
+    +filterModel : Model|UserSearchInterface
+    +ruleUserSwitch : array = [false]
+    +userSwitch : yii.debug.models.UserSwitch
+    -addAccesRules()
+    +canSearchUsers() : bool
+    +canSwitchUser() : bool
+    #dataToString(data : mixed) : string
+    +getDetail()
+    +getName()
+    +getSummary()
+    +getUserDataProvider() : yii.data.DataProviderInterface
+    +getUsersFilterModel() : Model|UserSearchInterface
+    #identityData(identity : IdentityInterface) : array
+    +init()
+    +isEnabled()
+    +save()
+}
+class yii.debug.panels.UserPanel extends yii.debug.Panel
+@enduml

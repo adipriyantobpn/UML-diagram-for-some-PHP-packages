@@ -1,0 +1,77 @@
+@startuml
+skinparam handwritten true
+class yii.test.ActiveFixture {
+    +dataFile : string|bool
+    +tableName : string
+    -_table : yii.db.TableSchema
+    #getData() : array
+    +getTableSchema() : yii.db.TableSchema
+    +init()
+    +load()
+    #resetTable()
+    +unload()
+}
+class yii.test.ActiveFixture extends yii.test.BaseActiveFixture
+class yii.test.ArrayFixture {
+    +data : array = []
+    +dataFile : string|bool
+    #getData() : array
+    +load()
+    +unload()
+}
+class yii.test.ArrayFixture extends yii.test.Fixture
+class yii.test.ArrayFixture implements IteratorAggregate
+class yii.test.ArrayFixture implements ArrayAccess
+class yii.test.ArrayFixture implements Countable
+abstract class yii.test.BaseActiveFixture {
+    +data : array = []
+    +dataFile : string|bool
+    +modelClass : string
+    -_models : yii.db.ActiveRecord[] = []
+    #getData() : array
+    +getModel(name : string) : null|.yii.db.ActiveRecord
+    +load()
+    +unload()
+}
+class yii.test.BaseActiveFixture extends yii.test.DbFixture
+class yii.test.BaseActiveFixture implements IteratorAggregate
+class yii.test.BaseActiveFixture implements ArrayAccess
+class yii.test.BaseActiveFixture implements Countable
+abstract class yii.test.DbFixture {
+    +db : Connection|array|string = "db"
+    +init()
+}
+class yii.test.DbFixture extends yii.test.Fixture
+class yii.test.Fixture {
+    +depends : array = []
+    +afterLoad()
+    +afterUnload()
+    +beforeLoad()
+    +beforeUnload()
+    +load()
+    +unload()
+}
+class yii.test.Fixture extends yii.base.Component
+abstract class yii.test.FixtureTrait {
+    -_fixtures : array
+    #createFixtures(fixtures : array) : Fixture[]
+    +fixtures() : array
+    +getFixture(name : string) : Fixture
+    +getFixtures() : Fixture[]
+    +globalFixtures() : array
+    +initFixtures()
+    +loadFixtures(fixtures : Fixture[] = null)
+    +unloadFixtures(fixtures : Fixture[] = null)
+}
+class yii.test.InitDbFixture {
+    +initScript : string = "@app/tests/fixtures/initdb.php"
+    +schemas : array = [""]
+    +afterLoad()
+    +afterUnload()
+    +beforeLoad()
+    +beforeUnload()
+    +checkIntegrity(check : bool)
+    +load()
+}
+class yii.test.InitDbFixture extends yii.test.DbFixture
+@enduml

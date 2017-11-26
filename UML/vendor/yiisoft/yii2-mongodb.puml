@@ -1,0 +1,613 @@
+@startuml
+skinparam handwritten true
+class yii.mongodb.ActiveFixture {
+    +collectionName : string|array
+    +db : Connection|string = "mongodb"
+    #getCollection() : Collection
+    #getCollectionName() : array|string
+    #getData() : array
+    +init()
+    +load()
+    #resetCollection()
+}
+class yii.mongodb.ActiveFixture extends yii.test.BaseActiveFixture
+class yii.mongodb.ActiveQuery {
+    +{static}EVENT_INIT = "init"
+    +all(db : Connection = null) : array|ActiveRecord
+    +getCollection(db : Connection = null) : Collection
+    +init()
+    +modify(update : array, options : array = [], db : Connection = null) : ActiveRecord|array|null
+    +one(db : Connection = null) : ActiveRecord|array|null
+    +populate(rows : array) : array
+    +prepare()
+    +__construct(modelClass : array, config : array = [])
+}
+class yii.mongodb.ActiveQuery extends yii.mongodb.Query
+class yii.mongodb.ActiveQuery implements yii.db.ActiveQueryInterface
+abstract class yii.mongodb.ActiveRecord {
+    +attributes() : array
+    +{static}collectionName() : string|array
+    +delete() : int|bool
+    +{static}deleteAll(condition : array = [], options : array = []) : int
+    #deleteInternal()
+    -dumpBsonObject(object : MongoDB.BSON.Type) : array|string
+    +equals(record : ActiveRecord) : bool
+    +{static}find() : ActiveQuery
+    +{static}getCollection() : Collection
+    +{static}getDb() : Connection
+    +insert(runValidation : bool = true, attributes : array = null) : bool
+    #insertInternal(attributes = null)
+    +{static}primaryKey() : string[]
+    +toArray(fields = [], expand = [], recursive = true)
+    -toArrayInternal(data : mixed) : array
+    +{static}updateAll(attributes : array, condition : array = [], options : array = []) : int
+    +{static}updateAllCounters(counters : array, condition : array = [], options : array = []) : int
+    #updateInternal(attributes = null)
+}
+class yii.mongodb.ActiveRecord extends yii.db.BaseActiveRecord
+class yii.mongodb.BatchQueryResult {
+    +batchSize : int = 100
+    +db : Connection
+    +each : bool = false
+    +query : Query
+    -_batch : array
+    -_iterator : Iterator
+    -_key : string|int
+    -_value : mixed
+    +current() : mixed
+    #fetchData() : array
+    +key() : int
+    +next()
+    +reset()
+    +rewind()
+    +valid() : bool
+}
+class yii.mongodb.BatchQueryResult extends yii.base.BaseObject
+class yii.mongodb.BatchQueryResult implements Iterator
+class yii.mongodb.Cache {
+    +cacheCollection : string|array = "cache"
+    +db : Connection|array|string = "mongodb"
+    +gcProbability : int = 100
+    #addValue(key : string, value : string, expire : int) : bool
+    #deleteValue(key : string) : bool
+    #flushValues() : bool
+    +gc(force : bool = false)
+    #getValue(key : string) : string|bool
+    +init()
+    #setValue(key : string, value : string, expire : int) : bool
+}
+class yii.mongodb.Cache extends yii.caching.Cache
+class yii.mongodb.Collection {
+    +database : Database
+    +name : string
+    +aggregate(pipelines : array, options : array = []) : array|.MongoDB.Driver.Cursor
+    +batchInsert(rows : array, options : array = []) : array
+    +count(condition : array = [], options : array = []) : int
+    +createIndex(columns : array|string, options : array = []) : bool
+    +createIndexes(indexes : array) : bool
+    +distinct(column : string, condition : array = [], options : array = []) : array|bool
+    +drop() : bool
+    +dropAllIndexes() : int
+    +dropIndex(columns : string|array) : bool
+    +dropIndexes(indexes : string) : int
+    +find(condition : array = [], fields : array = [], options : array = []) : MongoDB.Driver.Cursor
+    +findAndModify(condition : array, update : array, options : array = []) : array|null
+    +findOne(condition : array = [], fields : array = [], options : array = []) : array|null
+    +getFullName() : string
+    +group(keys : mixed, initial : array, reduce : MongoDB.BSON.Javascript|string, options : array = []) : array
+    +insert(data : array|object, options : array = []) : MongoDB.BSON.ObjectID
+    +listIndexes(options : array = []) : array
+    +mapReduce(map : MongoDB.BSON.Javascript|string, reduce : MongoDB.BSON.Javascript|string, out : string|array, condition : array = [], options : array = []) : string|array
+    +remove(condition : array = [], options : array = []) : int|bool
+    +save(data : array|object, options : array = []) : MongoId
+    +update(condition : array, newData : array, options : array = []) : int|bool
+}
+class yii.mongodb.Collection extends yii.base.BaseObject
+class yii.mongodb.Command {
+    +databaseName : string
+    +db : Connection
+    +document : array = []
+    -_readConcern : ReadConcern|string
+    -_readPreference : ReadPreference|int|string|null
+    -_writeConcern : WriteConcern|int|string|null
+    +addDelete(condition : array, options : array = []) : $this
+    +addInsert(document : array) : $this
+    +addUpdate(condition : array, document : array, options : array = []) : $this
+    +aggregate(collectionName : string, pipelines : array, options : array = []) : array|.MongoDB.Driver.Cursor
+    +batchInsert(collectionName : string, documents : array[], options : array = []) : array|false
+    #beginProfile(token : string, category : string)
+    +count(collectionName : string, condition : array = [], options : array = []) : int
+    +createCollection(collectionName : string, options : array = []) : bool
+    +createIndexes(collectionName : string, indexes : array[]) : bool
+    +delete(collectionName : string, condition : array, options : array = []) : MongoDB.Driver.WriteResult
+    +distinct(collectionName : string, fieldName : string, condition : array = [], options : array = []) : array
+    +dropCollection(collectionName : string) : bool
+    +dropDatabase() : bool
+    +dropIndexes(collectionName : string, indexes : string) : array
+    #endProfile(token : string, category : string)
+    +execute() : MongoDB.Driver.Cursor
+    +executeBatch(collectionName : string, options : array = []) : array
+    +explain(collectionName : string, query : array) : array
+    +find(collectionName : string, condition : array, options : array = []) : MongoDB.Driver.Cursor
+    +findAndModify(collectionName, condition : array = [], update : array = [], options : array = []) : array|null
+    +getReadConcern() : ReadConcern|string
+    +getReadPreference() : MongoDB.Driver.ReadPreference
+    +getWriteConcern() : WriteConcern|null
+    +group(collectionName : string, keys : mixed, initial : array, reduce : MongoDB.BSON.Javascript|string, options : array = []) : array
+    +insert(collectionName : string, document : array, options : array = []) : ObjectID|bool
+    +listCollections(condition : array = [], options : array = []) : array
+    +listDatabases(condition : array = [], options : array = []) : array
+    +listIndexes(collectionName : string, options : array = []) : array
+    #log(namespace : array|string, data : array, category : string) : string|false
+    +mapReduce(collectionName : string, map : MongoDB.BSON.Javascript|string, reduce : MongoDB.BSON.Javascript|string, out : string|array, condition : array = [], options : array = []) : string|array
+    +query(collectionName : string, options : array = []) : MongoDB.Driver.Cursor
+    +setReadConcern(readConcern : ReadConcern|string) : $this
+    +setReadPreference(readPreference : ReadPreference|int|string|null) : $this
+    +setWriteConcern(writeConcern : WriteConcern|int|string|null) : $this
+    +update(collectionName : string, condition : array, document : array, options : array = []) : MongoDB.Driver.WriteResult
+}
+class yii.mongodb.Command extends yii.base.BaseObject
+class yii.mongodb.Connection {
+    +{static}EVENT_AFTER_OPEN = "afterOpen"
+    +driverOptions : array = []
+    +dsn : string
+    +enableLogging : bool = true
+    +enableProfiling : bool = true
+    +fileStreamProtocol : string = "gridfs"
+    +fileStreamWrapperClass : string = "yii\mongodb\file\StreamWrapper"
+    -fileStreamWrapperRegistered : bool = false
+    +manager : MongoDB.Driver.Manager
+    +options : array = []
+    +typeMap : array = []
+    -_databases : Database[] = []
+    -_defaultDatabaseName : string
+    -_logBuilder : LogBuilder|array|string = "yii\mongodb\LogBuilder"
+    -_queryBuilder : QueryBuilder|array|string = "yii\mongodb\QueryBuilder"
+    +close()
+    +createCommand(document : array = [], databaseName : string|null = null) : Command
+    +getCollection(name : string|array, refresh : bool = false) : Collection
+    +getDatabase(name : string|null = null, refresh : bool = false) : Database
+    +getDefaultDatabaseName() : string
+    +getFileCollection(prefix : string|array = "fs", refresh : bool = false) : file.Collection
+    +getIsActive() : bool
+    +getLogBuilder() : LogBuilder
+    +getQueryBuilder() : QueryBuilder
+    #initConnection()
+    +open()
+    +registerFileStreamWrapper(force : bool = false) : string
+    #selectDatabase(name : string) : Database
+    +setDefaultDatabaseName(name : string)
+    +setLogBuilder(logBuilder : array|string|LogBuilder)
+    +setQueryBuilder(queryBuilder : QueryBuilder|array|string|null)
+}
+class yii.mongodb.Connection extends yii.base.Component
+class yii.mongodb.Database {
+    +connection : Connection
+    +name : string
+    -_collections : Collection[] = []
+    -_fileCollections : file.Collection[] = []
+    +clearCollections()
+    +createCollection(name : string, options : array = []) : bool
+    +createCommand(document : array = []) : Command
+    +dropCollection(name : string) : bool
+    +getCollection(name : string, refresh : bool = false) : Collection
+    +getFileCollection(prefix : string = "fs", refresh : bool = false) : file.Collection
+    +listCollections(condition : array = [], options : array = []) : array
+    #selectCollection(name : string) : Collection
+    #selectFileCollection(prefix : string) : file.Collection
+}
+class yii.mongodb.Database extends yii.base.BaseObject
+class yii.mongodb.Exception {
+    +getName() : string
+}
+class yii.mongodb.Exception extends yii.base.Exception
+class yii.mongodb.LogBuilder {
+    +encodeData(data : mixed) : string
+    +generateToken(namespace : string|array, data : array = []) : string
+    #processData(data : mixed) : mixed
+    -processJavascript(javascript : MongoDB.BSON.Javascript) : string
+}
+class yii.mongodb.LogBuilder extends yii.base.BaseObject
+abstract class yii.mongodb.Migration {
+    +compact : bool = false
+    +db : Connection|array|string = "mongodb"
+    -profileTokens : array = []
+    +batchInsert(collection : array|string, rows : array, options : array = []) : array
+    #beginProfile(token : string)
+    #composeCollectionLogName(collection : array|string) : string
+    +createCollection(collection : string|array, options : array = [])
+    +createIndex(collection : string|array, columns : array|string, options : array = [])
+    +createIndexes(collection : string|array, indexes : array)
+    +dropAllIndexes(collection : string|array)
+    +dropCollection(collection : string|array)
+    +dropIndex(collection : string|array, columns : string|array)
+    +dropIndexes(collection : string|array, indexes : string)
+    #endProfile(token : string)
+    +init()
+    +insert(collection : array|string, data : array|object, options : array = []) : MongoDB.BSON.ObjectID
+    #log(string : string)
+    +remove(collection : array|string, condition : array = [], options : array = []) : int|bool
+    +save(collection : array|string, data : array|object, options : array = []) : MongoDB.BSON.ObjectID
+    +update(collection : array|string, condition : array, newData : array, options : array = []) : int|bool
+}
+class yii.mongodb.Migration extends yii.base.Component
+class yii.mongodb.Migration implements yii.db.MigrationInterface
+class yii.mongodb.Query {
+    +from : string|array
+    +options : array = []
+    +select : array = []
+    +addOptions(options : array) : $this
+    #aggregate(column : string, operator : string, db : Connection) : int
+    +all(db : Connection = null) : array
+    +andFilterCompare(name : string, value : string, defaultOperator : string = "=") : $this
+    +average(q : string, db : Connection = null) : int
+    +batch(batchSize : int = 100, db : Connection = null) : BatchQueryResult
+    +buildCursor(db : Connection = null) : MongoDB.Driver.Cursor
+    +column(db : Connection = null) : array
+    -composeCondition() : array
+    +count(q : string = "*", db : Connection = null) : int
+    +distinct(q : string, db : Connection = null) : array
+    +each(batchSize : int = 100, db : Connection = null) : BatchQueryResult
+    +exists(db : Connection = null) : bool
+    #fetchRows(cursor : MongoDB.Driver.Cursor, all : bool = true, indexBy : string|callable = null) : array|bool
+    #fetchRowsInternal(cursor : MongoDB.Driver.Cursor, all : bool) : array|bool
+    +from(collection) : $this
+    +getCollection(db : Connection = null) : Collection
+    +max(q : string, db : Connection = null) : int
+    +min(q : string, db : Connection = null) : int
+    +modify(update : array, options : array = [], db : Connection = null) : array|null
+    +one(db : Connection = null) : array|false
+    +options(options : array) : $this
+    +populate(rows : array) : array
+    +prepare() : $this
+    +scalar(db : Connection = null) : string|null|false
+    +select(fields : array) : $this
+    +sum(q : string, db : Connection = null) : int
+}
+class yii.mongodb.Query extends yii.base.Component
+class yii.mongodb.Query implements yii.db.QueryInterface
+class yii.mongodb.QueryBuilder {
+    +db : Connection
+    +aggregate(collectionName : string, pipelines : array, options : array = []) : array
+    +buildAndCondition(operator : string, operands : array) : array
+    +buildBetweenCondition(operator : string, operands : array) : array
+    -buildCompositeInCondition(operator : string, columns : array, values : array) : array
+    +buildCondition(condition : array) : array
+    +buildHashCondition(condition : array) : array
+    +buildInCondition(operator : string, operands : array) : array
+    +buildLikeCondition(operator : string, operands : array) : array
+    +buildNotCondition(operator : string, operands : array) : array
+    +buildOrCondition(operator : string, operands : array) : array
+    +buildRegexCondition(operator : string, operands : array) : array
+    +buildSelectFields(fields : array|string) : array
+    +buildSimpleCondition(operator : string, operands : array) : string
+    +buildSortFields(fields : array|string) : array
+    +count(collectionName : string, condition : array = [], options : array = []) : array
+    +createCollection(collectionName : string, options : array = []) : array
+    +createIndexes(databaseName : string|null, collectionName : string, indexes : array[]) : array
+    +distinct(collectionName : string, fieldName : string, condition : array = [], options : array = []) : array
+    +dropCollection(collectionName : string) : array
+    +dropDatabase() : array
+    +dropIndexes(collectionName : string, index : string) : array
+    #ensureMongoId(rawId : mixed) : array|ObjectID
+    +explain(collectionName : string, query : array) : array
+    +findAndModify(collectionName : string, condition : array = [], update : array = [], options : array = []) : array
+    -generateIndexName(columns : array) : string
+    +group(collectionName : string, keys, initial : array, reduce : Javascript|string, options : array = []) : array
+    +listCollections(condition : array = [], options : array = []) : array
+    +listDatabases(condition : array = [], options : array = []) : array
+    +listIndexes(collectionName : string, options : array = []) : array
+    +mapReduce(collectionName : string, map : MongoDB.BSON.Javascript|string, reduce : MongoDB.BSON.Javascript|string, out : string|array, condition : array = [], options : array = []) : array
+    #normalizeConditionKeyword(key : string) : string
+    +__construct(connection : Connection, config : array = [])
+}
+class yii.mongodb.QueryBuilder extends yii.base.BaseObject
+class yii.mongodb.Session {
+    +db : Connection|array|string = "mongodb"
+    +sessionCollection : string|array = "session"
+    +destroySession(id : string) : bool
+    +gcSession(maxLifetime : int) : bool
+    +init()
+    +readSession(id : string) : string
+    +regenerateID(deleteOldSession : bool = false)
+    +writeSession(id : string, data : string) : bool
+}
+class yii.mongodb.Session extends yii.web.MultiFieldSession
+class yii.mongodb.console.controllers.MigrateController {
+    -baseMigrationEnsured = false
+    +db : Connection|string = "mongodb"
+    +migrationCollection : string|array = "migration"
+    +templateFile = "@yii/mongodb/views/migration.php"
+    #addMigrationHistory(version)
+    +beforeAction(action : yii.base.Action) : bool
+    #createMigration(class : string) : yii.mongodb.Migration
+    #ensureBaseMigrationHistory()
+    #getMigrationHistory(limit)
+    +options(actionID)
+    #removeMigrationHistory(version)
+    #truncateDatabase()
+}
+class yii.mongodb.console.controllers.MigrateController extends yii.console.controllers.BaseMigrateController
+class yii.mongodb.debug.ExplainAction {
+    +panel : MongoDbPanel
+    #explainQuery(queryString : string) : array|false
+    -prepareQueryFiler(query : array) : array|string
+    +run(seq : int, tag : string) : string
+}
+class yii.mongodb.debug.ExplainAction extends yii.base.Action
+class yii.mongodb.debug.MongoDbPanel {
+    +db = "mongodb"
+    +{static}canBeExplained(type)
+    +getDetail()
+    +getName()
+    +getProfileLogs() : array
+    #getQueryType(timing)
+    +getSummaryName()
+    #hasExplain()
+    +init()
+}
+class yii.mongodb.debug.MongoDbPanel extends yii.debug.panels.DbPanel
+class yii.mongodb.file.ActiveQuery {
+    +{static}EVENT_INIT = "init"
+    +all(db : yii.mongodb.Connection = null) : array|ActiveRecord
+    +buildCursor(db = null)
+    +getCollection(db : yii.mongodb.Connection = null) : Collection
+    +init()
+    +one(db : yii.mongodb.Connection = null) : ActiveRecord|array|null
+    +populate(rows : array) : array
+    +__construct(modelClass : array, config : array = [])
+}
+class yii.mongodb.file.ActiveQuery extends yii.mongodb.file.Query
+class yii.mongodb.file.ActiveQuery implements yii.db.ActiveQueryInterface
+abstract class yii.mongodb.file.ActiveRecord {
+    +attributes() : array
+    #extractFileName(file : mixed) : string
+    +{static}find() : ActiveQuery
+    +{static}getCollection() : Collection
+    +getFileContent() : null|string
+    +getFileResource() : resource
+    #insertInternal(attributes = null)
+    +refreshFile() : MongoGridFSFile|null
+    #updateInternal(attributes = null)
+    +writeFile(filename : string) : bool
+}
+class yii.mongodb.file.ActiveRecord extends yii.mongodb.ActiveRecord
+class yii.mongodb.file.Collection {
+    +database : yii.mongodb.Database
+    -indexesEnsured : bool = false
+    -_chunkCollection : yii.mongodb.Collection
+    -_fileCollection : yii.mongodb.Collection
+    -_prefix : string
+    +createDownload(document : array|ObjectID) : Download
+    +createUpload(options : array = []) : Upload
+    +delete(id : mixed) : bool
+    +drop()
+    -ensureChunkIndexes()
+    -ensureFileIndexes()
+    +ensureIndexes(force : bool = false) : $this
+    +find(condition = [], fields = [], options = []) : Cursor
+    +get(id : mixed) : Download|null
+    +getChunkCollection(refresh : bool = false) : yii.mongodb.Collection
+    +getFileCollection(refresh : bool = false) : yii.mongodb.Collection
+    +getPrefix() : string
+    +insertFile(filename : string, metadata : array = [], options : array = []) : mixed
+    +insertFileContent(bytes : string, metadata : array = [], options : array = []) : mixed
+    +insertUploads(name : string, metadata : array = [], options : array = []) : mixed
+    +remove(condition = [], options = [])
+    +setPrefix(prefix : string)
+}
+class yii.mongodb.file.Collection extends yii.mongodb.Collection
+class yii.mongodb.file.Cursor {
+    +collection : Collection
+    +count() : int
+    +current() : mixed
+    +getId() : MongoDB.Driver.CursorId
+    +setTypeMap(typemap : array)
+    +toArray() : array
+    +__call(name : string, arguments : array) : mixed
+    +__construct(collection : Collection, cursor : MongoDB.Driver.Cursor)
+    +__get(name : string) : mixed
+    +__isset(name : string) : bool
+    +__set(name : string, value : mixed)
+    +__unset(name : string)
+}
+class yii.mongodb.file.Cursor extends IteratorIterator
+class yii.mongodb.file.Cursor implements Countable
+class yii.mongodb.file.Download {
+    +collection : Collection
+    -_chunkCursor : MongoDB.Driver.Cursor
+    -_chunkIterator : Iterator
+    -_document : array|ObjectID
+    -_resource : resource|null
+    +getBytes() : string
+    +getChunkCursor(refresh : bool = false) : MongoDB.Driver.Cursor
+    +getChunkIterator(refresh : bool = false) : Iterator
+    +getDocument() : array
+    +getFilename() : string|null
+    +getResource() : resource
+    +getSize() : int
+    +setDocument(document : array|ObjectID)
+    +substr(start : int, length : int) : string|false
+    +toFile(filename : string) : int
+    +toResource() : resource
+    +toStream(stream : resource) : int
+    +toString() : string
+    +write(filename : string) : int
+}
+class yii.mongodb.file.Download extends yii.base.BaseObject
+class yii.mongodb.file.Query {
+    +getCollection(db : yii.mongodb.Connection = null) : Collection
+}
+class yii.mongodb.file.Query extends yii.mongodb.Query
+class yii.mongodb.file.StreamWrapper {
+    +context : resource
+    -download : Download
+    -namespace : string
+    -pointerOffset : int = 0
+    -protocol : string
+    -queryParams : array = []
+    -upload : Upload
+    -_contextOptions : array
+    -fetchCollection() : Collection
+    -fileStatisticsTemplate() : array
+    +getContextOptions() : array
+    -parsePath(path : string)
+    -prepareDownload() : bool
+    -prepareUpload() : bool
+    +{static}register(protocol : string = "gridfs", force : bool = false)
+    +stream_close()
+    +stream_eof() : bool
+    +stream_flush() : bool
+    +stream_open(path : string, mode : string, options : int, openedPath : string) : bool
+    +stream_read(count : int) : string|false
+    +stream_seek(offset : int, whence : int = 0) : bool
+    +stream_stat() : array
+    +stream_tell() : int
+    +stream_write(data : string) : int
+}
+class yii.mongodb.file.StreamWrapper extends yii.base.BaseObject
+class yii.mongodb.file.Upload {
+    -buffer : string
+    +chunkCount : int = 0
+    +chunkSize : int = 261120
+    +collection : Collection
+    +document : array = []
+    -documentId : MongoDB.BSON.ObjectID
+    +filename : string
+    -hashContext : resource
+    -isComplete : bool = false
+    +length : int = 0
+    +addContent(content : string) : $this
+    +addFile(filename : string) : $this
+    +addStream(stream : resource) : $this
+    +cancel()
+    +complete() : array
+    -flushBuffer(force : bool = false)
+    +init()
+    -insertChunk(data : string)
+    -insertFile() : array
+    +__destruct()
+}
+class yii.mongodb.file.Upload extends yii.base.BaseObject
+class yii.mongodb.gii.model.Generator {
+    +attributeList
+    +baseClass = "yii\mongodb\ActiveRecord"
+    +collectionName
+    +databaseName
+    +db = "mongodb"
+    +modelClass
+    +ns = "app\models"
+    +attributeLabels()
+    +autoCompleteData()
+    +generate()
+    #generateClassName(collectionName : string) : string
+    +generateLabels(attributes : array) : array
+    +generateRules(attributes : array) : array
+    #getDbConnection() : yii.mongodb.Connection
+    +getDescription()
+    +getName()
+    +hints()
+    +requiredTemplates()
+    +rules()
+    +stickyAttributes()
+    +validateCollectionName()
+    +validateDb()
+    +validateModelClass()
+    +validateNamespace()
+}
+class yii.mongodb.gii.model.Generator extends yii.gii.Generator
+class yii.mongodb.i18n.MongoDbMessageSource {
+    +cache : Cache|array|string = "cache"
+    +cachingDuration : int = 0
+    +collection : string|array = "message"
+    +db : Connection|array|string = "mongodb"
+    +enableCaching : bool = false
+    +init()
+    #loadMessages(category : string, language : string) : array
+    #loadMessagesFromDb(category : string, language : string) : array
+}
+class yii.mongodb.i18n.MongoDbMessageSource extends yii.i18n.MessageSource
+class yii.mongodb.log.MongoDbTarget {
+    +db : Connection|string = "mongodb"
+    +logCollection : string|array = "log"
+    +export()
+    +init()
+}
+class yii.mongodb.log.MongoDbTarget extends yii.log.Target
+class yii.mongodb.rbac.MongoDbManager {
+    +assignmentCollection : string|array = "auth_assignment"
+    +cache : Cache|array|string
+    +cacheKey : string = "rbac"
+    +db : Connection|array|string = "mongodb"
+    +itemCollection : string|array = "auth_item"
+    #items : Item[]
+    +ruleCollection : string|array = "auth_rule"
+    #rules : Rule[]
+    +addChild(parent, child)
+    #addItem(item)
+    #addRule(rule)
+    +assign(role, userId)
+    +canAddChild(parent, child)
+    +checkAccess(userId, permissionName, params = [])
+    #checkAccessFromCache(user : string|int, itemName : string, params : array, assignments : Assignment[]) : bool
+    #checkAccessRecursive(user : string|int, itemName : string, params : array, assignments : Assignment[]) : bool
+    #detectLoop(parent : Item, child : Item) : bool
+    +getAssignment(roleName, userId)
+    +getAssignments(userId)
+    +getChildren(name)
+    #getChildrenList() : array
+    #getChildrenRecursive(name : string, childrenList : array, result : array)
+    +getChildRoles(roleName)
+    #getItem(name)
+    #getItems(type)
+    +getPermissionsByRole(roleName)
+    +getPermissionsByUser(userId)
+    +getRolesByUser(userId)
+    +getRule(name)
+    +getRules()
+    +getUserIdsByRole(roleName)
+    +hasChild(parent, child)
+    +init()
+    -instantiateDefaultRoles() : Role[]
+    +invalidateCache()
+    +loadFromCache()
+    #populateItem(row : array) : yii.rbac.Item
+    +removeAll()
+    +removeAllAssignments()
+    #removeAllItems(type : int)
+    +removeAllPermissions()
+    +removeAllRoles()
+    +removeAllRules()
+    +removeChild(parent, child)
+    +removeChildren(parent)
+    #removeItem(item)
+    #removeRule(rule)
+    +revoke(role, userId)
+    +revokeAll(userId)
+    #updateItem(name, item)
+    #updateRule(name, rule)
+}
+class yii.mongodb.rbac.MongoDbManager extends yii.rbac.BaseManager
+class yii.mongodb.rbac.Permission {
+    +parents : array|null
+}
+class yii.mongodb.rbac.Permission extends yii.rbac.Permission
+class yii.mongodb.rbac.Role {
+    +parents : array|null
+}
+class yii.mongodb.rbac.Role extends yii.rbac.Role
+class yii.mongodb.validators.MongoDateValidator {
+    +mongoDateAttribute : string
+    #parseDateValue(value)
+    +validateAttribute(model, attribute)
+}
+class yii.mongodb.validators.MongoDateValidator extends yii.validators.DateValidator
+class yii.mongodb.validators.MongoIdValidator {
+    +forceFormat : string|null
+    +init()
+    -parseMongoId(value : mixed) : ObjectID|null
+    +validateAttribute(model, attribute)
+    #validateValue(value)
+}
+class yii.mongodb.validators.MongoIdValidator extends yii.validators.Validator
+@enduml

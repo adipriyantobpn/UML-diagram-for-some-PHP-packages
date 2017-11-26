@@ -1,0 +1,17 @@
+@startuml
+skinparam handwritten true
+class yii.shell.Bootstrap {
+    +bootstrap(app)
+}
+class yii.shell.Bootstrap implements yii.base.BootstrapInterface
+class yii.shell.ShellController {
+    +include : array = []
+    +actionIndex()
+    #getCasters() : array
+    +options(actionID)
+}
+class yii.shell.ShellController extends yii.console.Controller
+class yii.shell.YiiCaster {
+    +{static}castModel(model : yii.db.ActiveRecord) : array
+}
+@enduml

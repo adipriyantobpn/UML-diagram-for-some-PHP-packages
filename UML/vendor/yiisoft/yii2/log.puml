@@ -1,0 +1,107 @@
+@startuml
+skinparam handwritten true
+class yii.log.DbTarget {
+    +db : Connection|array|string = "db"
+    +logTable : string = "{{%log}}"
+    +export()
+    +init()
+}
+class yii.log.DbTarget extends yii.log.Target
+class yii.log.Dispatcher {
+    +targets : array|Target[] = []
+    -_logger : Logger
+    +dispatch(messages : array, final : bool)
+    +getFlushInterval() : int
+    +getLogger() : Logger
+    +getTraceLevel() : int
+    +init()
+    +setFlushInterval(value : int)
+    +setLogger(value : Logger|string|array)
+    +setTraceLevel(value : int)
+    +__construct(config = [])
+}
+class yii.log.Dispatcher extends yii.base.Component
+class yii.log.EmailTarget {
+    +mailer : MailerInterface|array|string = "mailer"
+    +message : array = []
+    #composeMessage(body : string) : yii.mail.MessageInterface
+    +export()
+    +init()
+}
+class yii.log.EmailTarget extends yii.log.Target
+class yii.log.FileTarget {
+    +dirMode : int = 509
+    +enableRotation : bool = true
+    +fileMode : int
+    +logFile : string
+    +maxFileSize : int = 10240
+    +maxLogFiles : int = 5
+    +rotateByCopy : bool = true
+    +export()
+    +init()
+    #rotateFiles()
+}
+class yii.log.FileTarget extends yii.log.Target
+class yii.log.Logger {
+    +{static}LEVEL_ERROR = 1
+    +{static}LEVEL_INFO = 4
+    +{static}LEVEL_PROFILE = 64
+    +{static}LEVEL_PROFILE_BEGIN = 80
+    +{static}LEVEL_PROFILE_END = 96
+    +{static}LEVEL_TRACE = 8
+    +{static}LEVEL_WARNING = 2
+    +dispatcher : Dispatcher
+    +flushInterval : int = 1000
+    +messages : array = []
+    +traceLevel : int = 0
+    +calculateTimings(messages : array) : array
+    +flush(final : bool = false)
+    +getDbProfiling() : array
+    +getElapsedTime() : float
+    +{static}getLevelName(level : int) : string
+    +getProfiling(categories : array = [], excludeCategories : array = []) : array
+    +init()
+    +log(message : string|array, level : int, category : string = "application")
+}
+class yii.log.Logger extends yii.base.Component
+class yii.log.SyslogTarget {
+    +facility : int = 8
+    +identity : string
+    +options : int
+    -_syslogLevels : array = [6, 6, 6, 6, 6, 5, 4]
+    +export()
+    +formatMessage(message)
+    +init()
+}
+class yii.log.SyslogTarget extends yii.log.Target
+abstract class yii.log.Target {
+    +categories : array = []
+    +except : array = []
+    +exportInterval : int = 1000
+    +logVars : array = ["_GET", "_POST", "_FILES", "_COOKIE", "_SESSION", "_SERVER"]
+    +messages : array = []
+    +microtime : bool = false
+    +prefix : callable
+    -_enabled = true
+    -_levels = 0
+    +collect(messages : array, final : bool)
+    +export()
+    +{static}filterMessages(messages : array, levels : int = 0, categories : array = [], except : array = []) : array
+    +formatMessage(message : array) : string
+    #getContextMessage() : string
+    +getEnabled() : bool
+    +getLevels() : int
+    +getMessagePrefix(message : array) : string
+    #getTime(timestamp : float) : string
+    +setEnabled(value : bool|callable)
+    +setLevels(levels : array|int)
+}
+class yii.log.Target extends yii.base.Component
+class m141106_185632_log_init {
+    -dbTargets : DbTarget[] = []
+    +down()
+    #getDbTargets() : DbTarget[]
+    +up()
+}
+class m141106_185632_log_init extends yii.db.Migration
+@enduml

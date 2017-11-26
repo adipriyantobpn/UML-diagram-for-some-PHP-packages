@@ -1,0 +1,128 @@
+@startuml
+skinparam handwritten true
+class yii.twig.Extension {
+    #aliases : array = []
+    #namespaces : array = []
+    #widgets : array = []
+    +addUses(args : array)
+    +beginWidget(widget : string, config : array = []) : mixed
+    +call(className : string, method : string, arguments : array = null) : mixed
+    +endWidget(widget : string = null)
+    +getFunctions()
+    +getName()
+    +getNodeVisitors()
+    +path(path : string, args : array = []) : string
+    +registerAsset(context : array, asset : string) : mixed
+    +registerAssetBundle(context : array, bundle : string, return : bool = false) : void|AssetBundle
+    +resolveAndCall(className : string, method : string, arguments : array = null) : mixed
+    +resolveClassName(className : string) : string
+    +setProperty(object : stdClass, property : string, value : mixed)
+    +url(path : string, args : array = []) : string
+    +viewHelper(context : array, name : string = null)
+    +widget(widget : string, config : array = []) : mixed
+    +__construct(uses : array = [])
+}
+class yii.twig.Extension extends Twig_Extension
+class yii.twig.GetAttr {
+    +compile(compiler : Twig_Compiler)
+}
+class yii.twig.GetAttr extends Twig_Node_Expression
+class yii.twig.GetAttrAdjuster {
+    +enterNode(node : Twig_Node, env : Twig_Environment)
+    +getPriority()
+    +leaveNode(node : Twig_Node, env : Twig_Environment)
+}
+class yii.twig.GetAttrAdjuster implements Twig_NodeVisitorInterface
+class yii.twig.Optimizer {
+    +enterNode(node : Twig_Node, env : Twig_Environment)
+    +getPriority()
+    +leaveNode(node : Twig_Node, env : Twig_Environment)
+}
+class yii.twig.Optimizer implements Twig_NodeVisitorInterface
+class yii.twig.Profile {
+    #profiler
+    #view
+    +__construct(profile : Twig_Profiler_Profile)
+}
+class yii.twig.Profile extends Twig_Extension_Profiler
+class yii.twig.Template {
+    +{static}attribute(env : Twig_Environment, source : Twig_Source, object : mixed, item : mixed, arguments : array = [], type : yii.twig.string = "~~NOT RESOLVED~~", isDefinedTest : yii.twig.bool = false, ignoreStrictCheck : yii.twig.bool = false) : mixed
+    #displayWithErrorHandling(context, blocks = [])
+}
+class yii.twig.Twig_Empty_Loader {
+    +exists(name)
+    +getCacheKey(name)
+    +getSourceContext(name)
+    +isFresh(name, time)
+}
+class yii.twig.Twig_Empty_Loader implements Twig_LoaderInterface
+class yii.twig.ViewRenderer {
+    +cachePath : string = "@runtime/Twig/cache"
+    +extensions : array = []
+    +filters : array = []
+    +functions : array = []
+    +globals : array = []
+    +lexerOptions : array = []
+    +options : array = []
+    +twig : Twig_Environment
+    +twigFallbackPaths : array = []
+    +twigModulesNamespace : string = "modules"
+    +twigViewsNamespace : string = "~~NOT RESOLVED~~"
+    +twigWidgetsNamespace : string = "widgets"
+    +uses : array = []
+    #addAliases(loader : Twig_Loader_Filesystem, aliases : array)
+    +addExtensions(extensions : array)
+    #addFallbackPaths(loader : Twig_Loader_Filesystem, theme : yii.base.Theme|null)
+    +addFilters(filters : array)
+    +addFunctions(functions : array)
+    +addGlobals(globals : array)
+    +init()
+    +render(view : View, file : string, params : array) : string
+    +setLexerOptions(options : array)
+    -_addCustom(classType : string, elements : array)
+}
+class yii.twig.ViewRenderer extends yii.base.ViewRenderer
+class yii.twig.ViewRendererStaticClassProxy {
+    -_staticClassName
+    +__call(method : string, arguments : array) : mixed
+    +__construct(staticClassName : string)
+    +__get(property : string) : mixed
+    +__isset(property : string) : bool
+    +__set(property : string, value : mixed) : mixed
+}
+abstract class yii.twig.html.BaseClassNode {
+    +compile(compiler : Twig_Compiler)
+    +getHelperMethod()
+}
+class yii.twig.html.BaseClassNode extends Twig_Node
+abstract class yii.twig.html.BaseCss_TokenParser {
+    +getNodeClass()
+    +parse(token : Twig_Token)
+}
+class yii.twig.html.BaseCss_TokenParser extends Twig_TokenParser
+class yii.twig.html.CssClassNode {
+    +getHelperMethod()
+    +__construct(name : Twig_Token, value, operator : Twig_Token, lineno = 0, tag = null)
+}
+class yii.twig.html.CssClassNode extends yii.twig.html.BaseClassNode
+class yii.twig.html.CssClass_TokenParser {
+    +getNodeClass()
+    +getTag()
+}
+class yii.twig.html.CssClass_TokenParser extends yii.twig.html.BaseCss_TokenParser
+class yii.twig.html.CssStyle_TokenParser {
+    +getNodeClass()
+    +getTag()
+}
+class yii.twig.html.CssStyle_TokenParser extends yii.twig.html.BaseCss_TokenParser
+class yii.twig.html.HtmlHelperExtension {
+    +getGlobals()
+    +getTokenParsers()
+}
+class yii.twig.html.HtmlHelperExtension extends Twig_Extension
+class yii.twig.html.StyleClassNode {
+    +getHelperMethod()
+    +__construct(name : Twig_Token, value, operator : Twig_Token, lineno = 0, tag = null)
+}
+class yii.twig.html.StyleClassNode extends yii.twig.html.BaseClassNode
+@enduml

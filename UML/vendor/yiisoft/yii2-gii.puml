@@ -1,0 +1,297 @@
+@startuml
+skinparam handwritten true
+class yii.gii.CodeFile {
+    +{static}OP_CREATE = "create"
+    +{static}OP_OVERWRITE = "overwrite"
+    +{static}OP_SKIP = "skip"
+    +content : string
+    +id : string
+    +operation : string
+    +path : string
+    +diff() : boolean|string
+    +getRelativePath() : string
+    +getType() : string
+    +preview() : boolean|string
+    -renderDiff(lines1 : mixed, lines2 : mixed) : string
+    +save() : string|boolean
+    +__construct(path : string, content : string)
+}
+class yii.gii.CodeFile extends yii.base.Object
+abstract class yii.gii.Generator {
+    +enableI18N : boolean = false
+    +messageCategory : string = "app"
+    +template : string = "default"
+    +templates : array = []
+    +attributeLabels()
+    +autoCompleteData() : array
+    +defaultTemplate() : string
+    +formView() : string
+    +generate() : CodeFile[]
+    +generateString(string : string = "", placeholders : array = []) : string
+    +getDescription() : string
+    +getName() : string
+    +getStickyDataFile() : string
+    +getTemplatePath() : string
+    +hints() : array
+    +init()
+    +isReservedKeyword(value : string) : boolean
+    +loadStickyAttributes()
+    +render(template : string, params : array = []) : string
+    +requiredTemplates() : array
+    +rules()
+    +save(files : CodeFile[], answers : array, results : string) : boolean
+    +saveStickyAttributes()
+    +stickyAttributes() : array
+    +successMessage() : string
+    +validateClass(attribute : string, params : array)
+    +validateMessageCategory()
+    +validateNewClass(attribute : string, params : array)
+    +validateTemplate()
+}
+class yii.gii.Generator extends yii.base.Model
+class yii.gii.GiiAsset {
+    +css = ["main.css"]
+    +depends = ["yii\web\YiiAsset", "yii\bootstrap\BootstrapAsset", "yii\bootstrap\BootstrapPluginAsset", "yii\gii\TypeAheadAsset"]
+    +js = ["gii.js"]
+    +sourcePath = "@yii/gii/assets"
+}
+class yii.gii.GiiAsset extends yii.web.AssetBundle
+class yii.gii.Module {
+    +allowedIPs : array = ["127.0.0.1", "::1"]
+    +controllerNamespace = "yii\gii\controllers"
+    +generators : array|Generator[] = []
+    +newDirMode : integer = 511
+    +newFileMode : integer = 438
+    +beforeAction(action)
+    +bootstrap(app)
+    #checkAccess() : boolean
+    #coreGenerators() : array
+    #resetGlobalSettings()
+}
+class yii.gii.Module extends yii.base.Module
+class yii.gii.Module implements yii.base.BootstrapInterface
+class yii.gii.TypeAheadAsset {
+    +depends = ["yii\bootstrap\BootstrapAsset", "yii\bootstrap\BootstrapPluginAsset"]
+    +js = ["typeahead.bundle.js"]
+    +sourcePath = "@bower/typeahead.js/dist"
+}
+class yii.gii.TypeAheadAsset extends yii.web.AssetBundle
+class yii.gii.components.ActiveField {
+    +model : yii.gii.Generator
+    +autoComplete(data : array) : $this
+    +init()
+    +sticky() : $this
+}
+class yii.gii.components.ActiveField extends yii.widgets.ActiveField
+class yii.gii.components.DiffRendererHtmlInline {
+    +render() : string
+}
+class yii.gii.components.DiffRendererHtmlInline extends Diff_Renderer_Html_Array
+class yii.gii.console.GenerateAction {
+    +controller : GenerateController
+    +generator : yii.gii.Generator
+    #displayValidationErrors()
+    #generateCode()
+    +run()
+}
+class yii.gii.console.GenerateAction extends yii.base.Action
+class yii.gii.console.GenerateController {
+    +generators : array = []
+    +module : yii.gii.Module
+    +overwrite : boolean = false
+    -_options : array = []
+    +actionIndex()
+    +actions()
+    +createAction(id)
+    #formatHint(hint)
+    +getActionArgsHelp(action)
+    +getActionHelp(action)
+    +getActionHelpSummary(action)
+    +getActionOptionsHelp(action)
+    +getUniqueID()
+    +init()
+    +options(id)
+    +__get(name)
+    +__set(name, value)
+}
+class yii.gii.console.GenerateController extends yii.console.Controller
+class yii.gii.controllers.DefaultController {
+    +generator : yii.gii.Generator
+    +layout = "generator"
+    +module : yii.gii.Module
+    +actionAction(id : string, name : string) : mixed
+    +actionDiff(id, file)
+    +actionIndex()
+    +actionPreview(id, file)
+    +actionView(id)
+    #loadGenerator(id : string) : yii.gii.Generator
+}
+class yii.gii.controllers.DefaultController extends yii.web.Controller
+class yii.gii.generators.controller.Generator {
+    +actions : string = "index"
+    +baseClass : string = "yii\web\Controller"
+    +controllerClass : string
+    +viewPath : string
+    +attributeLabels()
+    +generate()
+    +getActionIDs() : array
+    +getControllerFile() : string
+    +getControllerID() : string
+    +getControllerNamespace() : string
+    +getDescription()
+    +getName()
+    +getViewFile(action : string) : string
+    +hints()
+    +requiredTemplates()
+    +rules()
+    +stickyAttributes()
+    +successMessage()
+}
+class yii.gii.generators.controller.Generator extends yii.gii.Generator
+class yii.gii.generators.crud.Generator {
+    +baseControllerClass = "yii\web\Controller"
+    +controllerClass
+    +enablePjax : boolean = false
+    +indexWidgetType = "grid"
+    +modelClass
+    +searchModelClass = ""
+    +viewPath
+    +attributeLabels()
+    +generate()
+    +generateActionParamComments() : array
+    +generateActionParams() : string
+    +generateActiveField(attribute : string) : string
+    +generateActiveSearchField(attribute : string) : string
+    +generateColumnFormat(column : yii.db.ColumnSchema) : string
+    +generateSearchConditions() : array
+    +generateSearchLabels() : array
+    +generateSearchRules() : array
+    +generateUrlParams() : string
+    +getColumnNames() : array
+    +getControllerID() : string
+    +getDescription()
+    +getName()
+    +getNameAttribute()
+    +getSearchAttributes() : array
+    +getTableSchema() : boolean|.yii.db.TableSchema
+    +getViewPath() : string
+    +hints()
+    +requiredTemplates()
+    +rules()
+    +stickyAttributes()
+    +validateModelClass()
+}
+class yii.gii.generators.crud.Generator extends yii.gii.Generator
+class yii.gii.generators.extension.Generator {
+    +authorEmail
+    +authorName
+    +description
+    +keywords = "yii2,extension"
+    +license
+    +namespace
+    +outputPath = "@app/runtime/tmp-extensions"
+    +packageName = "yii2-"
+    +title
+    +type = "yii2-extension"
+    +vendorName
+    +attributeLabels()
+    +generate()
+    +getDescription()
+    +getKeywordsArrayJson() : string
+    +getName()
+    +getOutputPath() : boolean
+    +hints()
+    +optsLicense() : array
+    +optsType() : array
+    +requiredTemplates()
+    +rules()
+    +stickyAttributes()
+    +successMessage()
+}
+class yii.gii.generators.extension.Generator extends yii.gii.Generator
+class yii.gii.generators.form.Generator {
+    +modelClass
+    +scenarioName
+    +viewName
+    +viewPath = "@app/views"
+    +attributeLabels()
+    +generate()
+    +getDescription()
+    +getModelAttributes() : array
+    +getName()
+    +hints()
+    +requiredTemplates()
+    +rules()
+    +stickyAttributes()
+    +successMessage()
+    +validateViewPath()
+}
+class yii.gii.generators.form.Generator extends yii.gii.Generator
+class yii.gii.generators.model.Generator {
+    +{static}RELATIONS_ALL = "all"
+    +{static}RELATIONS_ALL_INVERSE = "all-inverse"
+    +{static}RELATIONS_NONE = "none"
+    +baseClass = "yii\db\ActiveRecord"
+    #classNames
+    +db = "db"
+    +generateLabelsFromComments = false
+    +generateQuery = false
+    +generateRelations = "all"
+    +modelClass
+    +ns = "app\models"
+    +queryBaseClass = "yii\db\ActiveQuery"
+    +queryClass
+    +queryNs = "app\models"
+    +tableName
+    #tableNames
+    +useSchemaName = true
+    +useTablePrefix = false
+    #addInverseRelations(relations : array) : array
+    +attributeLabels()
+    +autoCompleteData()
+    #checkJunctionTable(table) : array|boolean
+    +generate()
+    #generateClassName(tableName : string, useSchemaName : boolean = null) : string
+    +generateLabels(table : yii.db.TableSchema) : array
+    -generateManyManyRelations(table, fks : array, relations : array) : array
+    #generateQueryClassName(modelClassName : string) : string
+    #generateRelationLink(refs : array) : string
+    #generateRelationName(relations : array, table : yii.db.TableSchema, key : string, multiple : boolean) : string
+    #generateRelations() : array
+    +generateRules(table : yii.db.TableSchema) : array
+    +generateTableName(tableName : string) : string
+    #getDbConnection() : yii.db.Connection
+    +getDescription()
+    +getName()
+    #getSchemaNames() : string[]
+    #getTableNames() : array
+    +getTablePrefix() : string
+    +hints()
+    #isColumnAutoIncremental(table : yii.db.TableSchema, columns : array) : boolean
+    #isHasManyRelation(table : TableSchema, fks : array) : boolean
+    +requiredTemplates()
+    +rules()
+    +stickyAttributes()
+    +validateDb()
+    +validateModelClass()
+    +validateNamespace(attribute : string)
+    +validateTableName()
+}
+class yii.gii.generators.model.Generator extends yii.gii.Generator
+class yii.gii.generators.module.Generator {
+    +moduleClass
+    +moduleID
+    +attributeLabels()
+    +generate()
+    +getControllerNamespace() : string
+    +getDescription()
+    +getModulePath() : boolean
+    +getName()
+    +hints()
+    +requiredTemplates()
+    +rules()
+    +successMessage()
+    +validateModuleClass()
+}
+class yii.gii.generators.module.Generator extends yii.gii.Generator
+@enduml

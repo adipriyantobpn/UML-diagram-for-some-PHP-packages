@@ -1,0 +1,104 @@
+@startuml
+skinparam handwritten true
+class yii.rest.Action {
+    +checkAccess : callable
+    +findModel : callable
+    +modelClass : string
+    +findModel(id : string) : yii.db.ActiveRecordInterface
+    +init()
+}
+class yii.rest.Action extends yii.base.Action
+class yii.rest.ActiveController {
+    +createScenario : string = "~~NOT RESOLVED~~"
+    +modelClass : string
+    +updateScenario : string = "~~NOT RESOLVED~~"
+    +actions()
+    +checkAccess(action : string, model : object = null, params : array = [])
+    +init()
+    #verbs()
+}
+class yii.rest.ActiveController extends yii.rest.Controller
+class yii.rest.Controller {
+    +enableCsrfValidation = false
+    +serializer : string|array = "yii\rest\Serializer"
+    +afterAction(action, result)
+    +behaviors()
+    #serializeData(data : mixed) : mixed
+    #verbs() : array
+}
+class yii.rest.Controller extends yii.web.Controller
+class yii.rest.CreateAction {
+    +scenario : string = "~~NOT RESOLVED~~"
+    +viewAction : string = "view"
+    +run() : yii.db.ActiveRecordInterface
+}
+class yii.rest.CreateAction extends yii.rest.Action
+class yii.rest.DeleteAction {
+    +run(id : mixed)
+}
+class yii.rest.DeleteAction extends yii.rest.Action
+class yii.rest.IndexAction {
+    +dataFilter : DataFilter|null
+    +prepareDataProvider : callable
+    #prepareDataProvider() : yii.data.ActiveDataProvider
+    +run() : yii.data.ActiveDataProvider
+}
+class yii.rest.IndexAction extends yii.rest.Action
+class yii.rest.OptionsAction {
+    +collectionOptions : array = ["GET", "POST", "HEAD", "OPTIONS"]
+    +resourceOptions : array = ["GET", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"]
+    +run(id : string = null)
+}
+class yii.rest.OptionsAction extends yii.base.Action
+class yii.rest.Serializer {
+    +collectionEnvelope : string
+    +currentPageHeader : string = "X-Pagination-Current-Page"
+    +expandParam : string = "expand"
+    +fieldsParam : string = "fields"
+    +linksEnvelope : string = "_links"
+    +metaEnvelope : string = "_meta"
+    +pageCountHeader : string = "X-Pagination-Page-Count"
+    +perPageHeader : string = "X-Pagination-Per-Page"
+    +preserveKeys : bool = false
+    +request : yii.web.Request
+    +response : yii.web.Response
+    +totalCountHeader : string = "X-Pagination-Total-Count"
+    #addPaginationHeaders(pagination : Pagination)
+    #getRequestedFields() : array
+    +init()
+    +serialize(data : mixed) : mixed
+    #serializeDataProvider(dataProvider : DataProviderInterface) : array
+    #serializeModel(model : Arrayable) : array
+    #serializeModelErrors(model : Model) : array
+    #serializeModels(models : array) : array
+    #serializePagination(pagination : Pagination) : array
+}
+class yii.rest.Serializer extends yii.base.Component
+class yii.rest.UpdateAction {
+    +scenario : string = "~~NOT RESOLVED~~"
+    +run(id : string) : yii.db.ActiveRecordInterface
+}
+class yii.rest.UpdateAction extends yii.rest.Action
+class yii.rest.UrlRule {
+    +controller : string|array
+    +except : array = []
+    +extraPatterns : array = []
+    +only : array = []
+    +patterns : array = ["update", "delete", "view", "create", "index", "options", "options"]
+    +pluralize : bool = true
+    +prefix : string
+    +ruleConfig : array = ["yii\web\UrlRule"]
+    +suffix : string
+    +tokens : array = ["<id:\d[\d,]*>"]
+    #createRule(pattern : string, prefix : string, action : string) : yii.web.UrlRuleInterface
+    #createRules()
+    +createUrl(manager, route, params)
+    +init()
+    +parseRequest(manager, request)
+}
+class yii.rest.UrlRule extends yii.web.CompositeUrlRule
+class yii.rest.ViewAction {
+    +run(id : string) : yii.db.ActiveRecordInterface
+}
+class yii.rest.ViewAction extends yii.rest.Action
+@enduml

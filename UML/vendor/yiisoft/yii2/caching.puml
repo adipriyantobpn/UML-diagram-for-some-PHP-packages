@@ -1,0 +1,242 @@
+@startuml
+skinparam handwritten true
+class yii.caching.ApcCache {
+    +useApcu : bool = false
+    #addValue(key : string, value : mixed, duration : int) : bool
+    #addValues(data : array, duration : int) : array
+    #deleteValue(key : string) : bool
+    +exists(key : mixed) : bool
+    #flushValues() : bool
+    #getValue(key : string) : mixed|false
+    #getValues(keys : array) : array
+    +init()
+    #setValue(key : string, value : mixed, duration : int) : bool
+    #setValues(data : array, duration : int) : array
+}
+class yii.caching.ApcCache extends yii.caching.Cache
+class yii.caching.ArrayCache {
+    -_cache
+    #addValue(key, value, duration)
+    #deleteValue(key)
+    +exists(key)
+    #flushValues()
+    #getValue(key)
+    #setValue(key, value, duration)
+}
+class yii.caching.ArrayCache extends yii.caching.Cache
+abstract class yii.caching.Cache {
+    +defaultDuration : int = 0
+    +keyPrefix : string
+    +serializer : null|array|false
+    +add(key : mixed, value : mixed, duration : int = 0, dependency : Dependency = null) : bool
+    #addValue(key : string, value : mixed, duration : int) : bool
+    #addValues(data : array, duration : int) : array
+    +buildKey(key : mixed) : string
+    +delete(key : mixed) : bool
+    #deleteValue(key : string) : bool
+    +exists(key : mixed) : bool
+    +flush() : bool
+    #flushValues() : bool
+    +get(key : mixed) : mixed
+    +getOrSet(key : mixed, callable : callable|.Closure, duration : int = null, dependency : Dependency = null) : mixed
+    #getValue(key : string) : mixed|false
+    #getValues(keys : array) : array
+    +madd(items : array, duration : int = 0, dependency : Dependency = null) : array
+    +mget(keys : string[]) : array
+    +mset(items : array, duration : int = 0, dependency : Dependency = null) : array
+    +multiAdd(items : array, duration : int = 0, dependency : Dependency = null) : array
+    +multiGet(keys : string[]) : array
+    +multiSet(items : array, duration : int = 0, dependency : Dependency = null) : array
+    +offsetExists(key : string) : bool
+    +offsetGet(key : string) : mixed
+    +offsetSet(key : string, value : mixed)
+    +offsetUnset(key : string)
+    +set(key : mixed, value : mixed, duration : int = null, dependency : Dependency = null) : bool
+    #setValue(key : string, value : mixed, duration : int) : bool
+    #setValues(data : array, duration : int) : array
+}
+class yii.caching.Cache extends yii.base.Component
+class yii.caching.Cache implements yii.caching.CacheInterface
+interface yii.caching.CacheInterface {
+    +add(key : mixed, value : mixed, duration : int = 0, dependency : Dependency = null) : bool
+    +buildKey(key : mixed) : string
+    +delete(key : mixed) : bool
+    +exists(key : mixed) : bool
+    +flush() : bool
+    +get(key : mixed) : mixed
+    +getOrSet(key : mixed, callable : callable|.Closure, duration : int = null, dependency : Dependency = null) : mixed
+    +multiAdd(items : array, duration : int = 0, dependency : Dependency = null) : array
+    +multiGet(keys : string[]) : array
+    +multiSet(items : array, duration : int = 0, dependency : Dependency = null) : array
+    +set(key : mixed, value : mixed, duration : int = null, dependency : Dependency = null) : bool
+}
+interface yii.caching.CacheInterface implements ArrayAccess
+class yii.caching.ChainedDependency {
+    +dependencies : Dependency[] = []
+    +dependOnAll : bool = true
+    +evaluateDependency(cache : CacheInterface)
+    #generateDependencyData(cache : CacheInterface) : mixed
+    +isChanged(cache)
+}
+class yii.caching.ChainedDependency extends yii.caching.Dependency
+class yii.caching.DbCache {
+    +cacheTable : string = "{{%cache}}"
+    +db : Connection|array|string = "db"
+    +gcProbability : int = 100
+    #addValue(key : string, value : string, duration : int) : bool
+    #deleteValue(key : string) : bool
+    +exists(key : mixed) : bool
+    #flushValues() : bool
+    +gc(force : bool = false)
+    #getValue(key : string) : string|false
+    #getValues(keys : array) : array
+    +init()
+    #setValue(key : string, value : string, duration : int) : bool
+}
+class yii.caching.DbCache extends yii.caching.Cache
+class yii.caching.DbDependency {
+    +db : string = "db"
+    +params : array = []
+    +sql : string
+    #generateDependencyData(cache : CacheInterface) : mixed
+}
+class yii.caching.DbDependency extends yii.caching.Dependency
+class yii.caching.DbQueryDependency {
+    +db : string|array|object
+    +method : string|callable
+    +query : yii.db.QueryInterface
+    -executeQuery(query : QueryInterface, db : mixed) : mixed
+    #generateDependencyData(cache : CacheInterface) : mixed
+}
+class yii.caching.DbQueryDependency extends yii.caching.Dependency
+abstract class yii.caching.Dependency {
+    +data : mixed
+    +reusable : bool = false
+    -_reusableData : array = []
+    +evaluateDependency(cache : CacheInterface)
+    #generateDependencyData(cache : CacheInterface) : mixed
+    #generateReusableHash() : string
+    +getHasChanged(cache : CacheInterface) : bool
+    +isChanged(cache : CacheInterface) : bool
+    +{static}resetReusableData()
+}
+class yii.caching.Dependency extends yii.base.BaseObject
+class yii.caching.DummyCache {
+    #addValue(key : string, value : mixed, duration : int) : bool
+    #deleteValue(key : string) : bool
+    #flushValues() : bool
+    #getValue(key : string) : mixed|false
+    #setValue(key : string, value : mixed, duration : int) : bool
+}
+class yii.caching.DummyCache extends yii.caching.Cache
+class yii.caching.ExpressionDependency {
+    +expression : string = "true"
+    +params : mixed
+    #generateDependencyData(cache : CacheInterface) : mixed
+}
+class yii.caching.ExpressionDependency extends yii.caching.Dependency
+class yii.caching.FileCache {
+    +cacheFileSuffix : string = ".bin"
+    +cachePath : string = "@runtime/cache"
+    +directoryLevel : int = 1
+    +dirMode : int = 509
+    +fileMode : int
+    +gcProbability : int = 10
+    +keyPrefix : string = ""
+    #addValue(key : string, value : string, duration : int) : bool
+    #deleteValue(key : string) : bool
+    +exists(key : mixed) : bool
+    #flushValues() : bool
+    +gc(force : bool = false, expiredOnly : bool = true)
+    #gcRecursive(path : string, expiredOnly : bool)
+    #getCacheFile(key : string) : string
+    #getValue(key : string) : string|false
+    +init()
+    #setValue(key : string, value : string, duration : int) : bool
+}
+class yii.caching.FileCache extends yii.caching.Cache
+class yii.caching.FileDependency {
+    +fileName : string
+    #generateDependencyData(cache : CacheInterface) : mixed
+}
+class yii.caching.FileDependency extends yii.caching.Dependency
+class yii.caching.MemCache {
+    +options : array
+    +password : string
+    +persistentId : string
+    +useMemcached : bool = false
+    +username : string
+    -_cache : Memcache|.Memcached
+    -_servers : array = []
+    #addMemcachedServers(cache : Memcached, servers : MemCacheServer[])
+    #addMemcacheServers(cache : Memcache, servers : MemCacheServer[])
+    #addServers(cache : Memcache|.Memcached, servers : MemCacheServer[])
+    #addValue(key : string, value : mixed, duration : int) : bool
+    #deleteValue(key : string) : bool
+    #flushValues() : bool
+    +getMemcache() : Memcache|.Memcached
+    +getServers() : MemCacheServer[]
+    #getValue(key : string) : mixed|false
+    #getValues(keys : array) : array
+    +init()
+    +setServers(config : array)
+    #setValue(key : string, value : mixed, duration : int) : bool
+    #setValues(data : array, duration : int) : array
+}
+class yii.caching.MemCache extends yii.caching.Cache
+class yii.caching.MemCacheServer {
+    +failureCallback : Closure
+    +host : string
+    +persistent : bool = true
+    +port : int = 11211
+    +retryInterval : int = 15
+    +status : bool = true
+    +timeout : int = 1000
+    +weight : int = 1
+}
+class yii.caching.MemCacheServer extends yii.base.BaseObject
+class yii.caching.TagDependency {
+    +tags : string|array = []
+    #generateDependencyData(cache : CacheInterface) : mixed
+    #getTimestamps(cache : CacheInterface, tags : string[]) : array
+    +{static}invalidate(cache : CacheInterface, tags : string|array)
+    +isChanged(cache)
+    #{static}touchKeys(cache : CacheInterface, keys : string[]) : array
+}
+class yii.caching.TagDependency extends yii.caching.Dependency
+class yii.caching.WinCache {
+    #addValue(key : string, value : mixed, duration : int) : bool
+    #addValues(data : array, duration : int) : array
+    #deleteValue(key : string) : bool
+    +exists(key : mixed) : bool
+    #flushValues() : bool
+    #getValue(key : string) : string|bool
+    #getValues(keys : array) : array
+    #setValue(key : string, value : mixed, duration : int) : bool
+    #setValues(data : array, duration : int) : array
+}
+class yii.caching.WinCache extends yii.caching.Cache
+class yii.caching.XCache {
+    #addValue(key : string, value : mixed, duration : int) : bool
+    #deleteValue(key : string) : bool
+    +exists(key : mixed) : bool
+    #flushValues() : bool
+    #getValue(key : string) : mixed|false
+    #setValue(key : string, value : mixed, duration : int) : bool
+}
+class yii.caching.XCache extends yii.caching.Cache
+class yii.caching.ZendDataCache {
+    #addValue(key : string, value : mixed, duration : int) : bool
+    #deleteValue(key : string) : bool
+    #flushValues() : bool
+    #getValue(key : string) : mixed|false
+    #setValue(key : string, value : mixed, duration : int) : bool
+}
+class yii.caching.ZendDataCache extends yii.caching.Cache
+class m150909_153426_cache_init {
+    +down()
+    #getCache() : yii.caching.DbCache
+    +up()
+}
+class m150909_153426_cache_init extends yii.db.Migration
+@enduml

@@ -1,0 +1,490 @@
+@startuml
+skinparam handwritten true
+class yii.authclient.AuthAction {
+    +clientCollection : string = "authClientCollection"
+    +clientIdGetParamName : string = "authclient"
+    +redirectView : string
+    +successCallback : callable
+    -_cancelUrl : string = ""
+    -_successUrl : string = ""
+    #auth(client : mixed) : yii.web.Response
+    #authOAuth1(client : OAuth1) : yii.web.Response
+    #authOAuth2(client : OAuth2) : yii.web.Response
+    #authOpenId(client : OpenId) : yii.web.Response
+    #authSuccess(client : ClientInterface) : yii.web.Response
+    #defaultCancelUrl() : string
+    #defaultSuccessUrl() : string
+    +getCancelUrl() : string
+    +getSuccessUrl() : string
+    +redirect(url : mixed, enforceRedirect : bool = true) : yii.web.Response
+    +redirectCancel(url : string = null) : yii.web.Response
+    +redirectSuccess(url : string = null) : yii.web.Response
+    +run()
+    +setCancelUrl(url : string)
+    +setSuccessUrl(url : string)
+}
+class yii.authclient.AuthAction extends yii.base.Action
+abstract class yii.authclient.BaseClient {
+    -_httpClient : Client|array|string = "yii\httpclient\Client"
+    -_id : string
+    -_name : string
+    -_normalizeUserAttributeMap : array
+    -_requestOptions : array = []
+    -_stateStorage : StateStorageInterface|array|string = "yii\authclient\SessionStateStorage"
+    -_title : string
+    -_userAttributes : array
+    -_viewOptions : array
+    #createHttpClient(reference : string|array) : yii.httpclient.Client
+    +createRequest() : yii.httpclient.Request
+    #defaultName() : string
+    #defaultNormalizeUserAttributeMap() : array
+    #defaultRequestOptions() : array
+    #defaultTitle() : string
+    #defaultViewOptions() : array
+    +getHttpClient() : yii.httpclient.Client
+    +getId() : string
+    +getName() : string
+    +getNormalizeUserAttributeMap() : array
+    +getRequestOptions() : array
+    #getState(key : string) : mixed
+    #getStateKeyPrefix() : string
+    +getStateStorage() : StateStorageInterface
+    +getTitle() : string
+    +getUserAttributes() : array
+    +getViewOptions() : array
+    #initUserAttributes() : array
+    #normalizeUserAttributes(attributes : array) : array
+    #removeState(key : string) : bool
+    +setHttpClient(httpClient : array|Client)
+    +setId(id : string)
+    +setName(name : string)
+    +setNormalizeUserAttributeMap(normalizeUserAttributeMap : array)
+    +setRequestOptions(options : array)
+    #setState(key : string, value : mixed) : $this
+    +setStateStorage(stateStorage : StateStorageInterface|array|string)
+    +setTitle(title : string)
+    +setUserAttributes(userAttributes : array)
+    +setViewOptions(viewOptions : array)
+}
+class yii.authclient.BaseClient extends yii.base.Component
+class yii.authclient.BaseClient implements yii.authclient.ClientInterface
+abstract class yii.authclient.BaseOAuth {
+    +apiBaseUrl : string
+    +authUrl : string
+    +autoRefreshAccessToken : bool = true
+    +scope : string
+    +version : string = 1.0
+    -_accessToken : OAuthToken|array
+    -_returnUrl : string
+    -_signatureMethod : signature.BaseMethod|array = []
+    +api(apiSubUrl : string, method : string = "GET", data : array|string = [], headers : array = []) : array
+    +applyAccessTokenToRequest(request : yii.httpclient.Request, accessToken : OAuthToken)
+    +beforeApiRequestSend(event : yii.httpclient.RequestEvent)
+    #composeUrl(url : string, params : array = []) : string
+    +createApiRequest() : yii.httpclient.Request
+    #createHttpClient(reference)
+    #createSignatureMethod(signatureMethodConfig : array) : signature.BaseMethod
+    #createToken(tokenConfig : array = []) : OAuthToken
+    #defaultRequestOptions()
+    #defaultReturnUrl() : string
+    +getAccessToken() : OAuthToken
+    +getReturnUrl() : string
+    +getSignatureMethod() : signature.BaseMethod
+    +refreshAccessToken(token : yii.authclient.OAuthToken) : OAuthToken
+    #restoreAccessToken() : OAuthToken
+    #saveAccessToken(token : OAuthToken|null) : $this
+    #sendRequest(request : yii.httpclient.Request) : array
+    +setAccessToken(token : array|OAuthToken)
+    +setHttpClient(httpClient)
+    +setReturnUrl(returnUrl : string)
+    +setSignatureMethod(signatureMethod : array|signature.BaseMethod)
+}
+class yii.authclient.BaseOAuth extends yii.authclient.BaseClient
+interface yii.authclient.ClientInterface {
+    +getId() : string
+    +getName() : string
+    +getTitle() : string
+    +getUserAttributes() : array
+    +getViewOptions() : array
+    +setId(id : string)
+    +setName(name : string)
+    +setTitle(title : string)
+}
+class yii.authclient.Collection {
+    +httpClient : yii.httpclient.Client|array|string
+    -_clients : array = []
+    #createClient(id : string, config : array) : ClientInterface
+    +getClient(id : string) : ClientInterface
+    +getClients() : ClientInterface[]
+    +hasClient(id : string) : bool
+    +setClients(clients : array)
+}
+class yii.authclient.Collection extends yii.base.Component
+class yii.authclient.InvalidResponseException {
+    +response : yii.httpclient.Response
+    +__construct(response : yii.httpclient.Response, message : string = null, code : int = 0, previous : Exception = null)
+}
+class yii.authclient.InvalidResponseException extends yii.base.Exception
+abstract class yii.authclient.OAuth1 {
+    +accessTokenMethod : string = "GET"
+    +accessTokenUrl : string
+    +authorizationHeaderMethods : array|null = ["POST"]
+    +consumerKey : string
+    +consumerSecret : string
+    +requestTokenMethod : string = "GET"
+    +requestTokenUrl : string
+    +version : string = 1.0
+    +applyAccessTokenToRequest(request, accessToken)
+    +beforeRequestSend(event : yii.httpclient.RequestEvent)
+    +buildAuthUrl(requestToken : yii.authclient.OAuthToken = null, params : array = []) : string
+    #composeAuthorizationHeader(params : array, realm : string = "") : array
+    #composeSignatureBaseString(method : string, url : string, params : array) : string
+    #composeSignatureKey(token : OAuthToken|null = null) : string
+    +createApiRequest()
+    +createRequest()
+    #defaultReturnUrl() : string
+    +fetchAccessToken(oauthToken : string = null, requestToken : yii.authclient.OAuthToken = null, oauthVerifier : string = null, params : array = []) : OAuthToken
+    +fetchRequestToken(params : array = []) : OAuthToken
+    #generateCommonRequestParams() : array
+    #generateNonce() : string
+    #generateTimestamp() : int
+    +refreshAccessToken(token : yii.authclient.OAuthToken) : OAuthToken
+    +signRequest(request : yii.httpclient.Request, token : OAuthToken|null = null)
+}
+class yii.authclient.OAuth1 extends yii.authclient.BaseOAuth
+abstract class yii.authclient.OAuth2 {
+    +clientId : string
+    +clientSecret : string
+    +tokenUrl : string
+    +validateAuthState : bool = true
+    +version : string = 2.0
+    +applyAccessTokenToRequest(request, accessToken)
+    #applyClientCredentialsToRequest(request : yii.httpclient.Request)
+    +authenticateClient(params : array = []) : OAuthToken
+    +authenticateUser(username : string, password : string, params : array = []) : OAuthToken
+    +authenticateUserJwt(username : string, signature : yii.authclient.signature.BaseMethod|array = null, options : array = [], params : array = []) : OAuthToken
+    +buildAuthUrl(params : array = []) : string
+    #createToken(tokenConfig : array = []) : OAuthToken
+    #defaultReturnUrl() : string
+    +fetchAccessToken(authCode : string, params : array = []) : OAuthToken
+    #generateAuthState() : string
+    +refreshAccessToken(token : yii.authclient.OAuthToken) : OAuthToken
+}
+class yii.authclient.OAuth2 extends yii.authclient.BaseOAuth
+class yii.authclient.OAuthToken {
+    +createTimestamp : int
+    +tokenParamKey : string = "oauth_token"
+    +tokenSecretParamKey : string = "oauth_token_secret"
+    -_expireDurationParamKey : string
+    -_params : array = []
+    #defaultExpireDurationParamKey() : string
+    +getExpireDuration() : int
+    +getExpireDurationParamKey() : string
+    +getIsExpired() : bool
+    +getIsValid() : bool
+    +getParam(name : string) : mixed
+    +getParams() : array
+    +getToken() : string
+    +getTokenSecret() : string
+    +init()
+    +setExpireDuration(expireDuration : string)
+    +setExpireDurationParamKey(expireDurationParamKey : string)
+    +setParam(name : string, value : mixed)
+    +setParams(params : array)
+    +setToken(token : string) : $this
+    +setTokenSecret(tokenSecret : string)
+}
+class yii.authclient.OAuthToken extends yii.base.BaseObject
+class yii.authclient.OpenId {
+    +authUrl : string
+    +axToSregMap : array = ["nickname", "email", "fullname", "dob", "gender", "postcode", "country", "language", "timezone"]
+    +cainfo : string
+    +capath : string
+    +data : array
+    +optionalAttributes : array = []
+    +requiredAttributes : array = []
+    +verifyPeer : bool
+    -_claimedId : string
+    -_returnUrl : string
+    -_trustRoot : string
+    +buildAuthUrl(identifierSelect : bool = null) : string
+    #buildAuthUrlV1(serverInfo : array) : string
+    #buildAuthUrlV2(serverInfo : array) : string
+    #buildAxParams() : array
+    #buildSregParams() : array
+    #buildUrl(baseUrl : string, additionalUrl : string|array) : string
+    #compareUrl(expectedUrl : string, actualUrl : string) : bool
+    #defaultRequestOptions()
+    #defaultReturnUrl() : string
+    +discover(url : string) : array
+    #extractHtmlTagValue(content : string, tag : string, matchAttributeName : string, matchAttributeValue : string, valueAttributeName : string) : string|bool
+    +fetchAttributes() : array
+    #fetchAxAttributes() : array
+    #fetchSregAttributes() : array
+    +getClaimedId() : string
+    +getReturnUrl() : string
+    +getTrustRoot() : string
+    +hostExists(url : string) : bool
+    +init()
+    #initUserAttributes()
+    #sendRequest(url : string, method : string = "GET", params : array = []) : array|string
+    +setClaimedId(claimedId : string)
+    +setReturnUrl(returnUrl : string)
+    +setTrustRoot(value : string)
+    +validate(validateRequiredAttributes : bool = true) : bool
+    #validateRequiredAttributes() : bool
+}
+class yii.authclient.OpenId extends yii.authclient.BaseClient
+class yii.authclient.OpenIdConnect {
+    +allowedJwsAlgorithms : array = ["HS256", "HS384", "HS512", "ES256", "ES384", "ES512", "RS256", "RS384", "RS512", "PS256", "PS384", "PS512"]
+    +configParamsCacheKeyPrefix : string = "config-params-"
+    +issuerUrl : string
+    +scope = "openid"
+    +validateJws : bool = true
+    -_cache : Cache|string = "cache"
+    -_configParams : array
+    -_validateAuthNonce : bool|null
+    #applyClientCredentialsToRequest(request)
+    +buildAuthUrl(params = [])
+    #createToken(tokenConfig = [])
+    #defaultReturnUrl()
+    #discoverConfig() : array
+    +fetchAccessToken(authCode, params = [])
+    #generateAuthNonce() : string
+    +getCache() : Cache|null
+    +getConfigParam(name : string) : mixed
+    +getConfigParams() : array
+    +getValidateAuthNonce() : bool
+    #initUserAttributes()
+    #loadJws(jws : string) : array
+    +refreshAccessToken(token : yii.authclient.OAuthToken)
+    +setCache(cache : Cache|array|string|null)
+    +setValidateAuthNonce(validateAuthNonce : bool)
+    -validateClaims(claims : array)
+}
+class yii.authclient.OpenIdConnect extends yii.authclient.OAuth2
+class yii.authclient.SessionStateStorage {
+    +session : Session|array|string
+    +get(key)
+    +init()
+    +remove(key)
+    +set(key, value)
+}
+class yii.authclient.SessionStateStorage extends yii.base.Component
+class yii.authclient.SessionStateStorage implements yii.authclient.StateStorageInterface
+interface yii.authclient.StateStorageInterface {
+    +get(key : string) : mixed
+    +remove(key : string) : bool
+    +set(key : string, value : mixed)
+}
+class yii.authclient.clients.Facebook {
+    +apiBaseUrl = "https://graph.facebook.com"
+    +attributeNames : array = ["name", "email"]
+    +authUrl = "https://www.facebook.com/dialog/oauth"
+    +autoExchangeAccessToken : bool = false
+    +autoRefreshAccessToken = false
+    +clientAuthCodeUrl : string = "https://graph.facebook.com/oauth/client_code"
+    +scope = "email"
+    +tokenUrl = "https://graph.facebook.com/oauth/access_token"
+    +applyAccessTokenToRequest(request, accessToken)
+    #defaultName()
+    #defaultTitle()
+    #defaultViewOptions()
+    +exchangeAccessToken(token : yii.authclient.OAuthToken) : yii.authclient.OAuthToken
+    +fetchAccessToken(authCode, params = [])
+    +fetchClientAccessToken(authCode : string, params : array = []) : yii.authclient.OAuthToken
+    +fetchClientAuthCode(token : yii.authclient.OAuthToken = null, params : array = []) : string
+    #initUserAttributes()
+}
+class yii.authclient.clients.Facebook extends yii.authclient.OAuth2
+class yii.authclient.clients.GitHub {
+    +apiBaseUrl = "https://api.github.com"
+    +authUrl = "https://github.com/login/oauth/authorize"
+    +tokenUrl = "https://github.com/login/oauth/access_token"
+    #defaultName()
+    #defaultTitle()
+    +init()
+    #initUserAttributes()
+}
+class yii.authclient.clients.GitHub extends yii.authclient.OAuth2
+class yii.authclient.clients.Google {
+    +apiBaseUrl = "https://www.googleapis.com/plus/v1"
+    +authUrl = "https://accounts.google.com/o/oauth2/auth"
+    +tokenUrl = "https://accounts.google.com/o/oauth2/token"
+    #defaultName()
+    #defaultTitle()
+    +init()
+    #initUserAttributes()
+}
+class yii.authclient.clients.Google extends yii.authclient.OAuth2
+class yii.authclient.clients.GoogleHybrid {
+    +validateAuthState = false
+    #defaultReturnUrl()
+    #defaultViewOptions()
+}
+class yii.authclient.clients.GoogleHybrid extends yii.authclient.clients.Google
+class yii.authclient.clients.LinkedIn {
+    +apiBaseUrl = "https://api.linkedin.com/v1"
+    +attributeNames : array = ["id", "email-address", "first-name", "last-name", "public-profile-url"]
+    +authUrl = "https://www.linkedin.com/uas/oauth2/authorization"
+    +tokenUrl = "https://www.linkedin.com/uas/oauth2/accessToken"
+    +applyAccessTokenToRequest(request, accessToken)
+    #defaultName()
+    #defaultNormalizeUserAttributeMap()
+    #defaultTitle()
+    +init()
+    #initUserAttributes()
+}
+class yii.authclient.clients.LinkedIn extends yii.authclient.OAuth2
+class yii.authclient.clients.Live {
+    +apiBaseUrl = "https://apis.live.net/v5.0"
+    +authUrl = "https://login.live.com/oauth20_authorize.srf"
+    +tokenUrl = "https://login.live.com/oauth20_token.srf"
+    #defaultName()
+    #defaultTitle()
+    +init()
+    #initUserAttributes()
+}
+class yii.authclient.clients.Live extends yii.authclient.OAuth2
+class yii.authclient.clients.Twitter {
+    +accessTokenMethod = "POST"
+    +accessTokenUrl = "https://api.twitter.com/oauth/access_token"
+    +apiBaseUrl = "https://api.twitter.com/1.1"
+    +attributeParams : array = []
+    +authUrl = "https://api.twitter.com/oauth/authenticate"
+    +requestTokenMethod = "POST"
+    +requestTokenUrl = "https://api.twitter.com/oauth/request_token"
+    #defaultName()
+    #defaultTitle()
+    #initUserAttributes()
+}
+class yii.authclient.clients.Twitter extends yii.authclient.OAuth1
+class yii.authclient.clients.TwitterOAuth2 {
+    +apiBaseUrl = "https://api.twitter.com/1.1"
+    +authUrl = "https://api.twitter.com/oauth2/authenticate"
+    +tokenUrl = "https://api.twitter.com/oauth2/token"
+    +applyAccessTokenToRequest(request, accessToken)
+    #defaultName()
+    #defaultTitle()
+    #initUserAttributes()
+}
+class yii.authclient.clients.TwitterOAuth2 extends yii.authclient.OAuth2
+class yii.authclient.clients.VKontakte {
+    +apiBaseUrl = "https://api.vk.com/method"
+    +apiVersion : string = 3.0
+    +attributeNames : array = ["uid", "first_name", "last_name", "nickname", "screen_name", "sex", "bdate", "city", "country", "timezone", "photo"]
+    +authUrl = "https://oauth.vk.com/authorize"
+    +tokenUrl = "https://oauth.vk.com/access_token"
+    +applyAccessTokenToRequest(request, accessToken)
+    #defaultName()
+    #defaultNormalizeUserAttributeMap()
+    #defaultTitle()
+    #initUserAttributes()
+}
+class yii.authclient.clients.VKontakte extends yii.authclient.OAuth2
+class yii.authclient.clients.Yandex {
+    +apiBaseUrl = "https://login.yandex.ru"
+    +authUrl = "https://oauth.yandex.ru/authorize"
+    +tokenUrl = "https://oauth.yandex.ru/token"
+    +applyAccessTokenToRequest(request, accessToken)
+    #defaultName()
+    #defaultTitle()
+    #initUserAttributes()
+}
+class yii.authclient.clients.Yandex extends yii.authclient.OAuth2
+abstract class yii.authclient.signature.BaseMethod {
+    +generateSignature(baseString : string, key : string) : string
+    +getName() : string
+    +verify(signature : string, baseString : string, key : string) : bool
+}
+class yii.authclient.signature.BaseMethod extends yii.base.BaseObject
+class yii.authclient.signature.HmacSha {
+    +algorithm : string
+    +generateSignature(baseString, key)
+    +getName()
+    +init()
+}
+class yii.authclient.signature.HmacSha extends yii.authclient.signature.BaseMethod
+class yii.authclient.signature.HmacSha1 {
+    +algorithm = "sha1"
+}
+class yii.authclient.signature.HmacSha1 extends yii.authclient.signature.HmacSha
+class yii.authclient.signature.PlainText {
+    +generateSignature(baseString, key)
+    +getName()
+}
+class yii.authclient.signature.PlainText extends yii.authclient.signature.BaseMethod
+class yii.authclient.signature.RsaSha {
+    +algorithm : int|string
+    +privateCertificateFile : string
+    +publicCertificateFile : string
+    #_privateCertificate : string
+    #_publicCertificate : string
+    +generateSignature(baseString, key)
+    +getName()
+    +getPrivateCertificate() : string
+    +getPublicCertificate() : string
+    +init()
+    #initPrivateCertificate() : string
+    #initPublicCertificate() : string
+    +setPrivateCertificate(privateCertificate : string)
+    +setPublicCertificate(publicCertificate : string)
+    +verify(signature, baseString, key)
+}
+class yii.authclient.signature.RsaSha extends yii.authclient.signature.BaseMethod
+class yii.authclient.signature.RsaSha1 {
+    +algorithm = 1
+    +getName()
+}
+class yii.authclient.signature.RsaSha1 extends yii.authclient.signature.RsaSha
+class yii.authclient.widgets.AuthChoice {
+    +autoRender : bool = true
+    +clientCollection : string = "authClientCollection"
+    +clientIdGetParamName : string = "authclient"
+    +clientOptions : array = []
+    +options : array = []
+    +popupMode : bool = true
+    -_baseAuthUrl : array
+    -_clients : ClientInterface[]
+    +clientLink(client : ClientInterface, text : string = null, htmlOptions : array = []) : string
+    +createClientUrl(client : ClientInterface) : string
+    #defaultBaseAuthUrl() : array
+    #defaultClients() : ClientInterface[]
+    +getBaseAuthUrl() : array
+    +getClients() : ClientInterface[]
+    +init()
+    #renderMainContent() : string
+    +run() : string
+    +setBaseAuthUrl(baseAuthUrl : array)
+    +setClients(clients : ClientInterface[])
+}
+class yii.authclient.widgets.AuthChoice extends yii.base.Widget
+class yii.authclient.widgets.AuthChoiceAsset {
+    +depends = ["yii\authclient\widgets\AuthChoiceStyleAsset", "yii\web\YiiAsset"]
+    +js = ["authchoice.js"]
+    +sourcePath = "@yii/authclient/assets"
+}
+class yii.authclient.widgets.AuthChoiceAsset extends yii.web.AssetBundle
+class yii.authclient.widgets.AuthChoiceItem {
+    +authChoice : AuthChoice
+    +client : yii.authclient.ClientInterface
+}
+class yii.authclient.widgets.AuthChoiceItem extends yii.base.Widget
+class yii.authclient.widgets.AuthChoiceStyleAsset {
+    +css = ["authchoice.css"]
+    +sourcePath = "@yii/authclient/assets"
+}
+class yii.authclient.widgets.AuthChoiceStyleAsset extends yii.web.AssetBundle
+class yii.authclient.widgets.GooglePlusButton {
+    +buttonHtmlOptions : array = []
+    -_callback : string|array
+    #generateCallback(url : array = []) : string
+    +getCallback() : string
+    +init()
+    #registerClientScript()
+    #renderButton() : string
+    +run()
+    +setCallback(callback : string|array)
+}
+class yii.authclient.widgets.GooglePlusButton extends yii.authclient.widgets.AuthChoiceItem
+@enduml

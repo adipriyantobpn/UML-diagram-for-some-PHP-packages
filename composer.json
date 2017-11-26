@@ -1,0 +1,37 @@
+{
+    "name": "root/freeform",
+    "authors": [
+        {
+            "name": "Adi Priyanto",
+            "email": "adipriyanto.bpn@gmail.com"
+        }
+    ],
+    "require": {
+        "yiisoft/yii2": "2.0.13.1",
+        "yiisoft/yii2-authclient": "^2.1",
+        "yiisoft/yii2-bootstrap": "^2.0",
+        "yiisoft/yii2-debug": "^2.0",
+        "yiisoft/yii2-elasticsearch": "^2.0",
+        "yiisoft/yii2-faker": "^2.0",
+        "yiisoft/yii2-gii": "^2.0",
+        "yiisoft/yii2-httpclient": "^2.0",
+        "yiisoft/yii2-imagine": "^2.1",
+        "yiisoft/yii2-jui": "^2.0",
+        "yiisoft/yii2-mongodb": "^2.1",
+        "yiisoft/yii2-queue": "^2.0",
+        "yiisoft/yii2-redis": "^2.0",
+        "yiisoft/yii2-shell": "^2.0",
+        "yiisoft/yii2-smarty": "^2.0",
+        "yiisoft/yii2-sphinx": "^2.0",
+        "yiisoft/yii2-swiftmailer": "^2.1",
+        "yiisoft/yii2-twig": "^2.2",
+        "davidfuhr/php-plantumlwriter": "^1.6",
+        "bizley/migration": "^2.2"
+    },
+    "repositories": {
+        "asset-packagist": {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    }
+}

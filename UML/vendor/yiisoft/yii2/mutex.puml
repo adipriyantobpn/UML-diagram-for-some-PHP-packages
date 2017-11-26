@@ -1,0 +1,56 @@
+@startuml
+skinparam handwritten true
+abstract class yii.mutex.DbMutex {
+    +db : Connection|array|string = "db"
+    +init()
+}
+class yii.mutex.DbMutex extends yii.mutex.Mutex
+class yii.mutex.FileMutex {
+    +dirMode : int = 509
+    +fileMode : int
+    +mutexPath : string = "@runtime/mutex"
+    -_files : resource[] = []
+    #acquireLock(name : string, timeout : int = 0) : bool
+    #getLockFilePath(name : string) : string
+    +init()
+    #releaseLock(name : string) : bool
+}
+class yii.mutex.FileMutex extends yii.mutex.Mutex
+abstract class yii.mutex.Mutex {
+    +autoRelease : bool = true
+    -_locks : string[] = []
+    +acquire(name : string, timeout : int = 0) : bool
+    #acquireLock(name : string, timeout : int = 0) : bool
+    +init()
+    +release(name : string) : bool
+    #releaseLock(name : string) : bool
+}
+class yii.mutex.Mutex extends yii.base.Component
+class yii.mutex.MysqlMutex {
+    #acquireLock(name : string, timeout : int = 0) : bool
+    +init()
+    #releaseLock(name : string) : bool
+}
+class yii.mutex.MysqlMutex extends yii.mutex.DbMutex
+class yii.mutex.OracleMutex {
+    +{static}MODE_NL = "NL_MODE"
+    +{static}MODE_S = "S_MODE"
+    +{static}MODE_SS = "SS_MODE"
+    +{static}MODE_SSX = "SSX_MODE"
+    +{static}MODE_SX = "SX_MODE"
+    +{static}MODE_X = "X_MODE"
+    +lockMode : string = "X_MODE"
+    +releaseOnCommit : bool = false
+    #acquireLock(name : string, timeout : int = 0) : bool
+    +init()
+    #releaseLock(name : string) : bool
+}
+class yii.mutex.OracleMutex extends yii.mutex.DbMutex
+class yii.mutex.PgsqlMutex {
+    #acquireLock(name : string, timeout : int = 0) : bool
+    -getKeysFromName(name : string) : array
+    +init()
+    #releaseLock(name : string) : bool
+}
+class yii.mutex.PgsqlMutex extends yii.mutex.DbMutex
+@enduml

@@ -1,0 +1,21 @@
+@startuml
+skinparam handwritten true
+class YiiRequirementChecker {
+    +check(requirements : array|string) : $this
+    +checkPhpExtensionVersion(extensionName : string, version : string, compare : string = ">=") : bool
+    +checkPhpIniOff(name : string) : bool
+    +checkPhpIniOn(name : string) : bool
+    +checkUploadMaxFileSize(min : string|null = null, max : string|null = null) : bool
+    +checkYii() : YiiRequirementChecker
+    +compareByteSize(a : string, b : string, compare : string = ">=") : bool
+    +evaluateExpression(expression : string) : mixed
+    +getByteSize(verboseSize : string) : int
+    +getNowDate() : string
+    +getResult() : array|null
+    +getServerInfo() : string
+    +normalizeRequirement(requirement : array, requirementKey : int = 0) : array
+    +render()
+    +renderViewFile(_viewFile_ : string, _data_ : array = null, _return_ : bool = false) : string
+    +usageError(message : string)
+}
+@enduml

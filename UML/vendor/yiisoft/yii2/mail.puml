@@ -1,0 +1,77 @@
+@startuml
+skinparam handwritten true
+abstract class yii.mail.BaseMailer {
+    +{static}EVENT_AFTER_SEND = "afterSend"
+    +{static}EVENT_BEFORE_SEND = "beforeSend"
+    +fileTransportCallback : callable
+    +fileTransportPath : string = "@runtime/mail"
+    +htmlLayout : string|bool = "layouts/html"
+    +messageClass : string = "yii\mail\BaseMessage"
+    +messageConfig : array = []
+    +textLayout : string|bool = "layouts/text"
+    +useFileTransport : bool = false
+    -_message
+    -_view : yii.base.View|array = []
+    -_viewPath : string
+    +afterSend(message : MessageInterface, isSuccessful : bool)
+    +beforeSend(message : MessageInterface) : bool
+    +compose(view : string|array|null = null, params : array = []) : MessageInterface
+    #createMessage() : MessageInterface
+    #createView(config : array) : yii.web.View
+    +generateMessageFileName() : string
+    +getView() : yii.web.View
+    +getViewPath() : string
+    +render(view : string, params : array = [], layout : string|bool = false) : string
+    #saveMessage(message : MessageInterface) : bool
+    +send(message : MessageInterface) : bool
+    #sendMessage(message : MessageInterface) : bool
+    +sendMultiple(messages : array) : int
+    +setView(view : array|View)
+    +setViewPath(path : string)
+}
+class yii.mail.BaseMailer extends yii.base.Component
+class yii.mail.BaseMailer implements yii.mail.MailerInterface
+class yii.mail.BaseMailer implements yii.base.ViewContextInterface
+abstract class yii.mail.BaseMessage {
+    +mailer : MailerInterface
+    +send(mailer : yii.mail.MailerInterface = null) : bool
+    +__toString() : string
+}
+class yii.mail.BaseMessage extends yii.base.BaseObject
+class yii.mail.BaseMessage implements yii.mail.MessageInterface
+interface yii.mail.MailerInterface {
+    +compose(view : string|array|null = null, params : array = []) : MessageInterface
+    +send(message : MessageInterface) : bool
+    +sendMultiple(messages : array) : int
+}
+class yii.mail.MailEvent {
+    +isSuccessful : bool
+    +isValid : bool = true
+    +message : yii.mail.MessageInterface
+}
+class yii.mail.MailEvent extends yii.base.Event
+interface yii.mail.MessageInterface {
+    +attach(fileName : string, options : array = []) : $this
+    +attachContent(content : string, options : array = []) : $this
+    +embed(fileName : string, options : array = []) : string
+    +embedContent(content : string, options : array = []) : string
+    +getBcc() : array
+    +getCc() : array
+    +getCharset() : string
+    +getFrom() : string
+    +getReplyTo() : string
+    +getSubject() : string
+    +getTo() : array
+    +send(mailer : yii.mail.MailerInterface = null) : bool
+    +setBcc(bcc : string|array) : $this
+    +setCc(cc : string|array) : $this
+    +setCharset(charset : string) : $this
+    +setFrom(from : string|array) : $this
+    +setHtmlBody(html : string) : $this
+    +setReplyTo(replyTo : string|array) : $this
+    +setSubject(subject : string) : $this
+    +setTextBody(text : string) : $this
+    +setTo(to : string|array) : $this
+    +toString() : string
+}
+@enduml

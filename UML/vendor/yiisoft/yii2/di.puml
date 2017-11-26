@@ -1,0 +1,53 @@
+@startuml
+skinparam handwritten true
+class yii.di.Container {
+    -_definitions : array = []
+    -_dependencies : array = []
+    -_params : array = []
+    -_reflections : array = []
+    -_singletons : array = []
+    #build(class : string, params : array, config : array) : object
+    +clear(class : string)
+    +get(class : string, params : array = [], config : array = []) : object
+    +getDefinitions() : array
+    #getDependencies(class : string) : array
+    +has(class : string) : bool
+    +hasSingleton(class : string, checkInstance : bool = false) : bool
+    +invoke(callback : callable, params : array = []) : mixed
+    #mergeParams(class : string, params : array) : array
+    #normalizeDefinition(class : string, definition : string|array|callable) : array
+    +resolveCallableDependencies(callback : callable, params : array = []) : array
+    #resolveDependencies(dependencies : array, reflection : ReflectionClass = null) : array
+    +set(class : string, definition : mixed = [], params : array = []) : $this
+    +setDefinitions(definitions : array)
+    +setSingleton(class : string, definition : mixed = [], params : array = []) : $this
+    +setSingletons(singletons : array)
+}
+class yii.di.Container extends yii.base.Component
+class yii.di.Instance {
+    +id : string
+    +{static}ensure(reference : object|string|array|static, type : string = null, container : ServiceLocator|Container = null) : object
+    +get(container : ServiceLocator|Container = null) : object
+    +{static}of(id : string) : Instance
+    #__construct(id : string)
+    +{static}__set_state(state : array) : Instance
+}
+class yii.di.NotInstantiableException {
+    +getName() : string
+    +__construct(class, message = null, code = 0, previous : Exception = null)
+}
+class yii.di.NotInstantiableException extends yii.base.InvalidConfigException
+class yii.di.ServiceLocator {
+    -_components : array = []
+    -_definitions : array = []
+    +clear(id : string)
+    +get(id : string, throwException : bool = true) : object|null
+    +getComponents(returnDefinitions : bool = true) : array
+    +has(id : string, checkInstance : bool = false) : bool
+    +set(id : string, definition : mixed)
+    +setComponents(components : array)
+    +__get(name : string) : mixed
+    +__isset(name : string) : bool
+}
+class yii.di.ServiceLocator extends yii.base.Component
+@enduml
