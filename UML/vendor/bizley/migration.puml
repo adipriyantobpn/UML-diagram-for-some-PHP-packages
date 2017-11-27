@@ -1,0 +1,137 @@
+@startuml
+skinparam handwritten true
+class bizley.migration.controllers.MigrationController {
+    +db : Connection|array|string = "db"
+    +defaultAction : string = "list"
+    +fixHistory : bool|string|int = 0
+    +generalSchema : bool|string|int = 0
+    +migrationNamespace : string
+    +migrationPath : string = "@app/migrations"
+    +migrationTable : string = "{{%migration}}"
+    +showOnly : bool|string|int = 0
+    +skipMigrations : array = []
+    +templateFile : string = "@vendor/bizley/migration/src/views/create_migration.php"
+    +templateFileUpdate : string = "@vendor/bizley/migration/src/views/update_migration.php"
+    +useTablePrefix : bool|string|int = 1
+    #workingPath
+    +actionCreate(table : string) : int
+    +actionCreateAll() : int
+    +actionList() : int
+    +actionUpdate(table : string) : int
+    +actionUpdateAll() : int
+    #addMigrationHistory(version : string, namespace : string = null)
+    +beforeAction(action : Action) : bool
+    #createMigrationHistoryTable()
+    #execute(type : string, table : string, actionMethod : Closure)
+    +init()
+    +optionAliases()
+    +options(actionID)
+    +preparePathDirectory(path : string) : string
+}
+class bizley.migration.controllers.MigrationController extends yii.console.Controller
+class yii.db.Migration {
+    +changes : array = []
+    +db = "db"
+    +addChange(table : string, method : string, value : mixed)
+    +addColumn(table, column, type)
+    +addCommentOnColumn(table, column, comment)
+    +addCommentOnTable(table, comment)
+    +addForeignKey(name, table, columns, refTable, refColumns, delete = null, update = null)
+    +addPrimaryKey(name, table, columns)
+    +alterColumn(table, column, type)
+    +batchInsert(table, columns, rows)
+    +createIndex(name, table, columns, unique = false)
+    +createTable(table, columns, options = null)
+    +delete(table, condition = "", params = [])
+    +down()
+    +dropColumn(table, column)
+    +dropCommentFromColumn(table, column)
+    +dropCommentFromTable(table)
+    +dropForeignKey(name, table)
+    +dropIndex(name, table)
+    +dropPrimaryKey(name, table)
+    +dropTable(table)
+    +execute(sql, params = [])
+    #extractColumn(type : ColumnSchemaBuilder) : array
+    #extractColumns(columns : array) : array
+    +fillTypeMapProperties(type : string, keyToDb : array, dbToKey : array) : array
+    #getDb()
+    +getKeysMap(type : ColumnSchemaBuilder) : array
+    +getRawTableName(table : string) : string
+    +init()
+    +insert(table, columns)
+    +renameColumn(table, name, newName)
+    +renameTable(table, newName)
+    +safeDown()
+    +safeUp()
+    +truncateTable(table)
+    +up()
+    +update(table, columns, condition = "", params = [])
+}
+class yii.db.Migration extends yii.base.Component
+class yii.db.Migration implements yii.db.MigrationInterface
+class bizley.migration.Extractor {
+    +className : string
+    +db : yii.db.Connection
+    +generalSchema : bool = false
+    +namespace : string
+    +tableName : string
+    +templateFile : string
+    +templateFileUpdate : string
+    +useTablePrefix : bool
+    +view : yii.base.View
+    #_tableSchema
+    +checkSchema()
+    #generateTableName(tableName : string) : string
+    +getStructure() : array
+    #getTableColumns() : array
+    #getTableForeignKeys() : array
+    #getTablePrimaryKey() : array
+    +getTableSchema() : yii.db.TableSchema
+    #getTableUniqueIndexes() : array
+    +init()
+    +prepareSchemaAppend(primaryKey : bool, autoIncrement : bool) : string
+}
+class bizley.migration.Extractor extends yii.base.Component
+class bizley.migration.Generator {
+    +generateForeignKeyName(column : string) : string
+    +generateMigration() : string
+    +prepareColumnsDefinitions(compositePk : bool = false) : array
+    +prepareForeignKeysDefinitions() : array
+    +renderColumnDefinition(column : yii.db.ColumnSchema, compositePk : bool = false) : string
+    +renderKeyDefinition(name : string, key : array) : string
+    +renderPrecision(column : yii.db.ColumnSchema) : string
+    +renderScale(column : yii.db.ColumnSchema) : string
+    +renderSize(column : yii.db.ColumnSchema) : string
+}
+class bizley.migration.Generator extends bizley.migration.Extractor
+class bizley.migration.Updater {
+    +migrationPath : string = "@app/migrations"
+    +migrationTable : string = "{{%migration}}"
+    +showOnly : bool = false
+    +skipMigrations : array = []
+    -_classMap
+    -_modifications = []
+    -_oldSchema = []
+    -_structure = []
+    -_tableSubject
+    #analyseChanges(changes : array) : bool
+    #compareStructures() : bool
+    #confirmCompositePrimaryKey(newKeys : array) : bool
+    +displayValue(value : mixed) : string
+    #extract(migration : string) : array
+    +fetchHistory() : array
+    +findPrimaryKeyString(append : string) : bool
+    #formatStructure()
+    +generateMigration() : string
+    +init()
+    +isUpdateRequired() : bool
+    +prepareUpdates() : array
+    +removePrimaryKeyString(append : string) : string|bool|null
+    +renderColumnStructure(column : array) : string
+    +renderSizeStructure(column : array) : mixed
+    #restoreMigrationClass()
+    #setDummyMigrationClass()
+}
+class bizley.migration.Updater extends bizley.migration.Generator
+@enduml

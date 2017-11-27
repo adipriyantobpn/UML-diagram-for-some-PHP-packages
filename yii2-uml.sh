@@ -75,6 +75,8 @@ yii2_core_basedir=vendor/yiisoft/yii2-dev/framework
 yii2_ext_basedir=vendor/yiisoft/yii2
 yii2_exts=( authclient bootstrap composer debug elasticsearch faker gii httpclient imagine jui mongodb queue redis shell smarty sphinx swiftmailer twig )
 
+additional_pkg_dirs=( vendor/bizley/migration )
+
 # -- Scripts
 
 preparePumlDir $yii2_core_basedir
@@ -106,5 +108,14 @@ do
         phpfiles="$(find $puml_file -path $puml_file/tests -prune -o -type f -name "*.php" -print0 | xargs -0)"
     fi
 
+    generatePlantUml "$phpfiles" "$puml_file" "$plantuml_jar" "$generatePlantUmlAsPng" "$debug"
+done
+
+for pkg_dir in "${additional_pkg_dirs[@]}"
+do
+    preparePumlDir $pkg_dir
+    puml_file=$pkg_dir
+    info "Search PHP files for : $puml_file"
+    phpfiles="$(find $puml_file -path $puml_file/tests -prune -o -type f -name "*.php" -print0 | xargs -0)"
     generatePlantUml "$phpfiles" "$puml_file" "$plantuml_jar" "$generatePlantUmlAsPng" "$debug"
 done
