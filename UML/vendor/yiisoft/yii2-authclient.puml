@@ -128,7 +128,9 @@ class yii.authclient.InvalidResponseException extends yii.base.Exception
 abstract class yii.authclient.OAuth1 {
     +accessTokenMethod : string = "GET"
     +accessTokenUrl : string
-    +authorizationHeaderMethods : array|null = ["POST"]
+    +authorizationHeaderMethods : array|null = [
+        \t0 => "POST"
+    ]
     +consumerKey : string
     +consumerSecret : string
     +requestTokenMethod : string = "GET"
@@ -197,7 +199,17 @@ class yii.authclient.OAuthToken {
 class yii.authclient.OAuthToken extends yii.base.BaseObject
 class yii.authclient.OpenId {
     +authUrl : string
-    +axToSregMap : array = ["nickname", "email", "fullname", "dob", "gender", "postcode", "country", "language", "timezone"]
+    +axToSregMap : array = [
+        \t"namePerson/friendly" => "nickname",
+        \t"contact/email" => "email",
+        \t"namePerson" => "fullname",
+        \t"birthDate" => "dob",
+        \t"person/gender" => "gender",
+        \t"contact/postalCode/home" => "postcode",
+        \t"contact/country/home" => "country",
+        \t"pref/language" => "language",
+        \t"pref/timezone" => "timezone"
+    ]
     +cainfo : string
     +capath : string
     +data : array
@@ -236,7 +248,20 @@ class yii.authclient.OpenId {
 }
 class yii.authclient.OpenId extends yii.authclient.BaseClient
 class yii.authclient.OpenIdConnect {
-    +allowedJwsAlgorithms : array = ["HS256", "HS384", "HS512", "ES256", "ES384", "ES512", "RS256", "RS384", "RS512", "PS256", "PS384", "PS512"]
+    +allowedJwsAlgorithms : array = [
+        \t0 => "HS256",
+        \t1 => "HS384",
+        \t2 => "HS512",
+        \t3 => "ES256",
+        \t4 => "ES384",
+        \t5 => "ES512",
+        \t6 => "RS256",
+        \t7 => "RS384",
+        \t8 => "RS512",
+        \t9 => "PS256",
+        \t10 => "PS384",
+        \t11 => "PS512"
+    ]
     +configParamsCacheKeyPrefix : string = "config-params-"
     +issuerUrl : string
     +scope = "openid"
@@ -279,7 +304,10 @@ interface yii.authclient.StateStorageInterface {
 }
 class yii.authclient.clients.Facebook {
     +apiBaseUrl = "https://graph.facebook.com"
-    +attributeNames : array = ["name", "email"]
+    +attributeNames : array = [
+        \t0 => "name",
+        \t1 => "email"
+    ]
     +authUrl = "https://www.facebook.com/dialog/oauth"
     +autoExchangeAccessToken : bool = false
     +autoRefreshAccessToken = false
@@ -325,7 +353,13 @@ class yii.authclient.clients.GoogleHybrid {
 class yii.authclient.clients.GoogleHybrid extends yii.authclient.clients.Google
 class yii.authclient.clients.LinkedIn {
     +apiBaseUrl = "https://api.linkedin.com/v1"
-    +attributeNames : array = ["id", "email-address", "first-name", "last-name", "public-profile-url"]
+    +attributeNames : array = [
+        \t0 => "id",
+        \t1 => "email-address",
+        \t2 => "first-name",
+        \t3 => "last-name",
+        \t4 => "public-profile-url"
+    ]
     +authUrl = "https://www.linkedin.com/uas/oauth2/authorization"
     +tokenUrl = "https://www.linkedin.com/uas/oauth2/accessToken"
     +applyAccessTokenToRequest(request, accessToken)
@@ -372,7 +406,19 @@ class yii.authclient.clients.TwitterOAuth2 extends yii.authclient.OAuth2
 class yii.authclient.clients.VKontakte {
     +apiBaseUrl = "https://api.vk.com/method"
     +apiVersion : string = 3.0
-    +attributeNames : array = ["uid", "first_name", "last_name", "nickname", "screen_name", "sex", "bdate", "city", "country", "timezone", "photo"]
+    +attributeNames : array = [
+        \t0 => "uid",
+        \t1 => "first_name",
+        \t2 => "last_name",
+        \t3 => "nickname",
+        \t4 => "screen_name",
+        \t5 => "sex",
+        \t6 => "bdate",
+        \t7 => "city",
+        \t8 => "country",
+        \t9 => "timezone",
+        \t10 => "photo"
+    ]
     +authUrl = "https://oauth.vk.com/authorize"
     +tokenUrl = "https://oauth.vk.com/access_token"
     +applyAccessTokenToRequest(request, accessToken)
@@ -460,8 +506,13 @@ class yii.authclient.widgets.AuthChoice {
 }
 class yii.authclient.widgets.AuthChoice extends yii.base.Widget
 class yii.authclient.widgets.AuthChoiceAsset {
-    +depends = ["yii\authclient\widgets\AuthChoiceStyleAsset", "yii\web\YiiAsset"]
-    +js = ["authchoice.js"]
+    +depends = [
+        \t0 => "yii\authclient\widgets\AuthChoiceStyleAsset",
+        \t1 => "yii\web\YiiAsset"
+    ]
+    +js = [
+        \t0 => "authchoice.js"
+    ]
     +sourcePath = "@yii/authclient/assets"
 }
 class yii.authclient.widgets.AuthChoiceAsset extends yii.web.AssetBundle
@@ -471,7 +522,9 @@ class yii.authclient.widgets.AuthChoiceItem {
 }
 class yii.authclient.widgets.AuthChoiceItem extends yii.base.Widget
 class yii.authclient.widgets.AuthChoiceStyleAsset {
-    +css = ["authchoice.css"]
+    +css = [
+        \t0 => "authchoice.css"
+    ]
     +sourcePath = "@yii/authclient/assets"
 }
 class yii.authclient.widgets.AuthChoiceStyleAsset extends yii.web.AssetBundle

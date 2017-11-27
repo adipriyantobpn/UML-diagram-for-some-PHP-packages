@@ -121,7 +121,10 @@ class yii.sphinx.Command {
 class yii.sphinx.Command extends yii.db.Command
 class yii.sphinx.Connection {
     +enableFloatConversion : bool = true
-    +schemaMap = ["yii\sphinx\Schema", "yii\sphinx\Schema"]
+    +schemaMap = [
+        \t"mysqli" => "yii\sphinx\Schema",
+        \t"mysql" => "yii\sphinx\Schema"
+    ]
     +createCommand(sql : string = null, params : array = []) : Command
     +escapeMatchValue(str : string) : string
     +getIndexSchema(name : string, refresh : bool = false) : IndexSchema
@@ -145,8 +148,23 @@ class yii.sphinx.IndexSchema extends yii.base.BaseObject
 class yii.sphinx.MatchBuilder {
     +{static}PARAM_PREFIX = ":mp"
     +db : Connection
-    #matchBuilders : array = ["buildAndMatch", "buildAndMatch", "buildIgnoreMatch", "buildProximityMatch", "buildMultipleMatch", "buildMultipleMatch", "buildMultipleMatch", "buildZoneMatch", "buildZoneMatch"]
-    #matchOperators : array = [" ", " | ", " !", " "]
+    #matchBuilders : array = [
+        \t"AND" => "buildAndMatch",
+        \t"OR" => "buildAndMatch",
+        \t"IGNORE" => "buildIgnoreMatch",
+        \t"PROXIMITY" => "buildProximityMatch",
+        \t"MAYBE" => "buildMultipleMatch",
+        \t"SENTENCE" => "buildMultipleMatch",
+        \t"PARAGRAPH" => "buildMultipleMatch",
+        \t"ZONE" => "buildZoneMatch",
+        \t"ZONESPAN" => "buildZoneMatch"
+    ]
+    #matchOperators : array = [
+        \t"AND" => " ",
+        \t"OR" => " | ",
+        \t"NOT" => " !",
+        \t"=" => " "
+    ]
     +build(match : MatchExpression) : string
     +buildAndMatch(operator : string, operands : array, params : array) : string
     +buildHashMatch(match : array, params : array) : string
@@ -220,7 +238,19 @@ class yii.sphinx.Query {
 class yii.sphinx.Query extends yii.db.Query
 class yii.sphinx.QueryBuilder {
     +{static}PARAM_PREFIX = ":qp"
-    #conditionBuilders : array = ["buildAndCondition", "buildAndCondition", "buildBetweenCondition", "buildBetweenCondition", "buildInCondition", "buildInCondition", "buildLikeCondition", "buildLikeCondition", "buildLikeCondition", "buildLikeCondition", "buildNotCondition"]
+    #conditionBuilders : array = [
+        \t"AND" => "buildAndCondition",
+        \t"OR" => "buildAndCondition",
+        \t"BETWEEN" => "buildBetweenCondition",
+        \t"NOT BETWEEN" => "buildBetweenCondition",
+        \t"IN" => "buildInCondition",
+        \t"NOT IN" => "buildInCondition",
+        \t"LIKE" => "buildLikeCondition",
+        \t"NOT LIKE" => "buildLikeCondition",
+        \t"OR LIKE" => "buildLikeCondition",
+        \t"OR NOT LIKE" => "buildLikeCondition",
+        \t"NOT" => "buildNotCondition"
+    ]
     +db : Connection
     +querySeparator : string = "; "
     +separator : string = " "
@@ -276,7 +306,19 @@ class yii.sphinx.Schema {
     +{static}TYPE_STRING = "string"
     +{static}TYPE_TIMESTAMP = "timestamp"
     +db : Connection
-    +typeMap : array = ["~~NOT RESOLVED~~", "~~NOT RESOLVED~~", "~~NOT RESOLVED~~", "~~NOT RESOLVED~~", "~~NOT RESOLVED~~", "~~NOT RESOLVED~~", "~~NOT RESOLVED~~", "~~NOT RESOLVED~~", "~~NOT RESOLVED~~", "~~NOT RESOLVED~~", "integer"]
+    +typeMap : array = [
+        \t"field" => "~~NOT RESOLVED~~",
+        \t"string" => "~~NOT RESOLVED~~",
+        \t"ordinal" => "~~NOT RESOLVED~~",
+        \t"integer" => "~~NOT RESOLVED~~",
+        \t"int" => "~~NOT RESOLVED~~",
+        \t"uint" => "~~NOT RESOLVED~~",
+        \t"bigint" => "~~NOT RESOLVED~~",
+        \t"timestamp" => "~~NOT RESOLVED~~",
+        \t"bool" => "~~NOT RESOLVED~~",
+        \t"float" => "~~NOT RESOLVED~~",
+        \t"mva" => "integer"
+    ]
     -_builder : QueryBuilder
     -_indexes : array = []
     -_indexNames : array

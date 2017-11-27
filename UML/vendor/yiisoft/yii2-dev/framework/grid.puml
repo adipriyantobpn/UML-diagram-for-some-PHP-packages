@@ -1,0 +1,152 @@
+@startuml
+skinparam handwritten true
+class yii.grid.ActionColumn {
+    +buttonOptions : array = []
+    +buttons : array = []
+    +controller : string
+    +headerOptions = [
+        \t"class" => "action-column"
+    ]
+    +template : string = "{view} {update} {delete}"
+    +urlCreator : callable
+    +visibleButtons : array = []
+    +createUrl(action : string, model : yii.db.ActiveRecordInterface, key : mixed, index : int) : string
+    +init()
+    #initDefaultButton(name : string, iconName : string, additionalOptions : array = [])
+    #initDefaultButtons()
+    #renderDataCellContent(model, key, index)
+}
+class yii.grid.ActionColumn extends yii.grid.Column
+class yii.grid.CheckboxColumn {
+    +checkboxOptions : array|.Closure = []
+    +cssClass : string
+    +multiple : bool = true
+    +name : string = "selection"
+    #getHeaderCheckBoxName() : string
+    +init()
+    +registerClientScript()
+    #renderDataCellContent(model, key, index)
+    #renderHeaderCellContent() : string
+}
+class yii.grid.CheckboxColumn extends yii.grid.Column
+class yii.grid.Column {
+    +content : callable
+    +contentOptions : array|.Closure = []
+    +filterOptions : array = []
+    +footer : string
+    +footerOptions : array = []
+    +grid : GridView
+    +header : string
+    +headerOptions : array = []
+    +options : array = []
+    +visible : bool = true
+    #getHeaderCellLabel() : string
+    +renderDataCell(model : mixed, key : mixed, index : int) : string
+    #renderDataCellContent(model : mixed, key : mixed, index : int) : string
+    +renderFilterCell()
+    #renderFilterCellContent() : string
+    +renderFooterCell()
+    #renderFooterCellContent() : string
+    +renderHeaderCell()
+    #renderHeaderCellContent() : string
+}
+class yii.grid.Column extends yii.base.BaseObject
+class yii.grid.DataColumn {
+    +attribute : string
+    +enableSorting : bool = true
+    +encodeLabel : bool = true
+    +filter : string|array|null|false
+    +filterInputOptions : array = [
+        \t"class" => "form-control",
+        \t"id" => null
+    ]
+    +format : string|array|Closure = "text"
+    +label : string
+    +sortLinkOptions : array = []
+    +value : string|Closure
+    +getDataCellValue(model : mixed, key : mixed, index : int) : string
+    #getHeaderCellLabel()
+    #renderDataCellContent(model, key, index)
+    #renderFilterCellContent()
+    #renderHeaderCellContent()
+}
+class yii.grid.DataColumn extends yii.grid.Column
+class yii.grid.GridView {
+    +{static}FILTER_POS_BODY = "body"
+    +{static}FILTER_POS_FOOTER = "footer"
+    +{static}FILTER_POS_HEADER = "header"
+    +afterRow : Closure
+    +beforeRow : Closure
+    +caption : string
+    +captionOptions : array = []
+    +columns : array = []
+    +dataColumnClass : string
+    +emptyCell : string = "&nbsp;"
+    +filterErrorOptions : array = [
+        \t"class" => "help-block"
+    ]
+    +filterErrorSummaryOptions : array = [
+        \t"class" => "error-summary"
+    ]
+    +filterModel : yii.base.Model
+    +filterPosition : string = "body"
+    +filterRowOptions : array = [
+        \t"class" => "filters"
+    ]
+    +filterSelector : string
+    +filterUrl : string|array
+    +footerRowOptions : array = []
+    +formatter : array|Formatter
+    +headerRowOptions : array = []
+    +layout : string = "{summary}\\n{items}\\n{pager}"
+    +options : array = [
+        \t"class" => "grid-view"
+    ]
+    +rowOptions : array|Closure = []
+    +showFooter : bool = false
+    +showHeader : bool = true
+    +showOnEmpty : bool = true
+    +tableOptions : array = [
+        \t"class" => "table table-striped table-bordered"
+    ]
+    #createDataColumn(text : string) : DataColumn
+    #getClientOptions() : array
+    #guessColumns()
+    +init()
+    #initColumns()
+    +renderCaption() : bool|string
+    +renderColumnGroup() : bool|string
+    +renderErrors() : string
+    +renderFilters() : string
+    +renderItems()
+    +renderSection(name)
+    +renderTableBody() : string
+    +renderTableFooter() : string
+    +renderTableHeader() : string
+    +renderTableRow(model : mixed, key : mixed, index : int) : string
+    +run()
+}
+class yii.grid.GridView extends yii.widgets.BaseListView
+class yii.grid.GridViewAsset {
+    +depends = [
+        \t0 => "yii\web\YiiAsset"
+    ]
+    +js = [
+        \t0 => "yii.gridView.js"
+    ]
+    +sourcePath = "@yii/assets"
+}
+class yii.grid.GridViewAsset extends yii.web.AssetBundle
+class yii.grid.RadioButtonColumn {
+    +name : string = "radioButtonSelection"
+    +radioOptions : array|.Closure = []
+    +init()
+    #renderDataCellContent(model, key, index)
+}
+class yii.grid.RadioButtonColumn extends yii.grid.Column
+class yii.grid.SerialColumn {
+    +header = "#"
+    #renderDataCellContent(model, key, index)
+}
+class yii.grid.SerialColumn extends yii.grid.Column
+@enduml

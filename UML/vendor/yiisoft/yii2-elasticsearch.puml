@@ -44,7 +44,9 @@ class yii.elasticsearch.ActiveRecord {
     +getPrimaryKey(asArray = false)
     +getScore() : float
     +{static}index() : string
-    +insert(runValidation : boolean = true, attributes : array = null, options : array = ["create"]) : boolean
+    +insert(runValidation : boolean = true, attributes : array = null, options : array = [
+        \t"op_type" => "create"
+    ]) : boolean
     +{static}instantiate(row : array) : static
     +{static}mget(primaryKeys : array, options : array = []) : array
     +optimisticLock()
@@ -127,7 +129,11 @@ class yii.elasticsearch.Connection {
     +autodetectCluster : boolean = true
     +connectionTimeout : float
     +dataTimeout : float
-    +nodes : array = [["inet[/127.0.0.1:9200]"]]
+    +nodes : array = [
+        \t0 => [
+        \t    \t"http_address" => "inet[/127.0.0.1:9200]"
+        \t]
+    ]
     -_curl : resource
     +close()
     +createCommand(config : array = []) : Command

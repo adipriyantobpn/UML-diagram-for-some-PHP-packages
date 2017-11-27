@@ -4,21 +4,34 @@ class yii.imagine.BaseImage {
     +{static}DRIVER_GD2 = "gd2"
     +{static}DRIVER_GMAGICK = "gmagick"
     +{static}DRIVER_IMAGICK = "imagick"
-    +driver : array|string = ["~~NOT RESOLVED~~", "~~NOT RESOLVED~~", "gd2"]
+    +driver : array|string = [
+        \t0 => "~~NOT RESOLVED~~",
+        \t1 => "~~NOT RESOLVED~~",
+        \t2 => "gd2"
+    ]
     +thumbnailBackgroundAlpha : string = 100
     +thumbnailBackgroundColor : string = "FFF"
     -_imagine : Imagine.Image.ImagineInterface
     +{static}autorotate(image : string|resource|ImageInterface, color : string = 000000) : Imagine.Image.ImageInterface
     #{static}createImagine() : Imagine.Image.ImagineInterface
-    +{static}crop(image : string|resource|ImageInterface, width : int, height : int, start : array = [0, 0]) : Imagine.Image.ImageInterface
+    +{static}crop(image : string|resource|ImageInterface, width : int, height : int, start : array = [
+        \t0 => 0,
+        \t1 => 0
+    ]) : Imagine.Image.ImageInterface
     #{static}ensureImageInterfaceInstance(image : string|resource|ImageInterface) : Imagine.Image.ImageInterface
     +{static}frame(image : string|resource|ImageInterface, margin : int = 20, color : string = 666, alpha : int = 100) : Imagine.Image.ImageInterface
     +{static}getImagine() : Imagine.Image.ImagineInterface
     #{static}getThumbnailBox(sourceBox : Imagine.Image.BoxInterface, width : int, height : int) : Imagine.Image.BoxInterface
     +{static}setImagine(imagine : ImagineInterface)
-    +{static}text(image : string|resource|ImageInterface, text : string, fontFile : string, start : array = [0, 0], fontOptions : array = []) : Imagine.Image.ImageInterface
+    +{static}text(image : string|resource|ImageInterface, text : string, fontFile : string, start : array = [
+        \t0 => 0,
+        \t1 => 0
+    ], fontOptions : array = []) : Imagine.Image.ImageInterface
     +{static}thumbnail(image : string|resource|ImageInterface, width : int, height : int, mode : string = "~~NOT RESOLVED~~") : Imagine.Image.ImageInterface
-    +{static}watermark(image : string|resource|ImageInterface, watermarkImage : string|resource|ImageInterface, start : array = [0, 0]) : Imagine.Image.ImageInterface
+    +{static}watermark(image : string|resource|ImageInterface, watermarkImage : string|resource|ImageInterface, start : array = [
+        \t0 => 0,
+        \t1 => 0
+    ]) : Imagine.Image.ImageInterface
 }
 class yii.imagine.Image {
     +{static}DRIVER_GD2 = "gd2"

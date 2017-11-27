@@ -1,0 +1,2012 @@
+@startuml
+skinparam handwritten true
+class yii.db.ActiveQuery {
+    +{static}EVENT_INIT = "init"
+    +joinWith : array
+    +on : string|array
+    +sql : string
+    +alias(alias : string) : $this
+    +all(db : Connection = null) : array|ActiveRecord[]
+    +andOnCondition(condition : string|array, params : array = []) : $this
+    -buildJoinWith()
+    +createCommand(db : Connection|null = null) : Command
+    -getJoinType(joinType : string|array, name : string) : string
+    #getPrimaryTableName() : string
+    -getTableNameAndAlias() : array
+    +getTablesUsedInFrom()
+    +init()
+    +innerJoinWith(with : string|array, eagerLoading : bool|array = true) : $this
+    +joinWith(with : string|array, eagerLoading : bool|array = true, joinType : string|array = "LEFT JOIN") : $this
+    -joinWithRelation(parent : ActiveQuery, child : ActiveQuery, joinType : string)
+    -joinWithRelations(model : ActiveRecord, with : array, joinType : string|array)
+    +onCondition(condition : string|array, params : array = []) : $this
+    +one(db : Connection|null = null) : ActiveRecord|array|null
+    +orOnCondition(condition : string|array, params : array = []) : $this
+    +populate(rows)
+    +prepare(builder)
+    #queryScalar(selectExpression, db)
+    -removeDuplicatedModels(models : array) : array
+    +viaTable(tableName : string, link : array, callable : callable = null) : $this
+    +__construct(modelClass : string, config : array = [])
+}
+class yii.db.ActiveQuery extends yii.db.Query
+class yii.db.ActiveQuery implements yii.db.ActiveQueryInterface
+interface yii.db.ActiveQueryInterface {
+    +asArray(value : bool = true) : $this
+    +findFor(name : string, model : ActiveRecordInterface) : mixed
+    +indexBy(column : string|callable) : $this
+    +one(db : Connection = null) : ActiveRecordInterface|array|null
+    +via(relationName : string, callable : callable = null) : $this
+    +with() : $this
+}
+interface yii.db.ActiveQueryInterface implements yii.db.QueryInterface
+abstract class yii.db.ActiveQueryTrait {
+    +asArray : bool
+    +modelClass : string
+    +with : array
+    +asArray(value : bool = true) : $this
+    #createModels(rows : array) : array|ActiveRecord[]
+    +findWith(with : array, models : array|ActiveRecord[])
+    -normalizeRelations(model : ActiveRecord, with : array) : ActiveQueryInterface[]
+    +with() : $this
+}
+class yii.db.ActiveRecord {
+    +{static}EVENT_AFTER_DELETE = "afterDelete"
+    +{static}EVENT_AFTER_FIND = "afterFind"
+    +{static}EVENT_AFTER_INSERT = "afterInsert"
+    +{static}EVENT_AFTER_REFRESH = "afterRefresh"
+    +{static}EVENT_AFTER_UPDATE = "afterUpdate"
+    +{static}EVENT_BEFORE_DELETE = "beforeDelete"
+    +{static}EVENT_BEFORE_INSERT = "beforeInsert"
+    +{static}EVENT_BEFORE_UPDATE = "beforeUpdate"
+    +{static}EVENT_INIT = "init"
+    +{static}OP_ALL = 7
+    +{static}OP_DELETE = 4
+    +{static}OP_INSERT = 1
+    +{static}OP_UPDATE = 2
+    +attributes() : array
+    +delete() : int|false
+    +{static}deleteAll(condition : string|array = null, params : array = []) : int
+    #deleteInternal() : int|false
+    +equals(record : ActiveRecord) : bool
+    +{static}find() : ActiveQuery
+    #{static}findByCondition(condition : mixed) : ActiveQueryInterface
+    +{static}findBySql(sql : string, params : array = []) : ActiveQuery
+    +{static}getDb() : Connection
+    +{static}getTableSchema() : TableSchema
+    +insert(runValidation : bool = true, attributes : array = null) : bool
+    #insertInternal(attributes : array = null) : bool
+    +isTransactional(operation : int) : bool
+    +loadDefaultValues(skipIfSet : bool = true) : $this
+    +{static}populateRecord(record, row)
+    +{static}primaryKey() : string[]
+    +refresh()
+    +{static}tableName() : string
+    +transactions() : array
+    +update(runValidation : bool = true, attributeNames : array = null) : int|false
+    +{static}updateAll(attributes : array, condition : string|array = "", params : array = []) : int
+    +{static}updateAllCounters(counters : array, condition : string|array = "", params : array = []) : int
+}
+class yii.db.ActiveRecord extends yii.db.BaseActiveRecord
+interface yii.db.ActiveRecordInterface {
+    +attributes() : array
+    +delete() : int|bool
+    +{static}deleteAll(condition : array = null) : int
+    +equals(record : static) : bool
+    +{static}find() : ActiveQueryInterface
+    +{static}findAll(condition : mixed) : array
+    +{static}findOne(condition : mixed) : static
+    +getAttribute(name : string) : mixed
+    +{static}getDb() : mixed
+    +getIsNewRecord() : bool
+    +getOldPrimaryKey(asArray : bool = false) : mixed
+    +getPrimaryKey(asArray : bool = false) : mixed
+    +getRelation(name : string, throwException : bool = true) : ActiveQueryInterface
+    +hasAttribute(name : string) : bool
+    +insert(runValidation : bool = true, attributes : array = null) : bool
+    +{static}isPrimaryKey(keys : array) : bool
+    +link(name : string, model : static, extraColumns : array = [])
+    +populateRelation(name : string, records : ActiveRecordInterface|array|null)
+    +{static}primaryKey() : string[]
+    +save(runValidation : bool = true, attributeNames : array = null) : bool
+    +setAttribute(name : string, value : mixed)
+    +unlink(name : string, model : static, delete : bool = false)
+    +update(runValidation : bool = true, attributeNames : array = null) : int|bool
+    +{static}updateAll(attributes : array, condition : array = null) : int
+}
+interface yii.db.ActiveRecordInterface implements yii.base.StaticInstanceInterface
+abstract class yii.db.ActiveRelationTrait {
+    +inverseOf : string
+    +link : array
+    +multiple : bool
+    +primaryModel : ActiveRecord
+    +via : array|object
+    -addInverseRelations(result : array)
+    -buildBuckets(models : array, link : array, viaModels : array = null, viaLink : array = null, checkMultiple : bool = true) : array
+    -filterByModels(models : array)
+    +findFor(name : string, model : ActiveRecordInterface|BaseActiveRecord) : mixed
+    -findJunctionRows(primaryModels : array) : array
+    -getModelKey(model : ActiveRecordInterface|array, attributes : array) : string
+    -indexBuckets(buckets : array, indexBy : string|callable) : array
+    +inverseOf(relationName : string) : $this
+    -normalizeModelKey(value : mixed) : string
+    -populateInverseRelation(primaryModels : ActiveRecordInterface[], models : ActiveRecordInterface[], primaryName : string, name : string)
+    +populateRelation(name : string, primaryModels : array) : array
+    -prefixKeyColumns(attributes : array) : array
+    +via(relationName : string, callable : callable = null) : $this
+    +__clone()
+}
+class yii.db.AfterSaveEvent {
+    +changedAttributes : array
+}
+class yii.db.AfterSaveEvent extends yii.base.Event
+abstract class yii.db.BaseActiveRecord {
+    +{static}EVENT_AFTER_DELETE = "afterDelete"
+    +{static}EVENT_AFTER_FIND = "afterFind"
+    +{static}EVENT_AFTER_INSERT = "afterInsert"
+    +{static}EVENT_AFTER_REFRESH = "afterRefresh"
+    +{static}EVENT_AFTER_UPDATE = "afterUpdate"
+    +{static}EVENT_BEFORE_DELETE = "beforeDelete"
+    +{static}EVENT_BEFORE_INSERT = "beforeInsert"
+    +{static}EVENT_BEFORE_UPDATE = "beforeUpdate"
+    +{static}EVENT_INIT = "init"
+    -_attributes : array = []
+    -_oldAttributes : array|null
+    -_related : array = []
+    +afterDelete()
+    +afterFind()
+    +afterRefresh()
+    +afterSave(insert : bool, changedAttributes : array)
+    +beforeDelete() : bool
+    +beforeSave(insert : bool) : bool
+    -bindModels(link : array, foreignModel : ActiveRecordInterface, primaryModel : ActiveRecordInterface)
+    +canGetProperty(name, checkVars = true, checkBehaviors = true)
+    +canSetProperty(name, checkVars = true, checkBehaviors = true)
+    #createRelationQuery(class : string, link : array, multiple : bool) : ActiveQueryInterface
+    +delete() : int|false
+    +{static}deleteAll(condition : string|array = null) : int
+    +equals(record : ActiveRecordInterface) : bool
+    +extraFields()
+    +fields()
+    +{static}findAll(condition) : static[]
+    #{static}findByCondition(condition : mixed) : ActiveQueryInterface
+    +{static}findOne(condition) : static|null
+    +getAttribute(name : string) : mixed
+    +getAttributeHint(attribute : string) : string
+    +getAttributeLabel(attribute : string) : string
+    +getDirtyAttributes(names : string[]|null = null) : array
+    +getIsNewRecord() : bool
+    +getOldAttribute(name : string) : mixed
+    +getOldAttributes() : array
+    +getOldPrimaryKey(asArray : bool = false) : mixed
+    +getPrimaryKey(asArray : bool = false) : mixed
+    +getRelatedRecords() : array
+    +getRelation(name : string, throwException : bool = true) : ActiveQueryInterface|ActiveQuery
+    +hasAttribute(name : string) : bool
+    +hasMany(class : string, link : array) : ActiveQueryInterface
+    +hasOne(class : string, link : array) : ActiveQueryInterface
+    +init()
+    +{static}instantiate(row : array) : static
+    +isAttributeChanged(name : string, identical : bool = true) : bool
+    +{static}isPrimaryKey(keys : array) : bool
+    +isRelationPopulated(name : string) : bool
+    +link(name : string, model : ActiveRecordInterface, extraColumns : array = [])
+    +markAttributeDirty(name : string)
+    +offsetExists(offset : mixed) : bool
+    +offsetUnset(offset : mixed)
+    +optimisticLock() : string
+    +{static}populateRecord(record : BaseActiveRecord, row : array)
+    +populateRelation(name : string, records : ActiveRecordInterface|array|null)
+    +refresh() : bool
+    #refreshInternal(record : BaseActiveRecord) : bool
+    +save(runValidation : bool = true, attributeNames : array = null) : bool
+    +setAttribute(name : string, value : mixed)
+    +setIsNewRecord(value : bool)
+    +setOldAttribute(name : string, value : mixed)
+    +setOldAttributes(values : array|null)
+    +unlink(name : string, model : ActiveRecordInterface, delete : bool = false)
+    +unlinkAll(name : string, delete : bool = false)
+    +update(runValidation : bool = true, attributeNames : array = null) : int|false
+    +{static}updateAll(attributes : array, condition : string|array = "") : int
+    +{static}updateAllCounters(counters : array, condition : string|array = "") : int
+    +updateAttributes(attributes : array) : int
+    +updateCounters(counters : array) : bool
+    #updateInternal(attributes : array = null) : int|false
+    +__get(name : string) : mixed
+    +__isset(name : string) : bool
+    +__set(name : string, value : mixed)
+    +__unset(name : string)
+}
+class yii.db.BaseActiveRecord extends yii.base.Model
+class yii.db.BaseActiveRecord implements yii.db.ActiveRecordInterface
+class yii.db.BatchQueryResult {
+    +batchSize : int = 100
+    +db : Connection
+    +each : bool = false
+    +query : Query
+    -_batch : array
+    -_dataReader : DataReader
+    -_key : string|int
+    -_value : mixed
+    +current() : mixed
+    #fetchData() : array
+    +key() : int
+    +next()
+    +reset()
+    +rewind()
+    +valid() : bool
+    +__destruct()
+}
+class yii.db.BatchQueryResult extends yii.base.BaseObject
+class yii.db.BatchQueryResult implements Iterator
+class yii.db.CheckConstraint {
+    +expression : string
+}
+class yii.db.CheckConstraint extends yii.db.Constraint
+class yii.db.ColumnSchema {
+    +allowNull : bool
+    +autoIncrement : bool = false
+    +comment : string
+    +dbType : string
+    +defaultValue : mixed
+    +enumValues : array
+    +isPrimaryKey : bool
+    +name : string
+    +phpType : string
+    +precision : int
+    +scale : int
+    +size : int
+    +type : string
+    +unsigned : bool
+    +dbTypecast(value : mixed) : mixed
+    +phpTypecast(value : mixed) : mixed
+    #typecast(value : mixed) : mixed
+}
+class yii.db.ColumnSchema extends yii.base.BaseObject
+class yii.db.ColumnSchemaBuilder {
+    +{static}CATEGORY_NUMERIC = "numeric"
+    +{static}CATEGORY_OTHER = "other"
+    +{static}CATEGORY_PK = "pk"
+    +{static}CATEGORY_STRING = "string"
+    +{static}CATEGORY_TIME = "time"
+    #after : string
+    #append : mixed
+    +categoryMap : array = [
+        \t"pk" => "~~NOT RESOLVED~~",
+        \t"upk" => "~~NOT RESOLVED~~",
+        \t"bigpk" => "~~NOT RESOLVED~~",
+        \t"ubigpk" => "~~NOT RESOLVED~~",
+        \t"char" => "~~NOT RESOLVED~~",
+        \t"string" => "~~NOT RESOLVED~~",
+        \t"text" => "~~NOT RESOLVED~~",
+        \t"smallint" => "~~NOT RESOLVED~~",
+        \t"integer" => "~~NOT RESOLVED~~",
+        \t"bigint" => "~~NOT RESOLVED~~",
+        \t"float" => "~~NOT RESOLVED~~",
+        \t"double" => "~~NOT RESOLVED~~",
+        \t"decimal" => "~~NOT RESOLVED~~",
+        \t"datetime" => "~~NOT RESOLVED~~",
+        \t"timestamp" => "~~NOT RESOLVED~~",
+        \t"time" => "~~NOT RESOLVED~~",
+        \t"date" => "~~NOT RESOLVED~~",
+        \t"binary" => "~~NOT RESOLVED~~",
+        \t"boolean" => "~~NOT RESOLVED~~",
+        \t"money" => "numeric"
+    ]
+    #check : string
+    +comment : string
+    +db : yii.db.Connection
+    #default : mixed
+    #isFirst : bool
+    #isNotNull : bool|null
+    #isUnique : bool = false
+    #isUnsigned : bool = false
+    #length : int|string|array
+    #type : string
+    +after(after : string) : $this
+    +append(sql : string) : $this
+    #buildAfterString() : string
+    #buildAppendString() : string
+    #buildCheckString() : string
+    #buildCommentString() : string
+    #buildCompleteString(format : string) : string
+    #buildDefaultString() : string
+    #buildFirstString() : string
+    #buildLengthString() : string
+    #buildNotNullString() : string
+    #buildUniqueString() : string
+    #buildUnsignedString() : string
+    +check(check : string) : $this
+    +comment(comment : string) : $this
+    +defaultExpression(default : string) : $this
+    +defaultValue(default : mixed) : $this
+    +first() : $this
+    #getTypeCategory() : string
+    +notNull() : $this
+    +null() : $this
+    +unique() : $this
+    +unsigned() : $this
+    +__construct(type : string, length : int|string|array = null, db : yii.db.Connection = null, config : array = [])
+    +__toString() : string
+}
+class yii.db.ColumnSchemaBuilder extends yii.base.BaseObject
+class yii.db.Command {
+    +db : Connection
+    +fetchMode : int = 2
+    +params : array = []
+    +pdoStatement : PDOStatement
+    +queryCacheDependency : yii.caching.Dependency
+    +queryCacheDuration : int
+    -_pendingParams : array = []
+    -_refreshTableName : string
+    -_sql : string
+    +addCheck(name : string, table : string, expression : string) : $this
+    +addColumn(table : string, column : string, type : string) : $this
+    +addCommentOnColumn(table : string, column : string, comment : string) : $this
+    +addCommentOnTable(table : string, comment : string) : $this
+    +addDefaultValue(name : string, table : string, column : string, value : mixed) : $this
+    +addForeignKey(name : string, table : string, columns : string|array, refTable : string, refColumns : string|array, delete : string = null, update : string = null) : $this
+    +addPrimaryKey(name : string, table : string, columns : string|array) : $this
+    +addUnique(name : string, table : string, columns : string|array) : $this
+    +alterColumn(table : string, column : string, type : string) : $this
+    +batchInsert(table : string, columns : array, rows : array|.Generator) : $this
+    +bindParam(name : string|int, value : mixed, dataType : int = null, length : int = null, driverOptions : mixed = null) : $this
+    #bindPendingParams()
+    +bindValue(name : string|int, value : mixed, dataType : int = null) : $this
+    +bindValues(values : array) : $this
+    +cache(duration : int = null, dependency : yii.caching.Dependency = null) : $this
+    +cancel()
+    +checkIntegrity(check : bool = true, schema : string = "", table : string = "") : $this
+    +createIndex(name : string, table : string, columns : string|array, unique : bool = false) : $this
+    +createTable(table : string, columns : array, options : string = null) : $this
+    +delete(table : string, condition : string|array = "", params : array = []) : $this
+    +dropCheck(name : string, table : string) : $this
+    +dropColumn(table : string, column : string) : $this
+    +dropCommentFromColumn(table : string, column : string) : $this
+    +dropCommentFromTable(table : string) : $this
+    +dropDefaultValue(name : string, table : string) : $this
+    +dropForeignKey(name : string, table : string) : $this
+    +dropIndex(name : string, table : string) : $this
+    +dropPrimaryKey(name : string, table : string) : $this
+    +dropTable(table : string) : $this
+    +dropUnique(name : string, table : string) : $this
+    +execute() : int
+    +getRawSql() : string
+    +getSql() : string
+    +insert(table : string, columns : array|.yii.db.Query) : $this
+    -logQuery(category : string) : array
+    +noCache() : $this
+    +prepare(forRead : bool = null)
+    +query() : DataReader
+    +queryAll(fetchMode : int = null) : array
+    +queryColumn() : array
+    #queryInternal(method : string, fetchMode : int = null) : mixed
+    +queryOne(fetchMode : int = null) : array|false
+    +queryScalar() : string|null|false
+    #refreshTableSchema()
+    +renameColumn(table : string, oldName : string, newName : string) : $this
+    +renameTable(table : string, newName : string) : $this
+    #requireTableSchemaRefresh(name : string) : $this
+    #reset()
+    +resetSequence(table : string, value : mixed = null) : $this
+    +setRawSql(sql : string) : $this
+    +setSql(sql : string) : $this
+    +truncateTable(table : string) : $this
+    +update(table : string, columns : array, condition : string|array = "", params : array = []) : $this
+}
+class yii.db.Command extends yii.base.Component
+class yii.db.Connection {
+    +{static}EVENT_AFTER_OPEN = "afterOpen"
+    +{static}EVENT_BEGIN_TRANSACTION = "beginTransaction"
+    +{static}EVENT_COMMIT_TRANSACTION = "commitTransaction"
+    +{static}EVENT_ROLLBACK_TRANSACTION = "rollbackTransaction"
+    +attributes : array
+    +charset : string
+    +commandClass : string = "yii\db\Command"
+    +dsn : string
+    +emulatePrepare : bool
+    +enableLogging : bool = true
+    +enableProfiling : bool = true
+    +enableQueryCache : bool = true
+    +enableSavepoint : bool = true
+    +enableSchemaCache : bool = false
+    +enableSlaves : bool = true
+    +masterConfig : array = []
+    +masters : array = []
+    +password : string
+    +pdo : PDO
+    +pdoClass : string
+    +queryCache : CacheInterface|string = "cache"
+    +queryCacheDuration : int = 3600
+    +schemaCache : CacheInterface|string = "cache"
+    +schemaCacheDuration : int = 3600
+    +schemaCacheExclude : array = []
+    +schemaMap : array = [
+        \t"pgsql" => "yii\db\pgsql\Schema",
+        \t"mysqli" => "yii\db\mysql\Schema",
+        \t"mysql" => "yii\db\mysql\Schema",
+        \t"sqlite" => "yii\db\sqlite\Schema",
+        \t"sqlite2" => "yii\db\sqlite\Schema",
+        \t"sqlsrv" => "yii\db\mssql\Schema",
+        \t"oci" => "yii\db\oci\Schema",
+        \t"mssql" => "yii\db\mssql\Schema",
+        \t"dblib" => "yii\db\mssql\Schema",
+        \t"cubrid" => "yii\db\cubrid\Schema"
+    ]
+    +serverRetryInterval : int = 600
+    +serverStatusCache : CacheInterface|string = "cache"
+    +shuffleMasters : bool = true
+    +slaveConfig : array = []
+    +slaves : array = []
+    +tablePrefix : string = ""
+    +username : string
+    -_driverName : string
+    -_master : Connection|false = false
+    -_queryCacheInfo : array = []
+    -_schema : Schema
+    -_slave : Connection|false = false
+    -_transaction : Transaction
+    +beginTransaction(isolationLevel : string|null = null) : Transaction
+    +cache(callable : callable, duration : int = null, dependency : yii.caching.Dependency = null) : mixed
+    +close()
+    +createCommand(sql : string = null, params : array = []) : Command
+    #createPdoInstance() : PDO
+    +getDriverName() : string
+    +getIsActive() : bool
+    +getLastInsertID(sequenceName : string = "") : string
+    +getMaster() : Connection
+    +getMasterPdo() : PDO
+    +getQueryBuilder() : QueryBuilder
+    +getQueryCacheInfo(duration : int, dependency : yii.caching.Dependency) : array
+    +getSchema() : Schema
+    +getSlave(fallbackToMaster : bool = true) : Connection
+    +getSlavePdo(fallbackToMaster : bool = true) : PDO
+    +getTableSchema(name : string, refresh : bool = false) : TableSchema
+    +getTransaction() : Transaction
+    #initConnection()
+    +noCache(callable : callable) : mixed
+    +open()
+    #openFromPool(pool : array, sharedConfig : array) : Connection
+    #openFromPoolSequentially(pool : array, sharedConfig : array) : Connection
+    +quoteColumnName(name : string) : string
+    +quoteSql(sql : string) : string
+    +quoteTableName(name : string) : string
+    +quoteValue(value : string) : string
+    -rollbackTransactionOnLevel(transaction : Transaction, level : int)
+    +setDriverName(driverName : string)
+    +transaction(callback : callable, isolationLevel : string|null = null) : mixed
+    +useMaster(callback : callable) : mixed
+    +__clone()
+    +__sleep() : array
+}
+class yii.db.Connection extends yii.base.Component
+class yii.db.Constraint {
+    +columnNames : string[]|null
+    +name : string|null
+}
+class yii.db.Constraint extends yii.base.BaseObject
+abstract class yii.db.ConstraintFinderTrait {
+    +getSchemaChecks(schema : string = "", refresh : bool = false) : CheckConstraint[][]
+    +getSchemaDefaultValues(schema : string = "", refresh : bool = false) : DefaultValueConstraint[]
+    +getSchemaForeignKeys(schema : string = "", refresh : bool = false) : ForeignKeyConstraint[][]
+    +getSchemaIndexes(schema : string = "", refresh : bool = false) : IndexConstraint[][]
+    #getSchemaMetadata(schema : string, type : string, refresh : bool) : array
+    +getSchemaPrimaryKeys(schema : string = "", refresh : bool = false) : Constraint[]
+    +getSchemaUniques(schema : string = "", refresh : bool = false) : Constraint[][]
+    +getTableChecks(name : string, refresh : bool = false) : CheckConstraint[]
+    +getTableDefaultValues(name : string, refresh : bool = false) : DefaultValueConstraint[]
+    +getTableForeignKeys(name : string, refresh : bool = false) : ForeignKeyConstraint[]
+    +getTableIndexes(name : string, refresh : bool = false) : IndexConstraint[]
+    #getTableMetadata(name : string, type : string, refresh : bool) : mixed
+    +getTablePrimaryKey(name : string, refresh : bool = false) : Constraint|null
+    +getTableUniques(name : string, refresh : bool = false) : Constraint[]
+    #loadTableChecks(tableName : string) : CheckConstraint[]
+    #loadTableDefaultValues(tableName : string) : DefaultValueConstraint[]
+    #loadTableForeignKeys(tableName : string) : ForeignKeyConstraint[]
+    #loadTableIndexes(tableName : string) : IndexConstraint[]
+    #loadTablePrimaryKey(tableName : string) : Constraint|null
+    #loadTableUniques(tableName : string) : Constraint[]
+}
+class yii.db.DataReader {
+    -_closed = false
+    -_index = -1
+    -_row
+    -_statement : PDOStatement
+    +bindColumn(column : int|string, value : mixed, dataType : int = null)
+    +close()
+    +count() : int
+    +current() : mixed
+    +getColumnCount() : int
+    +getIsClosed() : bool
+    +getRowCount() : int
+    +key() : int
+    +next()
+    +nextResult() : bool
+    +read() : array
+    +readAll() : array
+    +readColumn(columnIndex : int) : mixed
+    +readObject(className : string, fields : array) : mixed
+    +rewind()
+    +setFetchMode(mode : int)
+    +valid() : bool
+    +__construct(command : yii.db.Command, config : array = [])
+}
+class yii.db.DataReader extends yii.base.BaseObject
+class yii.db.DataReader implements Iterator
+class yii.db.DataReader implements Countable
+class yii.db.DefaultValueConstraint {
+    +value : mixed
+}
+class yii.db.DefaultValueConstraint extends yii.db.Constraint
+class yii.db.Exception {
+    +errorInfo : array = []
+    +getName() : string
+    +__construct(message : string, errorInfo : array = [], code : int = 0, previous : Exception = null)
+    +__toString() : string
+}
+class yii.db.Exception extends yii.base.Exception
+class yii.db.Expression {
+    +expression : string
+    +params : array = []
+    +__construct(expression : string, params : array = [], config : array = [])
+    +__toString() : string
+}
+class yii.db.Expression extends yii.base.BaseObject
+class yii.db.ForeignKeyConstraint {
+    +foreignColumnNames : string[]
+    +foreignSchemaName : string|null
+    +foreignTableName : string
+    +onDelete : string|null
+    +onUpdate : string|null
+}
+class yii.db.ForeignKeyConstraint extends yii.db.Constraint
+class yii.db.IndexConstraint {
+    +isPrimary : bool
+    +isUnique : bool
+}
+class yii.db.IndexConstraint extends yii.db.Constraint
+class yii.db.IntegrityException {
+    +getName() : string
+}
+class yii.db.IntegrityException extends yii.db.Exception
+class yii.db.Migration {
+    +compact : bool = false
+    +db : Connection|array|string = "db"
+    +maxSqlOutputLength : int
+    +addColumn(table : string, column : string, type : string)
+    +addCommentOnColumn(table : string, column : string, comment : string)
+    +addCommentOnTable(table : string, comment : string)
+    +addForeignKey(name : string, table : string, columns : string|array, refTable : string, refColumns : string|array, delete : string = null, update : string = null)
+    +addPrimaryKey(name : string, table : string, columns : string|array)
+    +alterColumn(table : string, column : string, type : string)
+    +batchInsert(table : string, columns : array, rows : array)
+    #beginCommand(description : string) : float
+    +createIndex(name : string, table : string, columns : string|array, unique : bool = false)
+    +createTable(table : string, columns : array, options : string = null)
+    +delete(table : string, condition : array|string = "", params : array = [])
+    +down() : bool
+    +dropColumn(table : string, column : string)
+    +dropCommentFromColumn(table : string, column : string)
+    +dropCommentFromTable(table : string)
+    +dropForeignKey(name : string, table : string)
+    +dropIndex(name : string, table : string)
+    +dropPrimaryKey(name : string, table : string)
+    +dropTable(table : string)
+    #endCommand(time : float)
+    +execute(sql : string, params : array = [])
+    #getDb()
+    +init()
+    +insert(table : string, columns : array)
+    -printException(e : Throwable|.Exception)
+    +renameColumn(table : string, name : string, newName : string)
+    +renameTable(table : string, newName : string)
+    +safeDown() : bool
+    +safeUp() : bool
+    +truncateTable(table : string)
+    +up() : bool
+    +update(table : string, columns : array, condition : array|string = "", params : array = [])
+}
+class yii.db.Migration extends yii.base.Component
+class yii.db.Migration implements yii.db.MigrationInterface
+interface yii.db.MigrationInterface {
+    +down() : bool
+    +up() : bool
+}
+class yii.db.Query {
+    +distinct : bool
+    +from : array
+    +groupBy : array
+    +having : string|array|Expression
+    +join : array
+    +params : array = []
+    +select : array
+    +selectOption : string
+    +union : array
+    +addGroupBy(columns : string|array) : $this
+    +addParams(params : array) : $this
+    +addSelect(columns : string|array|Expression) : $this
+    +all(db : Connection = null) : array
+    +andFilterCompare(name : string, value : string, defaultOperator : string = "=") : $this
+    +andFilterHaving(condition : array) : $this
+    +andHaving(condition : string|array|Expression, params : array = []) : $this
+    +andWhere(condition : string|array|Expression, params : array = []) : $this
+    +average(q : string, db : Connection = null) : mixed
+    +batch(batchSize : int = 100, db : Connection = null) : BatchQueryResult
+    +column(db : Connection = null) : array
+    +count(q : string = "*", db : Connection = null) : int|string
+    +{static}create(from : Query) : Query
+    +createCommand(db : Connection = null) : Command
+    +distinct(value : bool = true) : $this
+    +each(batchSize : int = 100, db : Connection = null) : BatchQueryResult
+    +exists(db : Connection = null) : bool
+    +filterHaving(condition : array) : $this
+    +from(tables : string|array|Expression) : $this
+    +getTablesUsedInFrom() : string[]
+    +groupBy(columns : string|array|Expression) : $this
+    +having(condition : string|array|Expression, params : array = []) : $this
+    +innerJoin(table : string|array, on : string|array = "", params : array = []) : $this
+    +join(type : string, table : string|array, on : string|array = "", params : array = []) : $this
+    +leftJoin(table : string|array, on : string|array = "", params : array = []) : $this
+    +max(q : string, db : Connection = null) : mixed
+    +min(q : string, db : Connection = null) : mixed
+    +one(db : Connection = null) : array|bool
+    +orFilterHaving(condition : array) : $this
+    +orHaving(condition : string|array|Expression, params : array = []) : $this
+    +orWhere(condition : string|array|Expression, params : array = []) : $this
+    +params(params : array) : $this
+    +populate(rows : array) : array
+    +prepare(builder : QueryBuilder) : $this
+    #queryScalar(selectExpression : string|Expression, db : Connection|null) : bool|string
+    +rightJoin(table : string|array, on : string|array = "", params : array = []) : $this
+    +scalar(db : Connection = null) : string|null|false
+    +select(columns : string|array|Expression, option : string = null) : $this
+    +sum(q : string, db : Connection = null) : mixed
+    +union(sql : string|Query, all : bool = false) : $this
+    +where(condition : string|array|Expression, params : array = []) : $this
+}
+class yii.db.Query extends yii.base.Component
+class yii.db.Query implements yii.db.QueryInterface
+class yii.db.QueryBuilder {
+    +{static}PARAM_PREFIX = ":qp"
+    #conditionBuilders : array = [
+        \t"NOT" => "buildNotCondition",
+        \t"AND" => "buildAndCondition",
+        \t"OR" => "buildAndCondition",
+        \t"BETWEEN" => "buildBetweenCondition",
+        \t"NOT BETWEEN" => "buildBetweenCondition",
+        \t"IN" => "buildInCondition",
+        \t"NOT IN" => "buildInCondition",
+        \t"LIKE" => "buildLikeCondition",
+        \t"NOT LIKE" => "buildLikeCondition",
+        \t"OR LIKE" => "buildLikeCondition",
+        \t"OR NOT LIKE" => "buildLikeCondition",
+        \t"EXISTS" => "buildExistsCondition",
+        \t"NOT EXISTS" => "buildExistsCondition"
+    ]
+    +db : Connection
+    #likeEscapeCharacter : string|null
+    #likeEscapingReplacements : array = [
+        \t"%" => "\%",
+        \t"_" => "\_",
+        \t"\" => "\\"
+    ]
+    +separator : string = " "
+    +typeMap : array = []
+    +addCheck(name : string, table : string, expression : string) : string
+    +addColumn(table : string, column : string, type : string) : string
+    +addCommentOnColumn(table : string, column : string, comment : string) : string
+    +addCommentOnTable(table : string, comment : string) : string
+    +addDefaultValue(name : string, table : string, column : string, value : mixed) : string
+    +addForeignKey(name : string, table : string, columns : string|array, refTable : string, refColumns : string|array, delete : string = null, update : string = null) : string
+    +addPrimaryKey(name : string, table : string, columns : string|array) : string
+    +addUnique(name : string, table : string, columns : string|array) : string
+    +alterColumn(table : string, column : string, type : string) : string
+    +batchInsert(table : string, columns : array, rows : array|.Generator) : string
+    +build(query : Query, params : array = []) : array
+    +buildAndCondition(operator : string, operands : array, params : array) : string
+    +buildBetweenCondition(operator : string, operands : array, params : array) : string
+    +buildColumns(columns : string|array) : string
+    #buildCompositeInCondition(operator : string, columns : array|.Traversable, values : array, params : array) : string
+    +buildCondition(condition : string|array|Expression, params : array) : string
+    +buildExistsCondition(operator : string, operands : array, params : array) : string
+    +buildFrom(tables : array, params : array) : string
+    +buildGroupBy(columns : array) : string
+    +buildHashCondition(condition : array, params : array) : string
+    +buildHaving(condition : string|array, params : array) : string
+    +buildInCondition(operator : string, operands : array, params : array) : string
+    +buildJoin(joins : array, params : array) : string
+    +buildLikeCondition(operator : string, operands : array, params : array) : string
+    +buildLimit(limit : int, offset : int) : string
+    +buildNotCondition(operator : string, operands : array, params : array) : string
+    +buildOrderBy(columns : array) : string
+    +buildOrderByAndLimit(sql : string, orderBy : array, limit : int, offset : int) : string
+    +buildSelect(columns : array, params : array, distinct : bool = false, selectOption : string = null) : string
+    +buildSimpleCondition(operator : string, operands : array, params : array) : string
+    #buildSubqueryInCondition(operator : string, columns : array, values : Query, params : array) : string
+    +buildUnion(unions : array, params : array) : string
+    +buildWhere(condition : string|array, params : array) : string
+    +checkIntegrity(check : bool = true, schema : string = "", table : string = "") : string
+    +createIndex(name : string, table : string, columns : string|array, unique : bool = false) : string
+    +createTable(table : string, columns : array, options : string = null) : string
+    +delete(table : string, condition : array|string, params : array) : string
+    +dropCheck(name : string, table : string) : string
+    +dropColumn(table : string, column : string) : string
+    +dropCommentFromColumn(table : string, column : string) : string
+    +dropCommentFromTable(table : string) : string
+    +dropDefaultValue(name : string, table : string) : string
+    +dropForeignKey(name : string, table : string) : string
+    +dropIndex(name : string, table : string) : string
+    +dropPrimaryKey(name : string, table : string) : string
+    +dropTable(table : string) : string
+    +dropUnique(name : string, table : string) : string
+    +getColumnType(type : string|ColumnSchemaBuilder) : string
+    #hasLimit(limit : mixed) : bool
+    #hasOffset(offset : mixed) : bool
+    +insert(table : string, columns : array|.yii.db.Query, params : array) : string
+    #prepareInsertSelectSubQuery(columns : yii.db.Query, schema : yii.db.Schema, params : array = []) : array
+    -quoteTableNames(tables : array, params : array) : array
+    +renameColumn(table : string, oldName : string, newName : string) : string
+    +renameTable(oldName : string, newName : string) : string
+    +resetSequence(table : string, value : array|string = null) : string
+    +selectExists(rawSql : string) : string
+    +truncateTable(table : string) : string
+    +update(table : string, columns : array, condition : array|string, params : array) : string
+    +__construct(connection : Connection, config : array = [])
+}
+class yii.db.QueryBuilder extends yii.base.BaseObject
+interface yii.db.QueryInterface {
+    +addOrderBy(columns : string|array) : $this
+    +all(db : Connection = null) : array
+    +andFilterWhere(condition : array) : $this
+    +andWhere(condition : array) : $this
+    +count(q : string = "*", db : Connection = null) : int
+    +emulateExecution(value : bool = true) : $this
+    +exists(db : Connection = null) : bool
+    +filterWhere(condition : array) : $this
+    +indexBy(column : string|callable) : $this
+    +limit(limit : int|null) : $this
+    +offset(offset : int|null) : $this
+    +one(db : Connection = null) : array|bool
+    +orderBy(columns : string|array) : $this
+    +orFilterWhere(condition : array) : $this
+    +orWhere(condition : array) : $this
+    +where(condition : array) : $this
+}
+abstract class yii.db.QueryTrait {
+    +emulateExecution : bool = false
+    +indexBy : string|callable
+    +limit : int|Expression
+    +offset : int|Expression
+    +orderBy : array
+    +where : string|array
+    +addOrderBy(columns : string|array|Expression) : $this
+    +andFilterWhere(condition : array) : $this
+    +andWhere(condition : array) : $this
+    +emulateExecution(value : bool = true) : $this
+    #filterCondition(condition : array) : array
+    +filterWhere(condition : array) : $this
+    +indexBy(column : string|callable) : $this
+    #isEmpty(value : mixed) : bool
+    +limit(limit : int|Expression|null) : $this
+    #normalizeOrderBy(columns : array|string|Expression) : array
+    +offset(offset : int|Expression|null) : $this
+    +orderBy(columns : string|array|Expression) : $this
+    +orFilterWhere(condition : array) : $this
+    +orWhere(condition : array) : $this
+    +where(condition : array) : $this
+}
+abstract class yii.db.Schema {
+    +{static}SCHEMA_CACHE_VERSION = 1
+    +{static}TYPE_BIGINT = "bigint"
+    +{static}TYPE_BIGPK = "bigpk"
+    +{static}TYPE_BINARY = "binary"
+    +{static}TYPE_BOOLEAN = "boolean"
+    +{static}TYPE_CHAR = "char"
+    +{static}TYPE_DATE = "date"
+    +{static}TYPE_DATETIME = "datetime"
+    +{static}TYPE_DECIMAL = "decimal"
+    +{static}TYPE_DOUBLE = "double"
+    +{static}TYPE_FLOAT = "float"
+    +{static}TYPE_INTEGER = "integer"
+    +{static}TYPE_MONEY = "money"
+    +{static}TYPE_PK = "pk"
+    +{static}TYPE_SMALLINT = "smallint"
+    +{static}TYPE_STRING = "string"
+    +{static}TYPE_TEXT = "text"
+    +{static}TYPE_TIME = "time"
+    +{static}TYPE_TIMESTAMP = "timestamp"
+    +{static}TYPE_UBIGPK = "ubigpk"
+    +{static}TYPE_UPK = "upk"
+    +columnSchemaClass : string = "yii\db\ColumnSchema"
+    +db : Connection
+    +defaultSchema : string
+    +exceptionMap : array = [
+        \t"SQLSTATE[23" => "yii\db\IntegrityException"
+    ]
+    -_builder : QueryBuilder
+    -_schemaNames : array
+    -_tableMetadata : array = []
+    -_tableNames : array = []
+    +convertException(e : Exception, rawSql : string) : Exception
+    #createColumnSchema() : ColumnSchema
+    +createColumnSchemaBuilder(type : string, length : int|string|array = null) : ColumnSchemaBuilder
+    +createQueryBuilder() : QueryBuilder
+    +createSavepoint(name : string)
+    #findSchemaNames() : array
+    #findTableNames(schema : string = "") : array
+    +findUniqueIndexes(table : TableSchema) : array
+    #getCacheKey(name : string) : mixed
+    #getCacheTag() : string
+    #getColumnPhpType(column : ColumnSchema) : string
+    +getLastInsertID(sequenceName : string = "") : string
+    +getPdoType(data : mixed) : int
+    +getQueryBuilder() : QueryBuilder
+    +getRawTableName(name : string) : string
+    #getSchemaMetadata(schema : string, type : string, refresh : bool) : array
+    +getSchemaNames(refresh : bool = false) : string[]
+    #getTableMetadata(name : string, type : string, refresh : bool) : mixed
+    +getTableNames(schema : string = "", refresh : bool = false) : string[]
+    +getTableSchema(name : string, refresh : bool = false) : TableSchema|null
+    +getTableSchemas(schema : string = "", refresh : bool = false) : TableSchema[]
+    +insert(table : string, columns : array) : array|false
+    +isReadQuery(sql : string) : bool
+    -loadTableMetadataFromCache(cache : Cache|null, name : string)
+    #loadTableSchema(name : string) : TableSchema|null
+    #normalizePdoRowKeyCase(row : array, multiple : bool) : array
+    +quoteColumnName(name : string) : string
+    +quoteSimpleColumnName(name : string) : string
+    +quoteSimpleTableName(name : string) : string
+    +quoteTableName(name : string) : string
+    +quoteValue(str : string) : string
+    +refresh()
+    +refreshTableSchema(name : string)
+    +releaseSavepoint(name : string)
+    #resolveTableName(name : string) : TableSchema
+    +rollBackSavepoint(name : string)
+    -saveTableMetadataToCache(cache : Cache|null, name : string)
+    #setTableMetadata(name : string, type : string, data : mixed)
+    +setTransactionIsolationLevel(level : string)
+    +supportsSavepoint() : bool
+}
+class yii.db.Schema extends yii.base.BaseObject
+abstract class yii.db.SchemaBuilderTrait {
+    +bigInteger(length : int = null) : ColumnSchemaBuilder
+    +bigPrimaryKey(length : int = null) : ColumnSchemaBuilder
+    +binary(length : int = null) : ColumnSchemaBuilder
+    +boolean() : ColumnSchemaBuilder
+    +char(length : int = null) : ColumnSchemaBuilder
+    +date() : ColumnSchemaBuilder
+    +dateTime(precision : int = null) : ColumnSchemaBuilder
+    +decimal(precision : int = null, scale : int = null) : ColumnSchemaBuilder
+    +double(precision : int = null) : ColumnSchemaBuilder
+    +float(precision : int = null) : ColumnSchemaBuilder
+    #getDb() : Connection
+    +integer(length : int = null) : ColumnSchemaBuilder
+    +money(precision : int = null, scale : int = null) : ColumnSchemaBuilder
+    +primaryKey(length : int = null) : ColumnSchemaBuilder
+    +smallInteger(length : int = null) : ColumnSchemaBuilder
+    +string(length : int = null) : ColumnSchemaBuilder
+    +text() : ColumnSchemaBuilder
+    +time(precision : int = null) : ColumnSchemaBuilder
+    +timestamp(precision : int = null) : ColumnSchemaBuilder
+}
+class yii.db.SqlToken {
+    +{static}TYPE_CODE = 0
+    +{static}TYPE_IDENTIFIER = 6
+    +{static}TYPE_KEYWORD = 4
+    +{static}TYPE_OPERATOR = 5
+    +{static}TYPE_PARENTHESIS = 3
+    +{static}TYPE_STATEMENT = 1
+    +{static}TYPE_STRING_LITERAL = 7
+    +{static}TYPE_TOKEN = 2
+    +content : string|null
+    +endOffset : int
+    +parent : SqlToken
+    +startOffset : int
+    +type : int = 2
+    -_children : SqlToken[] = []
+    -calculateOffset(offset : int) : int
+    +getChildren() : SqlToken[]
+    +getHasChildren() : bool
+    +getIsCollection() : bool
+    +getSql() : string
+    +matches(patternToken : yii.db.SqlToken, offset : int = 0, firstMatchIndex : int|null = null, lastMatchIndex : int|null = null) : bool
+    +offsetExists(offset : int) : bool
+    +offsetGet(offset : int) : SqlToken|null
+    +offsetSet(offset : int|null, token : SqlToken)
+    +offsetUnset(offset : int)
+    +setChildren(children : SqlToken[])
+    -tokensMatch(patternToken : yii.db.SqlToken, token : yii.db.SqlToken, offset : int = 0, firstMatchIndex : int|null = null, lastMatchIndex : int|null = null) : bool
+    -updateCollectionOffsets()
+    +__toString() : string
+}
+class yii.db.SqlToken extends yii.base.BaseObject
+class yii.db.SqlToken implements ArrayAccess
+abstract class yii.db.SqlTokenizer {
+    #length : int
+    #offset : int
+    +sql : string
+    -_buffer : string = ""
+    -_currentToken : SqlToken
+    -_substrings : string[]
+    -_token : SqlToken
+    -_tokenStack : SplStack
+    -addTokenFromBuffer()
+    -advance(length : int)
+    #indexAfter(string : string, offset : int|null = null) : int
+    #isComment(length : int) : bool
+    -isEof() : bool
+    #isIdentifier(length : int, content : string) : bool
+    #isKeyword(string : string, content : string) : bool
+    #isOperator(length : int, content : string) : bool
+    #isStringLiteral(length : int, content : string) : bool
+    #isWhitespace(length : int) : bool
+    #startsWithAnyLongest(with : string[], caseSensitive : bool, length : int|null = null, content : string|null = null) : bool
+    #substring(length : int, caseSensitive : bool = true, offset : int|null = null) : string
+    +tokenize() : SqlToken
+    -tokenizeDelimitedString(length : int) : bool
+    -tokenizeOperator(length : int) : bool
+    +__construct(sql : string, config : array = [])
+}
+class yii.db.SqlTokenizer extends yii.base.Component
+class yii.db.StaleObjectException {
+    +getName() : string
+}
+class yii.db.StaleObjectException extends yii.db.Exception
+class yii.db.TableSchema {
+    +columns : ColumnSchema[] = []
+    +foreignKeys : array = []
+    +fullName : string
+    +name : string
+    +primaryKey : string[] = []
+    +schemaName : string
+    +sequenceName : string
+    +fixPrimaryKey(keys : string|array)
+    +getColumn(name : string) : ColumnSchema
+    +getColumnNames() : array
+}
+class yii.db.TableSchema extends yii.base.BaseObject
+class yii.db.Transaction {
+    +{static}READ_COMMITTED = "READ COMMITTED"
+    +{static}READ_UNCOMMITTED = "READ UNCOMMITTED"
+    +{static}REPEATABLE_READ = "REPEATABLE READ"
+    +{static}SERIALIZABLE = "SERIALIZABLE"
+    +db : Connection
+    -_level : int = 0
+    +begin(isolationLevel : string|null = null)
+    +commit()
+    +getIsActive() : bool
+    +getLevel() : int
+    +rollBack()
+    +setIsolationLevel(level : string)
+}
+class yii.db.Transaction extends yii.base.BaseObject
+abstract class yii.db.ViewFinderTrait {
+    -_viewNames : array = []
+    #findViewNames(schema : string = "") : array
+    +getViewNames(schema : string = "", refresh : bool = false) : string[]
+}
+class yii.db.cubrid.ColumnSchemaBuilder {
+    +{static}CATEGORY_NUMERIC = "numeric"
+    +{static}CATEGORY_OTHER = "other"
+    +{static}CATEGORY_PK = "pk"
+    +{static}CATEGORY_STRING = "string"
+    +{static}CATEGORY_TIME = "time"
+    #buildAfterString()
+    #buildCommentString()
+    #buildFirstString()
+    #buildUnsignedString()
+    +__toString()
+}
+class yii.db.cubrid.ColumnSchemaBuilder extends yii.db.ColumnSchemaBuilder
+class yii.db.cubrid.QueryBuilder {
+    +{static}PARAM_PREFIX = ":qp"
+    #likeEscapeCharacter = "!"
+    #likeEscapingReplacements = [
+        \t"%" => "!%",
+        \t"_" => "!_",
+        \t"!" => "!!"
+    ]
+    +typeMap : array = [
+        \t"pk" => "int NOT NULL AUTO_INCREMENT PRIMARY KEY",
+        \t"upk" => "int UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY",
+        \t"bigpk" => "bigint NOT NULL AUTO_INCREMENT PRIMARY KEY",
+        \t"ubigpk" => "bigint UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY",
+        \t"char" => "char(1)",
+        \t"string" => "varchar(255)",
+        \t"text" => "varchar",
+        \t"smallint" => "smallint",
+        \t"integer" => "int",
+        \t"bigint" => "bigint",
+        \t"float" => "float(7)",
+        \t"double" => "double(15)",
+        \t"decimal" => "decimal(10,0)",
+        \t"datetime" => "datetime",
+        \t"timestamp" => "timestamp",
+        \t"time" => "time",
+        \t"date" => "date",
+        \t"binary" => "blob",
+        \t"boolean" => "smallint",
+        \t"money" => "decimal(19,4)"
+    ]
+    +addCheck(name, table, expression)
+    +addCommentOnColumn(table, column, comment)
+    +addCommentOnTable(table, comment)
+    +buildLimit(limit, offset)
+    +dropCheck(name, table)
+    +dropCommentFromColumn(table, column)
+    +dropCommentFromTable(table)
+    +dropIndex(name, table)
+    -getColumnDefinition(table : string, column : string) : null|string
+    +resetSequence(tableName : string, value : mixed = null) : string
+    +selectExists(rawSql)
+}
+class yii.db.cubrid.QueryBuilder extends yii.db.QueryBuilder
+class yii.db.cubrid.Schema {
+    +{static}SCHEMA_CACHE_VERSION = 1
+    +{static}TYPE_BIGINT = "bigint"
+    +{static}TYPE_BIGPK = "bigpk"
+    +{static}TYPE_BINARY = "binary"
+    +{static}TYPE_BOOLEAN = "boolean"
+    +{static}TYPE_CHAR = "char"
+    +{static}TYPE_DATE = "date"
+    +{static}TYPE_DATETIME = "datetime"
+    +{static}TYPE_DECIMAL = "decimal"
+    +{static}TYPE_DOUBLE = "double"
+    +{static}TYPE_FLOAT = "float"
+    +{static}TYPE_INTEGER = "integer"
+    +{static}TYPE_MONEY = "money"
+    +{static}TYPE_PK = "pk"
+    +{static}TYPE_SMALLINT = "smallint"
+    +{static}TYPE_STRING = "string"
+    +{static}TYPE_TEXT = "text"
+    +{static}TYPE_TIME = "time"
+    +{static}TYPE_TIMESTAMP = "timestamp"
+    +{static}TYPE_UBIGPK = "ubigpk"
+    +{static}TYPE_UPK = "upk"
+    +exceptionMap : array = [
+        \t"Operation would have caused one or more unique constraint violations" => "yii\db\IntegrityException"
+    ]
+    +typeMap : array = [
+        \t"short" => "~~NOT RESOLVED~~",
+        \t"smallint" => "~~NOT RESOLVED~~",
+        \t"int" => "~~NOT RESOLVED~~",
+        \t"integer" => "~~NOT RESOLVED~~",
+        \t"bigint" => "~~NOT RESOLVED~~",
+        \t"numeric" => "~~NOT RESOLVED~~",
+        \t"decimal" => "~~NOT RESOLVED~~",
+        \t"float" => "~~NOT RESOLVED~~",
+        \t"real" => "~~NOT RESOLVED~~",
+        \t"double" => "~~NOT RESOLVED~~",
+        \t"double precision" => "~~NOT RESOLVED~~",
+        \t"monetary" => "~~NOT RESOLVED~~",
+        \t"date" => "~~NOT RESOLVED~~",
+        \t"time" => "~~NOT RESOLVED~~",
+        \t"timestamp" => "~~NOT RESOLVED~~",
+        \t"datetime" => "~~NOT RESOLVED~~",
+        \t"char" => "~~NOT RESOLVED~~",
+        \t"varchar" => "~~NOT RESOLVED~~",
+        \t"char varying" => "~~NOT RESOLVED~~",
+        \t"nchar" => "~~NOT RESOLVED~~",
+        \t"nchar varying" => "~~NOT RESOLVED~~",
+        \t"string" => "~~NOT RESOLVED~~",
+        \t"blob" => "~~NOT RESOLVED~~",
+        \t"clob" => "~~NOT RESOLVED~~",
+        \t"bit" => "~~NOT RESOLVED~~",
+        \t"bit varying" => "~~NOT RESOLVED~~",
+        \t"set" => "~~NOT RESOLVED~~",
+        \t"multiset" => "~~NOT RESOLVED~~",
+        \t"list" => "~~NOT RESOLVED~~",
+        \t"sequence" => "~~NOT RESOLVED~~",
+        \t"enum" => "string"
+    ]
+    +createColumnSchemaBuilder(type, length = null)
+    +createQueryBuilder() : QueryBuilder
+    #findTableNames(schema = "")
+    +getPdoType(data : mixed) : int
+    #loadColumnSchema(info : array) : yii.db.ColumnSchema
+    #loadTableChecks(tableName)
+    -loadTableConstraints(tableName : string, returnType : string) : mixed
+    #loadTableDefaultValues(tableName)
+    #loadTableForeignKeys(tableName)
+    #loadTableIndexes(tableName)
+    #loadTablePrimaryKey(tableName)
+    #loadTableSchema(name)
+    #loadTableUniques(tableName)
+    +quoteSimpleColumnName(name : string) : string
+    +quoteSimpleTableName(name : string) : string
+    +releaseSavepoint(name)
+    +setTransactionIsolationLevel(level)
+}
+class yii.db.cubrid.Schema extends yii.db.Schema
+class yii.db.mssql.PDO {
+    +{static}ATTR_AUTOCOMMIT = 0
+    +{static}ATTR_CASE = 8
+    +{static}ATTR_CLIENT_VERSION = 5
+    +{static}ATTR_CONNECTION_STATUS = 7
+    +{static}ATTR_CURSOR = 10
+    +{static}ATTR_CURSOR_NAME = 9
+    +{static}ATTR_DEFAULT_FETCH_MODE = 19
+    +{static}ATTR_DRIVER_NAME = 16
+    +{static}ATTR_EMULATE_PREPARES = 20
+    +{static}ATTR_ERRMODE = 3
+    +{static}ATTR_FETCH_CATALOG_NAMES = 15
+    +{static}ATTR_FETCH_TABLE_NAMES = 14
+    +{static}ATTR_MAX_COLUMN_LEN = 18
+    +{static}ATTR_ORACLE_NULLS = 11
+    +{static}ATTR_PERSISTENT = 12
+    +{static}ATTR_PREFETCH = 1
+    +{static}ATTR_SERVER_INFO = 6
+    +{static}ATTR_SERVER_VERSION = 4
+    +{static}ATTR_STATEMENT_CLASS = 13
+    +{static}ATTR_STRINGIFY_FETCHES = 17
+    +{static}ATTR_TIMEOUT = 2
+    +{static}CASE_LOWER = 2
+    +{static}CASE_NATURAL = 0
+    +{static}CASE_UPPER = 1
+    +{static}CURSOR_FWDONLY = 0
+    +{static}CURSOR_SCROLL = 1
+    +{static}ERRMODE_EXCEPTION = 2
+    +{static}ERRMODE_SILENT = 0
+    +{static}ERRMODE_WARNING = 1
+    +{static}ERR_NONE = 00000
+    +{static}FETCH_ASSOC = 2
+    +{static}FETCH_BOTH = 4
+    +{static}FETCH_BOUND = 6
+    +{static}FETCH_CLASS = 8
+    +{static}FETCH_CLASSTYPE = 262144
+    +{static}FETCH_COLUMN = 7
+    +{static}FETCH_FUNC = 10
+    +{static}FETCH_GROUP = 65536
+    +{static}FETCH_INTO = 9
+    +{static}FETCH_KEY_PAIR = 12
+    +{static}FETCH_LAZY = 1
+    +{static}FETCH_NAMED = 11
+    +{static}FETCH_NUM = 3
+    +{static}FETCH_OBJ = 5
+    +{static}FETCH_ORI_ABS = 4
+    +{static}FETCH_ORI_FIRST = 2
+    +{static}FETCH_ORI_LAST = 3
+    +{static}FETCH_ORI_NEXT = 0
+    +{static}FETCH_ORI_PRIOR = 1
+    +{static}FETCH_ORI_REL = 5
+    +{static}FETCH_PROPS_LATE = 1048576
+    +{static}FETCH_SERIALIZE = 524288
+    +{static}FETCH_UNIQUE = 196608
+    +{static}MYSQL_ATTR_COMPRESS = 1003
+    +{static}MYSQL_ATTR_DIRECT_QUERY = 1004
+    +{static}MYSQL_ATTR_FOUND_ROWS = 1005
+    +{static}MYSQL_ATTR_IGNORE_SPACE = 1006
+    +{static}MYSQL_ATTR_INIT_COMMAND = 1002
+    +{static}MYSQL_ATTR_LOCAL_INFILE = 1001
+    +{static}MYSQL_ATTR_MULTI_STATEMENTS = 1013
+    +{static}MYSQL_ATTR_SERVER_PUBLIC_KEY = 1012
+    +{static}MYSQL_ATTR_SSL_CA = 1009
+    +{static}MYSQL_ATTR_SSL_CAPATH = 1010
+    +{static}MYSQL_ATTR_SSL_CERT = 1008
+    +{static}MYSQL_ATTR_SSL_CIPHER = 1011
+    +{static}MYSQL_ATTR_SSL_KEY = 1007
+    +{static}MYSQL_ATTR_SSL_VERIFY_SERVER_CERT = 1014
+    +{static}MYSQL_ATTR_USE_BUFFERED_QUERY = 1000
+    +{static}NULL_EMPTY_STRING = 1
+    +{static}NULL_NATURAL = 0
+    +{static}NULL_TO_STRING = 2
+    +{static}PARAM_BOOL = 5
+    +{static}PARAM_EVT_ALLOC = 0
+    +{static}PARAM_EVT_EXEC_POST = 3
+    +{static}PARAM_EVT_EXEC_PRE = 2
+    +{static}PARAM_EVT_FETCH_POST = 5
+    +{static}PARAM_EVT_FETCH_PRE = 4
+    +{static}PARAM_EVT_FREE = 1
+    +{static}PARAM_EVT_NORMALIZE = 6
+    +{static}PARAM_INPUT_OUTPUT = -2147483648
+    +{static}PARAM_INT = 1
+    +{static}PARAM_LOB = 3
+    +{static}PARAM_NULL = 0
+    +{static}PARAM_STMT = 4
+    +{static}PARAM_STR = 2
+    +{static}SQLITE_DETERMINISTIC = 2048
+    +beginTransaction() : bool
+    +commit() : bool
+    +getAttribute(attribute : int) : mixed
+    +lastInsertId(sequence : string|null = null) : int
+    +rollBack() : bool
+}
+class yii.db.mssql.PDO extends PDO
+class yii.db.mssql.QueryBuilder {
+    +{static}PARAM_PREFIX = ":qp"
+    #likeEscapingReplacements = [
+        \t"%" => "[%]",
+        \t"_" => "[_]",
+        \t"[" => "[[]",
+        \t"]" => "[]]",
+        \t"\" => "[\]"
+    ]
+    +typeMap : array = [
+        \t"pk" => "int IDENTITY PRIMARY KEY",
+        \t"upk" => "int IDENTITY PRIMARY KEY",
+        \t"bigpk" => "bigint IDENTITY PRIMARY KEY",
+        \t"ubigpk" => "bigint IDENTITY PRIMARY KEY",
+        \t"char" => "nchar(1)",
+        \t"string" => "nvarchar(255)",
+        \t"text" => "nvarchar(max)",
+        \t"smallint" => "smallint",
+        \t"integer" => "int",
+        \t"bigint" => "bigint",
+        \t"float" => "float",
+        \t"double" => "float",
+        \t"decimal" => "decimal(18,0)",
+        \t"datetime" => "datetime",
+        \t"timestamp" => "datetime",
+        \t"time" => "time",
+        \t"date" => "date",
+        \t"binary" => "varbinary(max)",
+        \t"boolean" => "bit",
+        \t"money" => "decimal(19,4)"
+    ]
+    -_oldMssql : bool
+    +addCommentOnColumn(table, column, comment)
+    +addCommentOnTable(table, comment)
+    +addDefaultValue(name, table, column, value)
+    +alterColumn(table : string, column : string, type : string) : string
+    #buildCompositeInCondition(operator : string, columns : array, values : array, params : array) : string
+    +buildOrderByAndLimit(sql, orderBy, limit, offset)
+    #buildSubqueryInCondition(operator, columns, values, params)
+    +checkIntegrity(check : bool = true, schema : string = "", table : string = "") : string
+    +dropCommentFromColumn(table, column)
+    +dropCommentFromTable(table)
+    +dropDefaultValue(name, table)
+    #getAllColumnNames(modelClass : string = null) : array|null
+    +insert(table, columns, params)
+    #isOldMssql() : bool
+    #newBuildOrderByAndLimit(sql : string, orderBy : array, limit : int, offset : int) : string
+    -normalizeTableRowData(table : string, columns : array, params) : array
+    #oldBuildOrderByAndLimit(sql : string, orderBy : array, limit : int, offset : int) : string
+    +renameColumn(table : string, oldName : string, newName : string) : string
+    +renameTable(oldName : string, newName : string) : string
+    +resetSequence(tableName : string, value : mixed = null) : string
+    +selectExists(rawSql)
+    +update(table, columns, condition, params)
+}
+class yii.db.mssql.QueryBuilder extends yii.db.QueryBuilder
+class yii.db.mssql.Schema {
+    +{static}SCHEMA_CACHE_VERSION = 1
+    +{static}TYPE_BIGINT = "bigint"
+    +{static}TYPE_BIGPK = "bigpk"
+    +{static}TYPE_BINARY = "binary"
+    +{static}TYPE_BOOLEAN = "boolean"
+    +{static}TYPE_CHAR = "char"
+    +{static}TYPE_DATE = "date"
+    +{static}TYPE_DATETIME = "datetime"
+    +{static}TYPE_DECIMAL = "decimal"
+    +{static}TYPE_DOUBLE = "double"
+    +{static}TYPE_FLOAT = "float"
+    +{static}TYPE_INTEGER = "integer"
+    +{static}TYPE_MONEY = "money"
+    +{static}TYPE_PK = "pk"
+    +{static}TYPE_SMALLINT = "smallint"
+    +{static}TYPE_STRING = "string"
+    +{static}TYPE_TEXT = "text"
+    +{static}TYPE_TIME = "time"
+    +{static}TYPE_TIMESTAMP = "timestamp"
+    +{static}TYPE_UBIGPK = "ubigpk"
+    +{static}TYPE_UPK = "upk"
+    +defaultSchema : string = "dbo"
+    +typeMap : array = [
+        \t"bigint" => "~~NOT RESOLVED~~",
+        \t"numeric" => "~~NOT RESOLVED~~",
+        \t"bit" => "~~NOT RESOLVED~~",
+        \t"smallint" => "~~NOT RESOLVED~~",
+        \t"decimal" => "~~NOT RESOLVED~~",
+        \t"smallmoney" => "~~NOT RESOLVED~~",
+        \t"int" => "~~NOT RESOLVED~~",
+        \t"tinyint" => "~~NOT RESOLVED~~",
+        \t"money" => "~~NOT RESOLVED~~",
+        \t"float" => "~~NOT RESOLVED~~",
+        \t"double" => "~~NOT RESOLVED~~",
+        \t"real" => "~~NOT RESOLVED~~",
+        \t"date" => "~~NOT RESOLVED~~",
+        \t"datetimeoffset" => "~~NOT RESOLVED~~",
+        \t"datetime2" => "~~NOT RESOLVED~~",
+        \t"smalldatetime" => "~~NOT RESOLVED~~",
+        \t"datetime" => "~~NOT RESOLVED~~",
+        \t"time" => "~~NOT RESOLVED~~",
+        \t"char" => "~~NOT RESOLVED~~",
+        \t"varchar" => "~~NOT RESOLVED~~",
+        \t"text" => "~~NOT RESOLVED~~",
+        \t"nchar" => "~~NOT RESOLVED~~",
+        \t"nvarchar" => "~~NOT RESOLVED~~",
+        \t"ntext" => "~~NOT RESOLVED~~",
+        \t"binary" => "~~NOT RESOLVED~~",
+        \t"varbinary" => "~~NOT RESOLVED~~",
+        \t"image" => "~~NOT RESOLVED~~",
+        \t"timestamp" => "~~NOT RESOLVED~~",
+        \t"hierarchyid" => "~~NOT RESOLVED~~",
+        \t"uniqueidentifier" => "~~NOT RESOLVED~~",
+        \t"sql_variant" => "~~NOT RESOLVED~~",
+        \t"xml" => "~~NOT RESOLVED~~",
+        \t"table" => "string"
+    ]
+    +createQueryBuilder() : QueryBuilder
+    +createSavepoint(name)
+    #findColumns(table : TableSchema) : bool
+    #findForeignKeys(table : TableSchema)
+    #findPrimaryKeys(table : TableSchema)
+    #findSchemaNames()
+    #findTableConstraints(table : TableSchema, type : string) : array
+    #findTableNames(schema = "")
+    +findUniqueIndexes(table : TableSchema) : array
+    #findViewNames(schema = "")
+    #loadColumnSchema(info : array) : yii.db.ColumnSchema
+    #loadTableChecks(tableName)
+    -loadTableConstraints(tableName : string, returnType : string) : mixed
+    #loadTableDefaultValues(tableName)
+    #loadTableForeignKeys(tableName)
+    #loadTableIndexes(tableName)
+    #loadTablePrimaryKey(tableName)
+    #loadTableSchema(name)
+    #loadTableUniques(tableName)
+    +quoteSimpleColumnName(name : string) : string
+    +quoteSimpleTableName(name : string) : string
+    +releaseSavepoint(name)
+    #resolveTableName(name : string) : TableSchema
+    #resolveTableNames(table : TableSchema, name : string)
+    +rollBackSavepoint(name)
+}
+class yii.db.mssql.Schema extends yii.db.Schema
+class yii.db.mssql.SqlsrvPDO {
+    +{static}ATTR_AUTOCOMMIT = 0
+    +{static}ATTR_CASE = 8
+    +{static}ATTR_CLIENT_VERSION = 5
+    +{static}ATTR_CONNECTION_STATUS = 7
+    +{static}ATTR_CURSOR = 10
+    +{static}ATTR_CURSOR_NAME = 9
+    +{static}ATTR_DEFAULT_FETCH_MODE = 19
+    +{static}ATTR_DRIVER_NAME = 16
+    +{static}ATTR_EMULATE_PREPARES = 20
+    +{static}ATTR_ERRMODE = 3
+    +{static}ATTR_FETCH_CATALOG_NAMES = 15
+    +{static}ATTR_FETCH_TABLE_NAMES = 14
+    +{static}ATTR_MAX_COLUMN_LEN = 18
+    +{static}ATTR_ORACLE_NULLS = 11
+    +{static}ATTR_PERSISTENT = 12
+    +{static}ATTR_PREFETCH = 1
+    +{static}ATTR_SERVER_INFO = 6
+    +{static}ATTR_SERVER_VERSION = 4
+    +{static}ATTR_STATEMENT_CLASS = 13
+    +{static}ATTR_STRINGIFY_FETCHES = 17
+    +{static}ATTR_TIMEOUT = 2
+    +{static}CASE_LOWER = 2
+    +{static}CASE_NATURAL = 0
+    +{static}CASE_UPPER = 1
+    +{static}CURSOR_FWDONLY = 0
+    +{static}CURSOR_SCROLL = 1
+    +{static}ERRMODE_EXCEPTION = 2
+    +{static}ERRMODE_SILENT = 0
+    +{static}ERRMODE_WARNING = 1
+    +{static}ERR_NONE = 00000
+    +{static}FETCH_ASSOC = 2
+    +{static}FETCH_BOTH = 4
+    +{static}FETCH_BOUND = 6
+    +{static}FETCH_CLASS = 8
+    +{static}FETCH_CLASSTYPE = 262144
+    +{static}FETCH_COLUMN = 7
+    +{static}FETCH_FUNC = 10
+    +{static}FETCH_GROUP = 65536
+    +{static}FETCH_INTO = 9
+    +{static}FETCH_KEY_PAIR = 12
+    +{static}FETCH_LAZY = 1
+    +{static}FETCH_NAMED = 11
+    +{static}FETCH_NUM = 3
+    +{static}FETCH_OBJ = 5
+    +{static}FETCH_ORI_ABS = 4
+    +{static}FETCH_ORI_FIRST = 2
+    +{static}FETCH_ORI_LAST = 3
+    +{static}FETCH_ORI_NEXT = 0
+    +{static}FETCH_ORI_PRIOR = 1
+    +{static}FETCH_ORI_REL = 5
+    +{static}FETCH_PROPS_LATE = 1048576
+    +{static}FETCH_SERIALIZE = 524288
+    +{static}FETCH_UNIQUE = 196608
+    +{static}MYSQL_ATTR_COMPRESS = 1003
+    +{static}MYSQL_ATTR_DIRECT_QUERY = 1004
+    +{static}MYSQL_ATTR_FOUND_ROWS = 1005
+    +{static}MYSQL_ATTR_IGNORE_SPACE = 1006
+    +{static}MYSQL_ATTR_INIT_COMMAND = 1002
+    +{static}MYSQL_ATTR_LOCAL_INFILE = 1001
+    +{static}MYSQL_ATTR_MULTI_STATEMENTS = 1013
+    +{static}MYSQL_ATTR_SERVER_PUBLIC_KEY = 1012
+    +{static}MYSQL_ATTR_SSL_CA = 1009
+    +{static}MYSQL_ATTR_SSL_CAPATH = 1010
+    +{static}MYSQL_ATTR_SSL_CERT = 1008
+    +{static}MYSQL_ATTR_SSL_CIPHER = 1011
+    +{static}MYSQL_ATTR_SSL_KEY = 1007
+    +{static}MYSQL_ATTR_SSL_VERIFY_SERVER_CERT = 1014
+    +{static}MYSQL_ATTR_USE_BUFFERED_QUERY = 1000
+    +{static}NULL_EMPTY_STRING = 1
+    +{static}NULL_NATURAL = 0
+    +{static}NULL_TO_STRING = 2
+    +{static}PARAM_BOOL = 5
+    +{static}PARAM_EVT_ALLOC = 0
+    +{static}PARAM_EVT_EXEC_POST = 3
+    +{static}PARAM_EVT_EXEC_PRE = 2
+    +{static}PARAM_EVT_FETCH_POST = 5
+    +{static}PARAM_EVT_FETCH_PRE = 4
+    +{static}PARAM_EVT_FREE = 1
+    +{static}PARAM_EVT_NORMALIZE = 6
+    +{static}PARAM_INPUT_OUTPUT = -2147483648
+    +{static}PARAM_INT = 1
+    +{static}PARAM_LOB = 3
+    +{static}PARAM_NULL = 0
+    +{static}PARAM_STMT = 4
+    +{static}PARAM_STR = 2
+    +{static}SQLITE_DETERMINISTIC = 2048
+    +lastInsertId(sequence : string|null = null) : int
+}
+class yii.db.mssql.SqlsrvPDO extends PDO
+class yii.db.mssql.TableSchema {
+    +catalogName : string
+}
+class yii.db.mssql.TableSchema extends yii.db.TableSchema
+class yii.db.mysql.ColumnSchemaBuilder {
+    +{static}CATEGORY_NUMERIC = "numeric"
+    +{static}CATEGORY_OTHER = "other"
+    +{static}CATEGORY_PK = "pk"
+    +{static}CATEGORY_STRING = "string"
+    +{static}CATEGORY_TIME = "time"
+    #buildAfterString()
+    #buildCommentString()
+    #buildFirstString()
+    #buildUnsignedString()
+    +__toString()
+}
+class yii.db.mysql.ColumnSchemaBuilder extends yii.db.ColumnSchemaBuilder
+class yii.db.mysql.QueryBuilder {
+    +{static}PARAM_PREFIX = ":qp"
+    +typeMap : array = [
+        \t"pk" => "int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY",
+        \t"upk" => "int(10) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY",
+        \t"bigpk" => "bigint(20) NOT NULL AUTO_INCREMENT PRIMARY KEY",
+        \t"ubigpk" => "bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY",
+        \t"char" => "char(1)",
+        \t"string" => "varchar(255)",
+        \t"text" => "text",
+        \t"smallint" => "smallint(6)",
+        \t"integer" => "int(11)",
+        \t"bigint" => "bigint(20)",
+        \t"float" => "float",
+        \t"double" => "double",
+        \t"decimal" => "decimal(10,0)",
+        \t"datetime" => "datetime",
+        \t"timestamp" => "timestamp",
+        \t"time" => "time",
+        \t"date" => "date",
+        \t"binary" => "blob",
+        \t"boolean" => "tinyint(1)",
+        \t"money" => "decimal(19,4)"
+    ]
+    +addCheck(name, table, expression)
+    +addCommentOnColumn(table, column, comment)
+    +addCommentOnTable(table, comment)
+    +buildLimit(limit, offset)
+    +checkIntegrity(check : bool = true, schema : string = "", table : string = "") : string
+    +createIndex(name, table, columns, unique = false)
+    +dropCheck(name, table)
+    +dropCommentFromColumn(table, column)
+    +dropCommentFromTable(table)
+    +dropForeignKey(name : string, table : string) : string
+    +dropPrimaryKey(name : string, table : string) : string
+    +dropUnique(name, table)
+    -getColumnDefinition(table : string, column : string) : null|string
+    #hasLimit(limit)
+    #hasOffset(offset)
+    +insert(table, columns, params)
+    +renameColumn(table : string, oldName : string, newName : string) : string
+    +resetSequence(tableName : string, value : mixed = null) : string
+}
+class yii.db.mysql.QueryBuilder extends yii.db.QueryBuilder
+class yii.db.mysql.Schema {
+    +{static}SCHEMA_CACHE_VERSION = 1
+    +{static}TYPE_BIGINT = "bigint"
+    +{static}TYPE_BIGPK = "bigpk"
+    +{static}TYPE_BINARY = "binary"
+    +{static}TYPE_BOOLEAN = "boolean"
+    +{static}TYPE_CHAR = "char"
+    +{static}TYPE_DATE = "date"
+    +{static}TYPE_DATETIME = "datetime"
+    +{static}TYPE_DECIMAL = "decimal"
+    +{static}TYPE_DOUBLE = "double"
+    +{static}TYPE_FLOAT = "float"
+    +{static}TYPE_INTEGER = "integer"
+    +{static}TYPE_MONEY = "money"
+    +{static}TYPE_PK = "pk"
+    +{static}TYPE_SMALLINT = "smallint"
+    +{static}TYPE_STRING = "string"
+    +{static}TYPE_TEXT = "text"
+    +{static}TYPE_TIME = "time"
+    +{static}TYPE_TIMESTAMP = "timestamp"
+    +{static}TYPE_UBIGPK = "ubigpk"
+    +{static}TYPE_UPK = "upk"
+    +typeMap : array = [
+        \t"tinyint" => "~~NOT RESOLVED~~",
+        \t"bit" => "~~NOT RESOLVED~~",
+        \t"smallint" => "~~NOT RESOLVED~~",
+        \t"mediumint" => "~~NOT RESOLVED~~",
+        \t"int" => "~~NOT RESOLVED~~",
+        \t"integer" => "~~NOT RESOLVED~~",
+        \t"bigint" => "~~NOT RESOLVED~~",
+        \t"float" => "~~NOT RESOLVED~~",
+        \t"double" => "~~NOT RESOLVED~~",
+        \t"real" => "~~NOT RESOLVED~~",
+        \t"decimal" => "~~NOT RESOLVED~~",
+        \t"numeric" => "~~NOT RESOLVED~~",
+        \t"tinytext" => "~~NOT RESOLVED~~",
+        \t"mediumtext" => "~~NOT RESOLVED~~",
+        \t"longtext" => "~~NOT RESOLVED~~",
+        \t"longblob" => "~~NOT RESOLVED~~",
+        \t"blob" => "~~NOT RESOLVED~~",
+        \t"text" => "~~NOT RESOLVED~~",
+        \t"varchar" => "~~NOT RESOLVED~~",
+        \t"string" => "~~NOT RESOLVED~~",
+        \t"char" => "~~NOT RESOLVED~~",
+        \t"datetime" => "~~NOT RESOLVED~~",
+        \t"year" => "~~NOT RESOLVED~~",
+        \t"date" => "~~NOT RESOLVED~~",
+        \t"time" => "~~NOT RESOLVED~~",
+        \t"timestamp" => "~~NOT RESOLVED~~",
+        \t"enum" => "~~NOT RESOLVED~~",
+        \t"varbinary" => "binary"
+    ]
+    -_oldMysql : bool
+    +createColumnSchemaBuilder(type, length = null)
+    +createQueryBuilder() : QueryBuilder
+    #findColumns(table : TableSchema) : bool
+    #findConstraints(table : TableSchema)
+    #findTableNames(schema = "")
+    +findUniqueIndexes(table : TableSchema) : array
+    #getCreateTableSql(table : TableSchema) : string
+    #isOldMysql() : bool
+    #loadColumnSchema(info : array) : yii.db.ColumnSchema
+    #loadTableChecks(tableName)
+    -loadTableConstraints(tableName : string, returnType : string) : mixed
+    #loadTableDefaultValues(tableName)
+    #loadTableForeignKeys(tableName)
+    #loadTableIndexes(tableName)
+    #loadTablePrimaryKey(tableName)
+    #loadTableSchema(name)
+    #loadTableUniques(tableName)
+    +quoteSimpleColumnName(name : string) : string
+    +quoteSimpleTableName(name : string) : string
+    #resolveTableName(name)
+    #resolveTableNames(table : TableSchema, name : string)
+}
+class yii.db.mysql.Schema extends yii.db.Schema
+class yii.db.oci.ColumnSchemaBuilder {
+    +{static}CATEGORY_NUMERIC = "numeric"
+    +{static}CATEGORY_OTHER = "other"
+    +{static}CATEGORY_PK = "pk"
+    +{static}CATEGORY_STRING = "string"
+    +{static}CATEGORY_TIME = "time"
+    #buildUnsignedString()
+    +__toString()
+}
+class yii.db.oci.ColumnSchemaBuilder extends yii.db.ColumnSchemaBuilder
+class yii.db.oci.QueryBuilder {
+    +{static}PARAM_PREFIX = ":qp"
+    #likeEscapeCharacter = "!"
+    #likeEscapingReplacements = [
+        \t"%" => "!%",
+        \t"_" => "!_",
+        \t"!" => "!!"
+    ]
+    +typeMap : array = [
+        \t"pk" => "NUMBER(10) NOT NULL PRIMARY KEY",
+        \t"upk" => "NUMBER(10) UNSIGNED NOT NULL PRIMARY KEY",
+        \t"bigpk" => "NUMBER(20) NOT NULL PRIMARY KEY",
+        \t"ubigpk" => "NUMBER(20) UNSIGNED NOT NULL PRIMARY KEY",
+        \t"char" => "CHAR(1)",
+        \t"string" => "VARCHAR2(255)",
+        \t"text" => "CLOB",
+        \t"smallint" => "NUMBER(5)",
+        \t"integer" => "NUMBER(10)",
+        \t"bigint" => "NUMBER(20)",
+        \t"float" => "NUMBER",
+        \t"double" => "NUMBER",
+        \t"decimal" => "NUMBER",
+        \t"datetime" => "TIMESTAMP",
+        \t"timestamp" => "TIMESTAMP",
+        \t"time" => "TIMESTAMP",
+        \t"date" => "DATE",
+        \t"binary" => "BLOB",
+        \t"boolean" => "NUMBER(1)",
+        \t"money" => "NUMBER(19,4)"
+    ]
+    +addForeignKey(name, table, columns, refTable, refColumns, delete = null, update = null)
+    +alterColumn(table : string, column : string, type : string) : string
+    +batchInsert(table : string, columns : array, rows : array|.Generator) : string
+    +buildInCondition(operator, operands, params)
+    +buildLikeCondition(operator, operands, params)
+    +buildOrderByAndLimit(sql, orderBy, limit, offset)
+    +dropCommentFromColumn(table, column)
+    +dropCommentFromTable(table)
+    +dropIndex(name : string, table : string) : string
+    +insert(table, columns, params)
+    +renameTable(table : string, newName : string) : string
+    +resetSequence(table, value = null)
+    +selectExists(rawSql)
+    #splitInCondition(operator : string, operands : array, params : array) : null|string
+}
+class yii.db.oci.QueryBuilder extends yii.db.QueryBuilder
+class yii.db.oci.Schema {
+    +{static}SCHEMA_CACHE_VERSION = 1
+    +{static}TYPE_BIGINT = "bigint"
+    +{static}TYPE_BIGPK = "bigpk"
+    +{static}TYPE_BINARY = "binary"
+    +{static}TYPE_BOOLEAN = "boolean"
+    +{static}TYPE_CHAR = "char"
+    +{static}TYPE_DATE = "date"
+    +{static}TYPE_DATETIME = "datetime"
+    +{static}TYPE_DECIMAL = "decimal"
+    +{static}TYPE_DOUBLE = "double"
+    +{static}TYPE_FLOAT = "float"
+    +{static}TYPE_INTEGER = "integer"
+    +{static}TYPE_MONEY = "money"
+    +{static}TYPE_PK = "pk"
+    +{static}TYPE_SMALLINT = "smallint"
+    +{static}TYPE_STRING = "string"
+    +{static}TYPE_TEXT = "text"
+    +{static}TYPE_TIME = "time"
+    +{static}TYPE_TIMESTAMP = "timestamp"
+    +{static}TYPE_UBIGPK = "ubigpk"
+    +{static}TYPE_UPK = "upk"
+    +exceptionMap : array = [
+        \t"ORA-00001: unique constraint" => "yii\db\IntegrityException"
+    ]
+    #createColumn(column : array) : yii.db.ColumnSchema
+    +createColumnSchemaBuilder(type, length = null)
+    +createQueryBuilder()
+    #extractColumnSize(column : ColumnSchema, dbType : string, precision : string, scale : string, length : string)
+    #extractColumnType(column : ColumnSchema, dbType : string, precision : string, scale : string, length : string)
+    #findColumns(table : TableSchema) : bool
+    #findConstraints(table : TableSchema)
+    #findSchemaNames()
+    #findTableNames(schema = "")
+    +findUniqueIndexes(table : TableSchema) : array
+    +getLastInsertID(sequenceName : string = "") : string
+    #getTableSequenceName(tableName : string) : string|null
+    +init()
+    +insert(table, columns)
+    #loadTableChecks(tableName)
+    -loadTableConstraints(tableName : string, returnType : string) : mixed
+    #loadTableDefaultValues(tableName)
+    #loadTableForeignKeys(tableName)
+    #loadTableIndexes(tableName)
+    #loadTablePrimaryKey(tableName)
+    #loadTableSchema(name)
+    #loadTableUniques(tableName)
+    +quoteSimpleTableName(name)
+    +releaseSavepoint(name)
+    #resolveTableName(name)
+    #resolveTableNames(table : TableSchema, name : string)
+}
+class yii.db.oci.Schema extends yii.db.Schema
+class yii.db.pgsql.QueryBuilder {
+    +{static}INDEX_B_TREE = "btree"
+    +{static}INDEX_GIN = "gin"
+    +{static}INDEX_GIST = "gist"
+    +{static}INDEX_HASH = "hash"
+    +{static}INDEX_UNIQUE = "unique"
+    +{static}PARAM_PREFIX = ":qp"
+    #conditionBuilders : array = [
+        \t"NOT" => "buildNotCondition",
+        \t"AND" => "buildAndCondition",
+        \t"OR" => "buildAndCondition",
+        \t"BETWEEN" => "buildBetweenCondition",
+        \t"NOT BETWEEN" => "buildBetweenCondition",
+        \t"IN" => "buildInCondition",
+        \t"NOT IN" => "buildInCondition",
+        \t"LIKE" => "buildLikeCondition",
+        \t"ILIKE" => "buildLikeCondition",
+        \t"NOT LIKE" => "buildLikeCondition",
+        \t"NOT ILIKE" => "buildLikeCondition",
+        \t"OR LIKE" => "buildLikeCondition",
+        \t"OR ILIKE" => "buildLikeCondition",
+        \t"OR NOT LIKE" => "buildLikeCondition",
+        \t"OR NOT ILIKE" => "buildLikeCondition",
+        \t"EXISTS" => "buildExistsCondition",
+        \t"NOT EXISTS" => "buildExistsCondition"
+    ]
+    +typeMap : array = [
+        \t"pk" => "serial NOT NULL PRIMARY KEY",
+        \t"upk" => "serial NOT NULL PRIMARY KEY",
+        \t"bigpk" => "bigserial NOT NULL PRIMARY KEY",
+        \t"ubigpk" => "bigserial NOT NULL PRIMARY KEY",
+        \t"char" => "char(1)",
+        \t"string" => "varchar(255)",
+        \t"text" => "text",
+        \t"smallint" => "smallint",
+        \t"integer" => "integer",
+        \t"bigint" => "bigint",
+        \t"float" => "double precision",
+        \t"double" => "double precision",
+        \t"decimal" => "numeric(10,0)",
+        \t"datetime" => "timestamp(0)",
+        \t"timestamp" => "timestamp(0)",
+        \t"time" => "time(0)",
+        \t"date" => "date",
+        \t"binary" => "bytea",
+        \t"boolean" => "boolean",
+        \t"money" => "numeric(19,4)"
+    ]
+    +alterColumn(table : string, column : string, type : string) : string
+    +batchInsert(table, columns, rows)
+    +checkIntegrity(check : bool = true, schema : string = "", table : string = "") : string
+    +createIndex(name : string, table : string, columns : string|array, unique : bool|string = false) : string
+    +dropIndex(name : string, table : string) : string
+    +insert(table, columns, params)
+    -normalizeTableRowData(table : string, columns : array|.yii.db.Query) : array
+    +renameTable(oldName : string, newName : string) : string
+    +resetSequence(tableName : string, value : mixed = null) : string
+    +truncateTable(table : string) : string
+    +update(table, columns, condition, params)
+}
+class yii.db.pgsql.QueryBuilder extends yii.db.QueryBuilder
+class yii.db.pgsql.Schema {
+    +{static}SCHEMA_CACHE_VERSION = 1
+    +{static}TYPE_BIGINT = "bigint"
+    +{static}TYPE_BIGPK = "bigpk"
+    +{static}TYPE_BINARY = "binary"
+    +{static}TYPE_BOOLEAN = "boolean"
+    +{static}TYPE_CHAR = "char"
+    +{static}TYPE_DATE = "date"
+    +{static}TYPE_DATETIME = "datetime"
+    +{static}TYPE_DECIMAL = "decimal"
+    +{static}TYPE_DOUBLE = "double"
+    +{static}TYPE_FLOAT = "float"
+    +{static}TYPE_INTEGER = "integer"
+    +{static}TYPE_MONEY = "money"
+    +{static}TYPE_PK = "pk"
+    +{static}TYPE_SMALLINT = "smallint"
+    +{static}TYPE_STRING = "string"
+    +{static}TYPE_TEXT = "text"
+    +{static}TYPE_TIME = "time"
+    +{static}TYPE_TIMESTAMP = "timestamp"
+    +{static}TYPE_UBIGPK = "ubigpk"
+    +{static}TYPE_UPK = "upk"
+    +defaultSchema : string = "public"
+    +typeMap : array = [
+        \t"bit" => "~~NOT RESOLVED~~",
+        \t"bit varying" => "~~NOT RESOLVED~~",
+        \t"varbit" => "~~NOT RESOLVED~~",
+        \t"bool" => "~~NOT RESOLVED~~",
+        \t"boolean" => "~~NOT RESOLVED~~",
+        \t"box" => "~~NOT RESOLVED~~",
+        \t"circle" => "~~NOT RESOLVED~~",
+        \t"point" => "~~NOT RESOLVED~~",
+        \t"line" => "~~NOT RESOLVED~~",
+        \t"lseg" => "~~NOT RESOLVED~~",
+        \t"polygon" => "~~NOT RESOLVED~~",
+        \t"path" => "~~NOT RESOLVED~~",
+        \t"character" => "~~NOT RESOLVED~~",
+        \t"char" => "~~NOT RESOLVED~~",
+        \t"bpchar" => "~~NOT RESOLVED~~",
+        \t"character varying" => "~~NOT RESOLVED~~",
+        \t"varchar" => "~~NOT RESOLVED~~",
+        \t"text" => "~~NOT RESOLVED~~",
+        \t"bytea" => "~~NOT RESOLVED~~",
+        \t"cidr" => "~~NOT RESOLVED~~",
+        \t"inet" => "~~NOT RESOLVED~~",
+        \t"macaddr" => "~~NOT RESOLVED~~",
+        \t"real" => "~~NOT RESOLVED~~",
+        \t"float4" => "~~NOT RESOLVED~~",
+        \t"double precision" => "~~NOT RESOLVED~~",
+        \t"float8" => "~~NOT RESOLVED~~",
+        \t"decimal" => "~~NOT RESOLVED~~",
+        \t"numeric" => "~~NOT RESOLVED~~",
+        \t"money" => "~~NOT RESOLVED~~",
+        \t"smallint" => "~~NOT RESOLVED~~",
+        \t"int2" => "~~NOT RESOLVED~~",
+        \t"int4" => "~~NOT RESOLVED~~",
+        \t"int" => "~~NOT RESOLVED~~",
+        \t"integer" => "~~NOT RESOLVED~~",
+        \t"bigint" => "~~NOT RESOLVED~~",
+        \t"int8" => "~~NOT RESOLVED~~",
+        \t"oid" => "~~NOT RESOLVED~~",
+        \t"smallserial" => "~~NOT RESOLVED~~",
+        \t"serial2" => "~~NOT RESOLVED~~",
+        \t"serial4" => "~~NOT RESOLVED~~",
+        \t"serial" => "~~NOT RESOLVED~~",
+        \t"bigserial" => "~~NOT RESOLVED~~",
+        \t"serial8" => "~~NOT RESOLVED~~",
+        \t"pg_lsn" => "~~NOT RESOLVED~~",
+        \t"date" => "~~NOT RESOLVED~~",
+        \t"interval" => "~~NOT RESOLVED~~",
+        \t"time without time zone" => "~~NOT RESOLVED~~",
+        \t"time" => "~~NOT RESOLVED~~",
+        \t"time with time zone" => "~~NOT RESOLVED~~",
+        \t"timetz" => "~~NOT RESOLVED~~",
+        \t"timestamp without time zone" => "~~NOT RESOLVED~~",
+        \t"timestamp" => "~~NOT RESOLVED~~",
+        \t"timestamp with time zone" => "~~NOT RESOLVED~~",
+        \t"timestamptz" => "~~NOT RESOLVED~~",
+        \t"abstime" => "~~NOT RESOLVED~~",
+        \t"tsquery" => "~~NOT RESOLVED~~",
+        \t"tsvector" => "~~NOT RESOLVED~~",
+        \t"txid_snapshot" => "~~NOT RESOLVED~~",
+        \t"unknown" => "~~NOT RESOLVED~~",
+        \t"uuid" => "~~NOT RESOLVED~~",
+        \t"json" => "~~NOT RESOLVED~~",
+        \t"jsonb" => "~~NOT RESOLVED~~",
+        \t"xml" => "string"
+    ]
+    +createQueryBuilder() : QueryBuilder
+    #findColumns(table : TableSchema) : bool
+    #findConstraints(table : TableSchema)
+    #findSchemaNames()
+    #findTableNames(schema = "")
+    +findUniqueIndexes(table : TableSchema) : array
+    #findViewNames(schema = "")
+    #getUniqueIndexInformation(table : TableSchema) : array
+    +insert(table, columns)
+    #loadColumnSchema(info : array) : ColumnSchema
+    #loadTableChecks(tableName)
+    -loadTableConstraints(tableName : string, returnType : string) : mixed
+    #loadTableDefaultValues(tableName)
+    #loadTableForeignKeys(tableName)
+    #loadTableIndexes(tableName)
+    #loadTablePrimaryKey(tableName)
+    #loadTableSchema(name)
+    #loadTableUniques(tableName)
+    +quoteSimpleTableName(name : string) : string
+    #resolveTableName(name)
+    #resolveTableNames(table : TableSchema, name : string)
+}
+class yii.db.pgsql.Schema extends yii.db.Schema
+class yii.db.sqlite.ColumnSchemaBuilder {
+    +{static}CATEGORY_NUMERIC = "numeric"
+    +{static}CATEGORY_OTHER = "other"
+    +{static}CATEGORY_PK = "pk"
+    +{static}CATEGORY_STRING = "string"
+    +{static}CATEGORY_TIME = "time"
+    #buildUnsignedString()
+    +__toString()
+}
+class yii.db.sqlite.ColumnSchemaBuilder extends yii.db.ColumnSchemaBuilder
+class yii.db.sqlite.QueryBuilder {
+    +{static}PARAM_PREFIX = ":qp"
+    #likeEscapeCharacter = "\"
+    +typeMap : array = [
+        \t"pk" => "integer PRIMARY KEY AUTOINCREMENT NOT NULL",
+        \t"upk" => "integer UNSIGNED PRIMARY KEY AUTOINCREMENT NOT NULL",
+        \t"bigpk" => "integer PRIMARY KEY AUTOINCREMENT NOT NULL",
+        \t"ubigpk" => "integer UNSIGNED PRIMARY KEY AUTOINCREMENT NOT NULL",
+        \t"char" => "char(1)",
+        \t"string" => "varchar(255)",
+        \t"text" => "text",
+        \t"smallint" => "smallint",
+        \t"integer" => "integer",
+        \t"bigint" => "bigint",
+        \t"float" => "float",
+        \t"double" => "double",
+        \t"decimal" => "decimal(10,0)",
+        \t"datetime" => "datetime",
+        \t"timestamp" => "timestamp",
+        \t"time" => "time",
+        \t"date" => "date",
+        \t"binary" => "blob",
+        \t"boolean" => "boolean",
+        \t"money" => "decimal(19,4)"
+    ]
+    +addCheck(name, table, expression)
+    +addCommentOnColumn(table, column, comment)
+    +addCommentOnTable(table, comment)
+    +addDefaultValue(name, table, column, value)
+    +addForeignKey(name : string, table : string, columns : string|array, refTable : string, refColumns : string|array, delete : string = null, update : string = null) : string
+    +addPrimaryKey(name : string, table : string, columns : string|array) : string
+    +addUnique(name, table, columns)
+    +alterColumn(table : string, column : string, type : string) : string
+    +batchInsert(table : string, columns : array, rows : array|.Generator) : string
+    +build(query, params = [])
+    #buildCompositeInCondition(operator : string, columns : array, values : array, params : array) : string
+    +buildLimit(limit, offset)
+    #buildSubqueryInCondition(operator, columns, values, params)
+    +buildUnion(unions, params)
+    +checkIntegrity(check : bool = true, schema : string = "", table : string = "") : string
+    +dropCheck(name, table)
+    +dropColumn(table : string, column : string) : string
+    +dropCommentFromColumn(table, column)
+    +dropCommentFromTable(table)
+    +dropDefaultValue(name, table)
+    +dropForeignKey(name : string, table : string) : string
+    +dropIndex(name : string, table : string) : string
+    +dropPrimaryKey(name : string, table : string) : string
+    +dropUnique(name, table)
+    +renameColumn(table : string, oldName : string, newName : string) : string
+    +renameTable(table : string, newName : string) : string
+    +resetSequence(tableName : string, value : mixed = null) : string
+    +truncateTable(table : string) : string
+}
+class yii.db.sqlite.QueryBuilder extends yii.db.QueryBuilder
+class yii.db.sqlite.Schema {
+    +{static}SCHEMA_CACHE_VERSION = 1
+    +{static}TYPE_BIGINT = "bigint"
+    +{static}TYPE_BIGPK = "bigpk"
+    +{static}TYPE_BINARY = "binary"
+    +{static}TYPE_BOOLEAN = "boolean"
+    +{static}TYPE_CHAR = "char"
+    +{static}TYPE_DATE = "date"
+    +{static}TYPE_DATETIME = "datetime"
+    +{static}TYPE_DECIMAL = "decimal"
+    +{static}TYPE_DOUBLE = "double"
+    +{static}TYPE_FLOAT = "float"
+    +{static}TYPE_INTEGER = "integer"
+    +{static}TYPE_MONEY = "money"
+    +{static}TYPE_PK = "pk"
+    +{static}TYPE_SMALLINT = "smallint"
+    +{static}TYPE_STRING = "string"
+    +{static}TYPE_TEXT = "text"
+    +{static}TYPE_TIME = "time"
+    +{static}TYPE_TIMESTAMP = "timestamp"
+    +{static}TYPE_UBIGPK = "ubigpk"
+    +{static}TYPE_UPK = "upk"
+    +typeMap : array = [
+        \t"tinyint" => "~~NOT RESOLVED~~",
+        \t"bit" => "~~NOT RESOLVED~~",
+        \t"boolean" => "~~NOT RESOLVED~~",
+        \t"bool" => "~~NOT RESOLVED~~",
+        \t"smallint" => "~~NOT RESOLVED~~",
+        \t"mediumint" => "~~NOT RESOLVED~~",
+        \t"int" => "~~NOT RESOLVED~~",
+        \t"integer" => "~~NOT RESOLVED~~",
+        \t"bigint" => "~~NOT RESOLVED~~",
+        \t"float" => "~~NOT RESOLVED~~",
+        \t"double" => "~~NOT RESOLVED~~",
+        \t"real" => "~~NOT RESOLVED~~",
+        \t"decimal" => "~~NOT RESOLVED~~",
+        \t"numeric" => "~~NOT RESOLVED~~",
+        \t"tinytext" => "~~NOT RESOLVED~~",
+        \t"mediumtext" => "~~NOT RESOLVED~~",
+        \t"longtext" => "~~NOT RESOLVED~~",
+        \t"text" => "~~NOT RESOLVED~~",
+        \t"varchar" => "~~NOT RESOLVED~~",
+        \t"string" => "~~NOT RESOLVED~~",
+        \t"char" => "~~NOT RESOLVED~~",
+        \t"blob" => "~~NOT RESOLVED~~",
+        \t"datetime" => "~~NOT RESOLVED~~",
+        \t"year" => "~~NOT RESOLVED~~",
+        \t"date" => "~~NOT RESOLVED~~",
+        \t"time" => "~~NOT RESOLVED~~",
+        \t"timestamp" => "~~NOT RESOLVED~~",
+        \t"enum" => "string"
+    ]
+    +createColumnSchemaBuilder(type, length = null) : ColumnSchemaBuilder
+    +createQueryBuilder() : QueryBuilder
+    #findColumns(table : TableSchema) : bool
+    #findConstraints(table : TableSchema)
+    #findTableNames(schema = "")
+    +findUniqueIndexes(table : TableSchema) : array
+    -isSystemIdentifier(identifier : string) : bool
+    #loadColumnSchema(info : array) : yii.db.ColumnSchema
+    #loadTableChecks(tableName)
+    -loadTableConstraints(tableName : string, returnType : string) : mixed
+    #loadTableDefaultValues(tableName)
+    #loadTableForeignKeys(tableName)
+    #loadTableIndexes(tableName)
+    #loadTablePrimaryKey(tableName)
+    #loadTableSchema(name)
+    #loadTableUniques(tableName)
+    +quoteSimpleColumnName(name : string) : string
+    +quoteSimpleTableName(name : string) : string
+    +setTransactionIsolationLevel(level : string)
+}
+class yii.db.sqlite.Schema extends yii.db.Schema
+class yii.db.sqlite.SqlTokenizer {
+    #isComment(length)
+    #isIdentifier(length, content)
+    #isKeyword(string, content)
+    #isOperator(length, content)
+    #isStringLiteral(length, content)
+    #isWhitespace(length)
+}
+class yii.db.sqlite.SqlTokenizer extends yii.db.SqlTokenizer
+@enduml

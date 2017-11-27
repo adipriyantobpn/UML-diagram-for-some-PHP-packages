@@ -1,0 +1,201 @@
+@startuml
+skinparam handwritten true
+class yii.filters.AccessControl {
+    +denyCallback : callable
+    +ruleConfig : array = [
+        \t"class" => "yii\filters\AccessRule"
+    ]
+    +rules : array = []
+    +user : User|array|string|false = "user"
+    +beforeAction(action : Action) : bool
+    #denyAccess(user : User|false)
+    +init()
+}
+class yii.filters.AccessControl extends yii.base.ActionFilter
+class yii.filters.AccessRule {
+    +actions : array
+    +allow : bool
+    +controllers : array
+    +denyCallback : callable
+    +ips : array
+    +matchCallback : callable
+    +permissions : array
+    +roleParams : array|Closure = []
+    +roles : array
+    +verbs : array
+    +allows(action : Action, user : User|false, request : Request) : bool|null
+    #matchAction(action : Action) : bool
+    #matchController(controller : Controller) : bool
+    #matchCustom(action : Action) : bool
+    #matchIP(ip : string|null) : bool
+    #matchRole(user : User) : bool
+    #matchVerb(verb : string) : bool
+}
+class yii.filters.AccessRule extends yii.base.Component
+class yii.filters.AjaxFilter {
+    +errorMessage : string = "Request must be XMLHttpRequest."
+    +request : yii.web.Request
+    +beforeAction(action)
+    +init()
+}
+class yii.filters.AjaxFilter extends yii.base.ActionFilter
+class yii.filters.ContentNegotiator {
+    +formatParam : string = "_format"
+    +formats : array
+    +languageParam : string = "_lang"
+    +languages : array
+    +request : yii.web.Request
+    +response : yii.web.Response
+    +beforeAction(action)
+    +bootstrap(app)
+    #isLanguageSupported(requested : string, supported : string) : bool
+    +negotiate()
+    #negotiateContentType(request : Request, response : Response)
+    #negotiateLanguage(request : Request) : string
+}
+class yii.filters.ContentNegotiator extends yii.base.ActionFilter
+class yii.filters.ContentNegotiator implements yii.base.BootstrapInterface
+class yii.filters.Cors {
+    +actions : array = []
+    +cors : array = [
+        \t"Origin" => [
+        \t    \t0 => "*"
+        \t],
+        \t"Access-Control-Request-Method" => [
+        \t    \t0 => "GET",
+        \t    \t1 => "POST",
+        \t    \t2 => "PUT",
+        \t    \t3 => "PATCH",
+        \t    \t4 => "DELETE",
+        \t    \t5 => "HEAD",
+        \t    \t6 => "OPTIONS"
+        \t],
+        \t"Access-Control-Request-Headers" => [
+        \t    \t0 => "*"
+        \t],
+        \t"Access-Control-Allow-Credentials" => null,
+        \t"Access-Control-Max-Age" => 86400,
+        \t"Access-Control-Expose-Headers" => []
+    ]
+    +request : yii.web.Request
+    +response : yii.web.Response
+    +addCorsHeaders(response : Response, headers : array)
+    +beforeAction(action)
+    +extractHeaders() : array
+    #headerize(string : string) : string
+    #headerizeToPhp(string : string) : string
+    +overrideDefaultSettings(action : yii.base.Action)
+    #prepareAllowHeaders(type : string, requestHeaders : array, responseHeaders : array)
+    +prepareHeaders(requestHeaders : array) : array
+}
+class yii.filters.Cors extends yii.base.ActionFilter
+class yii.filters.HostControl {
+    +allowedHosts : array|.Closure|null
+    +denyCallback : callable
+    +fallbackHostInfo : string|null = ""
+    +beforeAction(action)
+    #denyAccess(action : yii.base.Action)
+}
+class yii.filters.HostControl extends yii.base.ActionFilter
+class yii.filters.HttpCache {
+    +cacheControlHeader : string = "public, max-age=3600"
+    +enabled : bool = true
+    +etagSeed : callable
+    +lastModified : callable
+    +params : mixed
+    +sessionCacheLimiter : string = ""
+    +weakEtag : bool = false
+    +beforeAction(action : Action) : bool
+    #generateEtag(seed : string) : string
+    #sendCacheControlHeader()
+    #validateCache(lastModified : int, etag : string) : bool
+}
+class yii.filters.HttpCache extends yii.base.ActionFilter
+class yii.filters.PageCache {
+    +cache : CacheInterface|array|string = "cache"
+    +cacheCookies : bool|array = false
+    +cacheHeaders : bool|array = true
+    +dependency : array|Dependency
+    +duration : int = 60
+    +dynamicPlaceholders : array
+    +enabled : bool = true
+    +variations : array
+    +varyByRoute : bool = true
+    +view : yii.base.View
+    +afterRestoreResponse(data : array|null)
+    +beforeAction(action : Action) : bool
+    +beforeCacheResponse() : bool|array
+    +cacheResponse()
+    #calculateCacheKey() : array
+    +init()
+    -insertResponseCollectionIntoData(response : yii.web.Response, collectionName : string, data : array)
+    #restoreResponse(response : Response, data : array)
+    #updateDynamicContent(content : string, placeholders : array) : string
+}
+class yii.filters.PageCache extends yii.base.ActionFilter
+class yii.filters.RateLimiter {
+    +enableRateLimitHeaders : bool = true
+    +errorMessage : string = "Rate limit exceeded."
+    +request : yii.web.Request
+    +response : yii.web.Response
+    +user : RateLimitInterface
+    +addRateLimitHeaders(response : Response, limit : int, remaining : int, reset : int)
+    +beforeAction(action)
+    +checkRateLimit(user : RateLimitInterface, request : Request, response : Response, action : yii.base.Action)
+    +init()
+}
+class yii.filters.RateLimiter extends yii.base.ActionFilter
+interface yii.filters.RateLimitInterface {
+    +getRateLimit(request : yii.web.Request, action : yii.base.Action) : array
+    +loadAllowance(request : yii.web.Request, action : yii.base.Action) : array
+    +saveAllowance(request : yii.web.Request, action : yii.base.Action, allowance : int, timestamp : int)
+}
+class yii.filters.VerbFilter {
+    +actions : array = []
+    +beforeAction(event : ActionEvent) : bool
+    +events() : array
+}
+class yii.filters.VerbFilter extends yii.base.Behavior
+interface yii.filters.auth.AuthInterface {
+    +authenticate(user : User, request : Request, response : Response) : yii.web.IdentityInterface
+    +challenge(response : Response)
+    +handleFailure(response : Response)
+}
+abstract class yii.filters.auth.AuthMethod {
+    +optional : array = []
+    +request : yii.web.Request
+    +response : yii.web.Response
+    +user : yii.web.User
+    +beforeAction(action)
+    +challenge(response)
+    +handleFailure(response)
+    #isOptional(action : Action) : bool
+}
+class yii.filters.auth.AuthMethod extends yii.base.ActionFilter
+class yii.filters.auth.AuthMethod implements yii.filters.auth.AuthInterface
+class yii.filters.auth.CompositeAuth {
+    +authMethods : array = []
+    +authenticate(user, request, response)
+    +beforeAction(action)
+    +challenge(response)
+}
+class yii.filters.auth.CompositeAuth extends yii.filters.auth.AuthMethod
+class yii.filters.auth.HttpBasicAuth {
+    +auth : callable
+    +realm : string = "api"
+    +authenticate(user, request, response)
+    +challenge(response)
+}
+class yii.filters.auth.HttpBasicAuth extends yii.filters.auth.AuthMethod
+class yii.filters.auth.HttpBearerAuth {
+    +realm : string = "api"
+    +authenticate(user, request, response)
+    +challenge(response)
+}
+class yii.filters.auth.HttpBearerAuth extends yii.filters.auth.AuthMethod
+class yii.filters.auth.QueryParamAuth {
+    +tokenParam : string = "access-token"
+    +authenticate(user, request, response)
+}
+class yii.filters.auth.QueryParamAuth extends yii.filters.auth.AuthMethod
+@enduml

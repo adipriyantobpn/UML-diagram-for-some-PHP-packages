@@ -27,14 +27,25 @@ function sleepAndCountDown {
     exit 0
 }
 
+function preparePumlDir {
+    puml_dir=$1
+
+    if [ ! -d UML/$puml_dir ];
+    then
+        info "Make UML directories in : UML/$puml_dir"
+        mkdir -p UML/$puml_dir
+    fi
+}
+
 function generatePlantUml {
     phpfiles=$1
     puml_file=$2
     plantuml_jar=$3
-    debug=$4
-    
-    if [ $debug = 'yes' ];
-    then        
+    generatePlantUmlAsPng=$4
+    debug=$5
+
+    if [ $debug == 'yes' ];
+    then
         info "debug mode : $debug"
         echo "phpfiles : $phpfiles"
         echo "puml_file : $puml_file"
@@ -44,36 +55,49 @@ function generatePlantUml {
     info "Generate PlantUML file for : $puml_file"
     echo $phpfiles | xargs vendor/bin/php-plantumlwriter write --without-doc-content -vvv -- > UML/$puml_file.puml
     # cat UML/$puml_file.puml
-
-    info "Generate PlantUML PNG file for : $puml_file"
-    java -Xms128m -Xmx5120m -DPLANTUML_LIMIT_SIZE=9999999 -jar $plantuml_jar -progress -enablestats -realtimestats -duration -failfast2 -tpng UML/$puml_file.puml
+    
+    if [ $generatePlantUmlAsPng == 'yes' ];
+    then
+        info "Generate PlantUML PNG file for : $puml_file"
+        java -Xms128m -Xmx5120m -DPLANTUML_LIMIT_SIZE=9999999 -jar $plantuml_jar -progress -enablestats -realtimestats -duration -failfast2 -tpng UML/$puml_file.puml
+    fi
+    
+    git status
 }
 
 # -- Variables
 debug=yes
+generatePlantUmlAsPng=yes
+
 plantuml_jar=plantuml.1.2017.19.jar
-basedir_yii2=vendor/yiisoft/yii2
+
+yii2_core_basedir=vendor/yiisoft/yii2-dev/framework
+yii2_ext_basedir=vendor/yiisoft/yii2
 yii2_exts=( authclient bootstrap composer debug elasticsearch faker gii httpclient imagine jui mongodb queue redis shell smarty sphinx swiftmailer twig )
 
 # -- Scripts
 
-# info "Make UML directories"
-# mkdir -p UML/$basedir_yii2
+preparePumlDir $yii2_core_basedir
+info "Processing PHP files : yii2 core"
+puml_file="$yii2_core_basedir/core"
+phpfiles="$yii2_core_basedir/Yii.php $yii2_core_basedir/BaseYii.php"
+generatePlantUml "$phpfiles" "$puml_file" "$plantuml_jar" "$generatePlantUmlAsPng" "$debug"
 
-# for puml_file in $basedir_yii2/*;
-# do
-    # if [ -d $puml_file -a $puml_file != $basedir_yii2/assets -a $puml_file != $basedir_yii2/views ];
-    # then
-        # info "Search PHP files for : $puml_file"
-        # phpfiles="$(find $puml_file -type f -name "*.php" -print0 | xargs -0)"
+for puml_file in $yii2_core_basedir/*;
+do
+    if [ -d $puml_file -a $puml_file != $yii2_core_basedir/assets -a $puml_file != $yii2_core_basedir/views ];
+    then
+        info "Search PHP files for : $puml_file"
+        phpfiles="$(find $puml_file -type f -name "*.php" -print0 | xargs -0)"
 
-        # generatePlantUml "$phpfiles" "$puml_file" "$plantuml_jar" "$debug"
-    # fi
-# done
+        generatePlantUml "$phpfiles" "$puml_file" "$plantuml_jar" "$generatePlantUmlAsPng" "$debug"
+    fi
+done
 
+preparePumlDir $yii2_ext_basedir
 for ext in "${yii2_exts[@]}"
 do
-    puml_file="$basedir_yii2-$ext"
+    puml_file="$yii2_ext_basedir-$ext"
     info "Search PHP files for : $puml_file"
     if [ $ext == 'queue' ];
     then
@@ -82,5 +106,5 @@ do
         phpfiles="$(find $puml_file -path $puml_file/tests -prune -o -type f -name "*.php" -print0 | xargs -0)"
     fi
 
-    generatePlantUml "$phpfiles" "$puml_file" "$plantuml_jar" "$debug"
+    generatePlantUml "$phpfiles" "$puml_file" "$plantuml_jar" "$generatePlantUmlAsPng" "$debug"
 done

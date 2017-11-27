@@ -1,0 +1,583 @@
+@startuml
+skinparam handwritten true
+class yii.base.Action {
+    +controller : Controller|.yii.web.Controller|.yii.console.Controller
+    +id : string
+    #afterRun()
+    #beforeRun() : bool
+    +getUniqueId() : string
+    +runWithParams(params : array) : mixed
+    +__construct(id : string, controller : Controller, config : array = [])
+}
+class yii.base.Action extends yii.base.Component
+class yii.base.ActionEvent {
+    +action : Action
+    +isValid : bool = true
+    +result : mixed
+    +__construct(action : Action, config : array = [])
+}
+class yii.base.ActionEvent extends yii.base.Event
+class yii.base.ActionFilter {
+    +except : array = []
+    +only : array
+    +afterAction(action : Action, result : mixed) : mixed
+    +afterFilter(event : ActionEvent)
+    +attach(owner)
+    +beforeAction(action : Action) : bool
+    +beforeFilter(event : ActionEvent)
+    +detach()
+    #getActionId(action : Action) : string
+    #isActive(action : Action) : bool
+}
+class yii.base.ActionFilter extends yii.base.Behavior
+abstract class yii.base.Application {
+    +{static}EVENT_AFTER_ACTION = "afterAction"
+    +{static}EVENT_AFTER_REQUEST = "afterRequest"
+    +{static}EVENT_BEFORE_ACTION = "beforeAction"
+    +{static}EVENT_BEFORE_REQUEST = "beforeRequest"
+    +{static}STATE_AFTER_REQUEST = 4
+    +{static}STATE_BEFORE_REQUEST = 2
+    +{static}STATE_BEGIN = 0
+    +{static}STATE_END = 6
+    +{static}STATE_HANDLING_REQUEST = 3
+    +{static}STATE_INIT = 1
+    +{static}STATE_SENDING_RESPONSE = 5
+    +bootstrap : array = []
+    +charset : string = "UTF-8"
+    +controller : Controller
+    +controllerNamespace : string = "app\controllers"
+    +extensions : array
+    +language : string = "en-US"
+    +layout : string|bool = "main"
+    +loadedModules : array = []
+    +name : string = "My Application"
+    +requestedAction : Action
+    +requestedParams : array
+    +requestedRoute : string
+    +sourceLanguage : string = "en-US"
+    +state : int
+    -_runtimePath
+    -_vendorPath
+    #bootstrap()
+    +coreComponents()
+    +end(status : int = 0, response : Response = null)
+    +getAssetManager() : yii.web.AssetManager
+    +getAuthManager() : yii.rbac.ManagerInterface
+    +getCache() : yii.caching.CacheInterface
+    +getDb() : yii.db.Connection
+    +getErrorHandler() : yii.web.ErrorHandler|.yii.console.ErrorHandler
+    +getFormatter() : yii.i18n.Formatter
+    +getI18n() : yii.i18n.I18N
+    +getLog() : yii.log.Dispatcher
+    +getMailer() : yii.mail.MailerInterface
+    +getRequest() : yii.web.Request|.yii.console.Request
+    +getResponse() : yii.web.Response|.yii.console.Response
+    +getRuntimePath() : string
+    +getSecurity() : yii.base.Security
+    +getTimeZone() : string
+    +getUniqueId() : string
+    +getUrlManager() : yii.web.UrlManager
+    +getVendorPath() : string
+    +getView() : View|.yii.web.View
+    +handleRequest(request : Request) : Response
+    +init()
+    +preInit(config : array)
+    #registerErrorHandler(config : array)
+    +run() : int
+    +setBasePath(path : string)
+    +setContainer(config : array)
+    +setRuntimePath(path : string)
+    +setTimeZone(value : string)
+    +setVendorPath(path : string)
+    +__construct(config : array = [])
+}
+class yii.base.Application extends yii.base.Module
+interface yii.base.Arrayable {
+    +extraFields() : array
+    +fields() : array
+    +toArray(fields : array = [], expand : array = [], recursive : bool = true) : array
+}
+abstract class yii.base.ArrayableTrait {
+    +extraFields() : array
+    +fields() : array
+    #resolveFields(fields : array, expand : array) : array
+    +toArray(fields : array = [], expand : array = [], recursive : bool = true) : array
+}
+abstract class yii.base.ArrayAccessTrait {
+    +count() : int
+    +getIterator() : ArrayIterator
+    +offsetExists(offset : mixed) : bool
+    +offsetGet(offset : int) : mixed
+    +offsetSet(offset : int, item : mixed)
+    +offsetUnset(offset : mixed)
+}
+class yii.base.BaseObject {
+    +canGetProperty(name : string, checkVars : bool = true) : bool
+    +canSetProperty(name : string, checkVars : bool = true) : bool
+    +{static}className() : string
+    +hasMethod(name : string) : bool
+    +hasProperty(name : string, checkVars : bool = true) : bool
+    +init()
+    +__call(name : string, params : array) : mixed
+    +__construct(config : array = [])
+    +__get(name : string) : mixed
+    +__isset(name : string) : bool
+    +__set(name : string, value : mixed)
+    +__unset(name : string)
+}
+class yii.base.BaseObject implements yii.base.Configurable
+class yii.base.Behavior {
+    +owner : Component|null
+    +attach(owner : Component)
+    +detach()
+    +events() : array
+}
+class yii.base.Behavior extends yii.base.BaseObject
+interface yii.base.BootstrapInterface {
+    +bootstrap(app : Application)
+}
+class yii.base.Component {
+    -_behaviors : Behavior[]|null
+    -_events : array = []
+    +attachBehavior(name : string, behavior : string|array|Behavior) : Behavior
+    -attachBehaviorInternal(name : string|int, behavior : string|array|Behavior) : Behavior
+    +attachBehaviors(behaviors : array)
+    +behaviors() : array
+    +canGetProperty(name : string, checkVars : bool = true, checkBehaviors : bool = true) : bool
+    +canSetProperty(name : string, checkVars : bool = true, checkBehaviors : bool = true) : bool
+    +detachBehavior(name : string) : null|Behavior
+    +detachBehaviors()
+    +ensureBehaviors()
+    +getBehavior(name : string) : null|Behavior
+    +getBehaviors() : Behavior[]
+    +hasEventHandlers(name : string) : bool
+    +hasMethod(name : string, checkBehaviors : bool = true) : bool
+    +hasProperty(name : string, checkVars : bool = true, checkBehaviors : bool = true) : bool
+    +off(name : string, handler : callable = null) : bool
+    +on(name : string, handler : callable, data : mixed = null, append : bool = true)
+    +trigger(name : string, event : yii.base.Event = null)
+    +__call(name : string, params : array) : mixed
+    +__clone()
+    +__get(name : string) : mixed
+    +__isset(name : string) : bool
+    +__set(name : string, value : mixed)
+    +__unset(name : string)
+}
+class yii.base.Component extends yii.base.BaseObject
+interface yii.base.Configurable {
+}
+class yii.base.Controller {
+    +{static}EVENT_AFTER_ACTION = "afterAction"
+    +{static}EVENT_BEFORE_ACTION = "beforeAction"
+    +action : Action
+    +defaultAction : string = "index"
+    +id : string
+    +layout : null|string|false
+    +module : Module
+    -_view : View
+    -_viewPath : string
+    +actions()
+    +afterAction(action : Action, result : mixed) : mixed
+    +beforeAction(action : Action) : bool
+    +bindActionParams(action : Action, params : array) : array
+    +createAction(id : string) : Action|null
+    +findLayoutFile(view : View) : string|bool
+    +getModules() : Module[]
+    +getRoute() : string
+    +getUniqueId() : string
+    +getView() : View|.yii.web.View
+    +getViewPath() : string
+    +render(view : string, params : array = []) : string
+    +renderContent(content : string) : string
+    +renderFile(file : string, params : array = []) : string
+    +renderPartial(view : string, params : array = []) : string
+    +run(route : string, params : array = []) : mixed
+    +runAction(id : string, params : array = []) : mixed
+    +setView(view : View|.yii.web.View)
+    +setViewPath(path : string)
+    +__construct(id : string, module : Module, config : array = [])
+}
+class yii.base.Controller extends yii.base.Component
+class yii.base.Controller implements yii.base.ViewContextInterface
+class yii.base.DynamicModel {
+    +{static}EVENT_AFTER_VALIDATE = "afterValidate"
+    +{static}EVENT_BEFORE_VALIDATE = "beforeValidate"
+    +{static}SCENARIO_DEFAULT = "default"
+    -_attributes = []
+    +addRule(attributes : string|array, validator : mixed, options : array = []) : $this
+    +attributes()
+    +defineAttribute(name : string, value : mixed = null)
+    +undefineAttribute(name : string)
+    +{static}validateData(data : array, rules : array = []) : static
+    +__construct(attributes : array = [], config : array = [])
+    +__get(name)
+    +__isset(name)
+    +__set(name, value)
+    +__unset(name)
+}
+class yii.base.DynamicModel extends yii.base.Model
+class yii.base.ErrorException {
+    +{static}E_HHVM_FATAL_ERROR = 16777217
+    +getName() : string
+    +{static}isFatalError(error : array) : bool
+    +__construct(message = "", code = 0, severity = 1, filename = "E:\project\\laboratorium\adipriyantobpn\freeform\vendor\yiisoft\yii2-dev\framework\base\ErrorException.php", lineno = 43, previous : Exception = null)
+}
+class yii.base.ErrorException extends ErrorException
+abstract class yii.base.ErrorHandler {
+    +discardExistingOutput : bool = true
+    +exception : Exception|null
+    +memoryReserveSize : int = 262144
+    -_hhvmException : Exception
+    -_memoryReserve : string
+    +clearOutput()
+    +{static}convertExceptionToError(exception : Exception)
+    +{static}convertExceptionToString(exception : Exception|.Error) : string
+    +handleError(code : int, message : string, file : string, line : int) : bool
+    +handleException(exception : Exception)
+    #handleFallbackExceptionMessage(exception : Exception|.Throwable, previousException : Exception)
+    +handleFatalError()
+    +handleHhvmError(code : int, message : string, file : string, line : int, context : mixed, backtrace : mixed) : bool
+    +logException(exception : Exception)
+    +register()
+    #renderException(exception : Exception)
+    +unregister()
+}
+class yii.base.ErrorHandler extends yii.base.Component
+class yii.base.Event {
+    +data : mixed
+    +handled : bool = false
+    +name : string
+    +sender : object
+    -_events : array = []
+    +{static}hasHandlers(class : string|object, name : string) : bool
+    +{static}off(class : string, name : string, handler : callable = null) : bool
+    +{static}offAll()
+    +{static}on(class : string, name : string, handler : callable, data : mixed = null, append : bool = true)
+    +{static}trigger(class : string|object, name : string, event : Event = null)
+}
+class yii.base.Event extends yii.base.BaseObject
+class yii.base.Exception {
+    +getName() : string
+}
+class yii.base.Exception extends Exception
+class yii.base.ExitException {
+    +statusCode : int
+    +__construct(status : int = 0, message : string = null, code : int = 0, previous : Exception = null)
+}
+class yii.base.ExitException extends Exception
+class yii.base.InlineAction {
+    +actionMethod : string
+    +runWithParams(params : array) : mixed
+    +__construct(id : string, controller : Controller, actionMethod : string, config : array = [])
+}
+class yii.base.InlineAction extends yii.base.Action
+class yii.base.InvalidCallException {
+    +getName() : string
+}
+class yii.base.InvalidCallException extends BadMethodCallException
+class yii.base.InvalidConfigException {
+    +getName() : string
+}
+class yii.base.InvalidConfigException extends yii.base.Exception
+class yii.base.InvalidParamException {
+    +getName() : string
+}
+class yii.base.InvalidParamException extends BadMethodCallException
+class yii.base.InvalidRouteException {
+    +getName() : string
+}
+class yii.base.InvalidRouteException extends yii.base.UserException
+class yii.base.InvalidValueException {
+    +getName() : string
+}
+class yii.base.InvalidValueException extends UnexpectedValueException
+class yii.base.Model {
+    +{static}EVENT_AFTER_VALIDATE = "afterValidate"
+    +{static}EVENT_BEFORE_VALIDATE = "beforeValidate"
+    +{static}SCENARIO_DEFAULT = "default"
+    -_errors : array
+    -_scenario : string = "default"
+    -_validators : ArrayObject
+    +activeAttributes() : string[]
+    +addError(attribute : string, error : string = "")
+    +addErrors(items : array)
+    +afterValidate()
+    +attributeHints() : array
+    +attributeLabels() : array
+    +attributes() : array
+    +beforeValidate() : bool
+    +clearErrors(attribute : string = null)
+    +createValidators() : ArrayObject
+    +fields() : array
+    +formName() : string
+    +generateAttributeLabel(name : string) : string
+    +getActiveValidators(attribute : string = null) : yii.validators.Validator[]
+    +getAttributeHint(attribute : string) : string
+    +getAttributeLabel(attribute : string) : string
+    +getAttributes(names : array = null, except : array = []) : array
+    +getErrors(attribute : string = null) : array
+    +getFirstError(attribute : string) : string
+    +getFirstErrors() : array
+    +getIterator() : ArrayIterator
+    +getScenario() : string
+    +getValidators() : ArrayObject|.yii.validators.Validator[]
+    +hasErrors(attribute : string|null = null) : bool
+    +isAttributeActive(attribute : string) : bool
+    +isAttributeRequired(attribute : string) : bool
+    +isAttributeSafe(attribute : string) : bool
+    +load(data : array, formName : string = null) : bool
+    +{static}loadMultiple(models : array, data : array, formName : string = null) : bool
+    +offsetExists(offset : mixed) : bool
+    +offsetGet(offset : mixed) : mixed
+    +offsetSet(offset : int, item : mixed)
+    +offsetUnset(offset : mixed)
+    +onUnsafeAttribute(name : string, value : mixed)
+    +rules() : array
+    +safeAttributes() : string[]
+    +scenarios() : array
+    +setAttributes(values : array, safeOnly : bool = true)
+    +setScenario(value : string)
+    +validate(attributeNames : array = null, clearErrors : bool = true) : bool
+    +{static}validateMultiple(models : array, attributeNames : array = null) : bool
+}
+class yii.base.Model extends yii.base.Component
+class yii.base.Model implements yii.base.StaticInstanceInterface
+class yii.base.Model implements IteratorAggregate
+class yii.base.Model implements ArrayAccess
+class yii.base.Model implements yii.base.Arrayable
+class yii.base.ModelEvent {
+    +isValid : bool = true
+}
+class yii.base.ModelEvent extends yii.base.Event
+class yii.base.Module {
+    +{static}EVENT_AFTER_ACTION = "afterAction"
+    +{static}EVENT_BEFORE_ACTION = "beforeAction"
+    +controllerMap : array = []
+    +controllerNamespace : string
+    +defaultRoute : string = "default"
+    +id : string
+    +layout : string|bool
+    +module : Module
+    +params : array = []
+    -_basePath : string
+    -_layoutPath : string
+    -_modules : array = []
+    -_version : string|callable
+    -_viewPath : string
+    +afterAction(action : Action, result : mixed) : mixed
+    +beforeAction(action : Action) : bool
+    +createController(route : string) : array|bool
+    +createControllerByID(id : string) : Controller|null
+    #defaultVersion() : string
+    +get(id, throwException = true)
+    +getBasePath() : string
+    +getControllerPath() : string
+    +{static}getInstance() : static|null
+    +getLayoutPath() : string
+    +getModule(id : string, load : bool = true) : Module|null
+    +getModules(loadedOnly : bool = false) : array
+    +getUniqueId() : string
+    +getVersion() : string
+    +getViewPath() : string
+    +has(id, checkInstance = false)
+    +hasModule(id : string) : bool
+    +init()
+    +runAction(route : string, params : array = []) : mixed
+    +setAliases(aliases : array)
+    +setBasePath(path : string)
+    +{static}setInstance(instance : Module|null)
+    +setLayoutPath(path : string)
+    +setModule(id : string, module : Module|array|null)
+    +setModules(modules : array)
+    +setVersion(version : string|callable)
+    +setViewPath(path : string)
+    +__construct(id : string, parent : Module = null, config : array = [])
+}
+class yii.base.Module extends yii.di.ServiceLocator
+class yii.base.NotSupportedException {
+    +getName() : string
+}
+class yii.base.NotSupportedException extends yii.base.Exception
+class yii.base.Object {
+}
+class yii.base.Object extends yii.base.BaseObject
+abstract class yii.base.Request {
+    -_isConsoleRequest
+    -_scriptFile
+    +getIsConsoleRequest() : bool
+    +getScriptFile() : string
+    +resolve() : array
+    +setIsConsoleRequest(value : bool)
+    +setScriptFile(value : string)
+}
+class yii.base.Request extends yii.base.Component
+class yii.base.Response {
+    +exitStatus : int = 0
+    +clearOutputBuffers()
+    +send()
+}
+class yii.base.Response extends yii.base.Component
+class yii.base.Security {
+    +allowedCiphers : array[] = [
+        \t"AES-128-CBC" => [
+        \t    \t0 => 16,
+        \t    \t1 => 16
+        \t],
+        \t"AES-192-CBC" => [
+        \t    \t0 => 16,
+        \t    \t1 => 24
+        \t],
+        \t"AES-256-CBC" => [
+        \t    \t0 => 16,
+        \t    \t1 => 32
+        \t]
+    ]
+    +authKeyInfo : string = "AuthorizationKey"
+    +cipher : string = "AES-128-CBC"
+    +derivationIterations : int = 100000
+    +kdfHash : string = "sha256"
+    +macHash : string = "sha256"
+    +passwordHashCost : int = 13
+    +passwordHashStrategy : string
+    -_randomFile
+    -_useLibreSSL
+    +compareString(expected : string, actual : string) : bool
+    #decrypt(data : string, passwordBased : bool, secret : string, info : string|null) : bool|string
+    +decryptByKey(data : string, inputKey : string, info : string = null) : bool|string
+    +decryptByPassword(data : string, password : string) : bool|string
+    #encrypt(data : string, passwordBased : bool, secret : string, info : string|null) : string
+    +encryptByKey(data : string, inputKey : string, info : string = null) : string
+    +encryptByPassword(data : string, password : string) : string
+    +generatePasswordHash(password : string, cost : int = null) : string
+    +generateRandomKey(length : int = 32) : string
+    +generateRandomString(length : int = 32) : string
+    #generateSalt(cost : int = 13) : string
+    +hashData(data : string, key : string, rawHash : bool = false) : string
+    +hkdf(algo : string, inputKey : string, salt : string = null, info : string = null, length : int = 0) : string
+    +maskToken(token : string) : string
+    +pbkdf2(algo : string, password : string, salt : string, iterations : int, length : int = 0) : string
+    +unmaskToken(maskedToken : string) : string
+    +validateData(data : string, key : string, rawHash : bool = false) : string|false
+    +validatePassword(password : string, hash : string) : bool
+}
+class yii.base.Security extends yii.base.Component
+interface yii.base.StaticInstanceInterface {
+    +{static}instance(refresh : bool = false) : static
+}
+abstract class yii.base.StaticInstanceTrait {
+    -_instances : static[] = []
+    +{static}instance(refresh : bool = false) : static
+}
+class yii.base.Theme {
+    +pathMap : array
+    -_basePath
+    -_baseUrl
+    +applyTo(path : string) : string
+    +getBasePath() : string
+    +getBaseUrl() : string
+    +getPath(path : string) : string
+    +getUrl(url : string) : string
+    +setBasePath(path : string)
+    +setBaseUrl(url : string)
+}
+class yii.base.Theme extends yii.base.Component
+class yii.base.UnknownClassException {
+    +getName() : string
+}
+class yii.base.UnknownClassException extends yii.base.Exception
+class yii.base.UnknownMethodException {
+    +getName() : string
+}
+class yii.base.UnknownMethodException extends BadMethodCallException
+class yii.base.UnknownPropertyException {
+    +getName() : string
+}
+class yii.base.UnknownPropertyException extends yii.base.Exception
+class yii.base.UserException {
+}
+class yii.base.UserException extends yii.base.Exception
+class yii.base.View {
+    +{static}EVENT_AFTER_RENDER = "afterRender"
+    +{static}EVENT_BEFORE_RENDER = "beforeRender"
+    +{static}EVENT_BEGIN_PAGE = "beginPage"
+    +{static}EVENT_END_PAGE = "endPage"
+    +blocks : array
+    +cacheStack : array = []
+    +context : ViewContextInterface
+    +defaultExtension : string = "php"
+    +dynamicPlaceholders : array = []
+    +params : mixed = []
+    +renderers : array
+    +theme : Theme|array|string
+    -_viewFiles : array = []
+    +addDynamicPlaceholder(placeholder : string, statements : string)
+    +afterRender(viewFile : string, params : array, output : string)
+    +beforeRender(viewFile : string, params : array) : bool
+    +beginBlock(id : string, renderInPlace : bool = false) : yii.widgets.Block
+    +beginCache(id : string, properties : array = []) : bool
+    +beginContent(viewFile : string, params : array = []) : yii.widgets.ContentDecorator
+    +beginPage()
+    +endBlock()
+    +endCache()
+    +endContent()
+    +endPage()
+    +evaluateDynamicContent(statements : string) : mixed
+    #findViewFile(view : string, context : object = null) : string
+    +getViewFile() : string|bool
+    +init()
+    +render(view : string, params : array = [], context : object = null) : string
+    +renderDynamic(statements : string) : string
+    +renderFile(viewFile : string, params : array = [], context : object = null) : string
+    +renderPhpFile(_file_ : string, _params_ : array = []) : string
+}
+class yii.base.View extends yii.base.Component
+interface yii.base.ViewContextInterface {
+    +getViewPath() : string
+}
+class yii.base.ViewEvent {
+    +isValid : bool = true
+    +output : string
+    +params : array
+    +viewFile : string
+}
+class yii.base.ViewEvent extends yii.base.Event
+class yii.base.ViewNotFoundException {
+    +getName() : string
+}
+class yii.base.ViewNotFoundException extends yii.base.InvalidParamException
+abstract class yii.base.ViewRenderer {
+    +render(view : View, file : string, params : array) : string
+}
+class yii.base.ViewRenderer extends yii.base.Component
+class yii.base.Widget {
+    +{static}EVENT_AFTER_RUN = "afterRun"
+    +{static}EVENT_BEFORE_RUN = "beforeRun"
+    +{static}EVENT_INIT = "init"
+    +autoIdPrefix : string = "w"
+    +counter : int = 0
+    +stack : Widget[] = []
+    -_id
+    -_view
+    +afterRun(result : mixed) : mixed
+    +beforeRun() : bool
+    +{static}begin(config : array = []) : static
+    +{static}end() : static
+    +getId(autoGenerate : bool = true) : string
+    +getView() : yii.web.View
+    +getViewPath() : string
+    +init()
+    +render(view : string, params : array = []) : string
+    +renderFile(file : string, params : array = []) : string
+    +run() : string
+    +setId(value : string)
+    +setView(view : View)
+    +{static}widget(config : array = []) : string
+}
+class yii.base.Widget extends yii.base.Component
+class yii.base.Widget implements yii.base.ViewContextInterface
+class yii.base.WidgetEvent {
+    +isValid : bool = true
+    +result : mixed
+}
+class yii.base.WidgetEvent extends yii.base.Event
+@enduml

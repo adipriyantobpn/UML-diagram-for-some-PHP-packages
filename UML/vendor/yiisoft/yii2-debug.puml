@@ -63,8 +63,14 @@ class yii.debug.controllers.UserController {
 }
 class yii.debug.controllers.UserController extends yii.web.Controller
 class yii.debug.DebugAsset {
-    +css = ["main.css", "toolbar.css"]
-    +depends = ["yii\web\YiiAsset", "yii\bootstrap\BootstrapAsset"]
+    +css = [
+        \t0 => "main.css",
+        \t1 => "toolbar.css"
+    ]
+    +depends = [
+        \t0 => "yii\web\YiiAsset",
+        \t1 => "yii\bootstrap\BootstrapAsset"
+    ]
     +sourcePath = "@yii/debug/assets"
 }
 class yii.debug.DebugAsset extends yii.web.AssetBundle
@@ -113,7 +119,10 @@ class yii.debug.LogTarget extends yii.log.Target
 class yii.debug.Module {
     +{static}DEFAULT_IDE_TRACELINE = "<a href="ide://open?url=file://{file}&line={line}">{text}</a>"
     +allowedHosts : array = []
-    +allowedIPs : array = ["127.0.0.1", "::1"]
+    +allowedIPs : array = [
+        \t0 => "127.0.0.1",
+        \t1 => "::1"
+    ]
     +controllerNamespace = "yii\debug\controllers"
     +dataPath : string = "@runtime/debug"
     +defaultPanel : string = "log"
@@ -162,13 +171,19 @@ class yii.debug.Panel {
 }
 class yii.debug.Panel extends yii.base.Component
 class yii.debug.TimelineAsset {
-    +css = ["timeline.css"]
-    +js = ["timeline.js"]
+    +css = [
+        \t0 => "timeline.css"
+    ]
+    +js = [
+        \t0 => "timeline.js"
+    ]
     +sourcePath = "@yii/debug/assets"
 }
 class yii.debug.TimelineAsset extends yii.web.AssetBundle
 class yii.debug.UserswitchAsset {
-    +js = ["userswitch.js"]
+    +js = [
+        \t0 => "userswitch.js"
+    ]
     +sourcePath = "@yii/debug/assets"
 }
 class yii.debug.UserswitchAsset extends yii.web.AssetBundle
@@ -208,7 +223,11 @@ class yii.debug.models.search.Db {
 class yii.debug.models.search.Db extends yii.debug.models.search.Base
 class yii.debug.models.search.Debug {
     +ajax : integer
-    +criticalCodes : array = [400, 404, 500]
+    +criticalCodes : array = [
+        \t0 => 400,
+        \t1 => 404,
+        \t2 => 500
+    ]
     +ip : string
     +mailCount : integer
     +method : string
@@ -292,8 +311,16 @@ class yii.debug.models.timeline.Search {
 }
 class yii.debug.models.timeline.Search extends yii.debug.models.search.Base
 class yii.debug.models.timeline.Svg {
-    +gradient : array = ["#d6e685", "#8cc665", "#44a340", "#1e6823"]
-    +listenMessages : array = ["log", "profiling"]
+    +gradient : array = [
+        \t10 => "#d6e685",
+        \t60 => "#8cc665",
+        \t90 => "#44a340",
+        \t100 => "#1e6823"
+    ]
+    +listenMessages : array = [
+        \t0 => "log",
+        \t1 => "profiling"
+    ]
     #panel : yii.debug.panels.TimelinePanel
     #points : array = []
     +stroke : string = "#1e6823"
@@ -332,7 +359,9 @@ class yii.debug.panels.DbPanel {
     +criticalQueryThreshold : integer
     +db : string = "db"
     +defaultFilter : array = []
-    +defaultOrder : array = [4]
+    +defaultOrder : array = [
+        \t"seq" => 4
+    ]
     -_models : array
     -_timings : array
     +calculateTimings() : array
@@ -385,7 +414,14 @@ class yii.debug.panels.ProfilingPanel {
 }
 class yii.debug.panels.ProfilingPanel extends yii.debug.Panel
 class yii.debug.panels.RequestPanel {
-    +displayVars : array = ["_SERVER", "_GET", "_POST", "_COOKIE", "_FILES", "_SESSION"]
+    +displayVars : array = [
+        \t0 => "_SERVER",
+        \t1 => "_GET",
+        \t2 => "_POST",
+        \t3 => "_COOKIE",
+        \t4 => "_FILES",
+        \t5 => "_SESSION"
+    ]
     +getDetail()
     #getFlashes() : array
     +getName()
@@ -394,7 +430,12 @@ class yii.debug.panels.RequestPanel {
 }
 class yii.debug.panels.RequestPanel extends yii.debug.Panel
 class yii.debug.panels.RouterPanel {
-    -_categories : array = ["yii\web\UrlManager::parseRequest", "yii\web\UrlRule::parseRequest", "yii\web\CompositeUrlRule::parseRequest", "yii\rest\UrlRule::parseRequest"]
+    -_categories : array = [
+        \t0 => "yii\web\UrlManager::parseRequest",
+        \t1 => "yii\web\UrlRule::parseRequest",
+        \t2 => "yii\web\CompositeUrlRule::parseRequest",
+        \t3 => "yii\rest\UrlRule::parseRequest"
+    ]
     +getCategories() : array
     +getDetail()
     +getName()
@@ -403,14 +444,20 @@ class yii.debug.panels.RouterPanel {
 }
 class yii.debug.panels.RouterPanel extends yii.debug.Panel
 class yii.debug.panels.TimelinePanel {
-    -_colors : array = ["#1e6823", "#44a340", "#8cc665"]
+    -_colors : array = [
+        \t20 => "#1e6823",
+        \t10 => "#44a340",
+        \t1 => "#8cc665"
+    ]
     -_duration : float
     -_end : float
     -_memory : int
     -_models : array
     -_start : float
     -_svg : Svg|null
-    -_svgOptions : array = ["yii\debug\models\timeline\Svg"]
+    -_svgOptions : array = [
+        \t"class" => "yii\debug\models\timeline\Svg"
+    ]
     +getColors() : array
     +getDetail()
     +getDuration() : float
@@ -430,7 +477,9 @@ class yii.debug.panels.TimelinePanel extends yii.debug.Panel
 class yii.debug.panels.UserPanel {
     +filterColumns : array = []
     +filterModel : Model|UserSearchInterface
-    +ruleUserSwitch : array = [false]
+    +ruleUserSwitch : array = [
+        \t"allow" => false
+    ]
     +userSwitch : yii.debug.models.UserSwitch
     -addAccesRules()
     +canSearchUsers() : bool

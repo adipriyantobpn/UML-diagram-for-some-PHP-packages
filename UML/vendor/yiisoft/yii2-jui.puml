@@ -28,7 +28,9 @@ class yii.jui.DatePicker {
 class yii.jui.DatePicker extends yii.jui.InputWidget
 class yii.jui.DatePickerLanguageAsset {
     +autoGenerate : boolean = true
-    +depends = ["yii\jui\JuiAsset"]
+    +depends = [
+        \t0 => "yii\jui\JuiAsset"
+    ]
     +language : string
     +sourcePath = "@bower/jquery-ui"
     +registerAssetFiles(view)
@@ -40,13 +42,25 @@ class yii.jui.Dialog {
 }
 class yii.jui.Dialog extends yii.jui.Widget
 class yii.jui.Draggable {
-    #clientEventMap = ["dragcreate", "drag", "dragstop", "dragstart"]
+    #clientEventMap = [
+        \t"create" => "dragcreate",
+        \t"drag" => "drag",
+        \t"stop" => "dragstop",
+        \t"start" => "dragstart"
+    ]
     +init()
     +run()
 }
 class yii.jui.Draggable extends yii.jui.Widget
 class yii.jui.Droppable {
-    #clientEventMap = ["dropactivate", "dropcreate", "dropdeactivate", "drop", "dropout", "dropover"]
+    #clientEventMap = [
+        \t"activate" => "dropactivate",
+        \t"create" => "dropcreate",
+        \t"deactivate" => "dropdeactivate",
+        \t"drop" => "drop",
+        \t"out" => "dropout",
+        \t"over" => "dropover"
+    ]
     +init()
     +run()
 }
@@ -61,9 +75,15 @@ class yii.jui.InputWidget {
 }
 class yii.jui.InputWidget extends yii.jui.Widget
 class yii.jui.JuiAsset {
-    +css = ["themes/smoothness/jquery-ui.css"]
-    +depends = ["yii\web\JqueryAsset"]
-    +js = ["jquery-ui.js"]
+    +css = [
+        \t0 => "themes/smoothness/jquery-ui.css"
+    ]
+    +depends = [
+        \t0 => "yii\web\JqueryAsset"
+    ]
+    +js = [
+        \t0 => "jquery-ui.js"
+    ]
     +sourcePath = "@bower/jquery-ui"
 }
 class yii.jui.JuiAsset extends yii.web.AssetBundle
@@ -80,7 +100,12 @@ class yii.jui.ProgressBar {
 }
 class yii.jui.ProgressBar extends yii.jui.Widget
 class yii.jui.Resizable {
-    #clientEventMap = ["resizecreate", "resize", "resizestart", "resizestop"]
+    #clientEventMap = [
+        \t"create" => "resizecreate",
+        \t"resize" => "resize",
+        \t"start" => "resizestart",
+        \t"stop" => "resizestop"
+    ]
     +init()
     +run()
 }
@@ -99,19 +124,45 @@ class yii.jui.Selectable {
 }
 class yii.jui.Selectable extends yii.jui.Widget
 class yii.jui.Slider {
-    #clientEventMap = ["slidechange", "slidecreate", "slide", "slidestart", "slidestop"]
+    #clientEventMap = [
+        \t"change" => "slidechange",
+        \t"create" => "slidecreate",
+        \t"slide" => "slide",
+        \t"start" => "slidestart",
+        \t"stop" => "slidestop"
+    ]
     +run()
 }
 class yii.jui.Slider extends yii.jui.Widget
 class yii.jui.SliderInput {
-    #clientEventMap = ["slidechange", "slidecreate", "slide", "slidestart", "slidestop"]
+    #clientEventMap = [
+        \t"change" => "slidechange",
+        \t"create" => "slidecreate",
+        \t"slide" => "slide",
+        \t"start" => "slidestart",
+        \t"stop" => "slidestop"
+    ]
     +containerOptions : array = []
     +init()
     +run()
 }
 class yii.jui.SliderInput extends yii.jui.InputWidget
 class yii.jui.Sortable {
-    #clientEventMap = ["sortactivate", "sortbeforestop", "sortchange", "sortcreate", "sortdeactivate", "sortout", "sortover", "sortreceive", "sortremove", "sort", "sortstart", "sortstop", "sortupdate"]
+    #clientEventMap = [
+        \t"activate" => "sortactivate",
+        \t"beforeStop" => "sortbeforestop",
+        \t"change" => "sortchange",
+        \t"create" => "sortcreate",
+        \t"deactivate" => "sortdeactivate",
+        \t"out" => "sortout",
+        \t"over" => "sortover",
+        \t"receive" => "sortreceive",
+        \t"remove" => "sortremove",
+        \t"sort" => "sort",
+        \t"start" => "sortstart",
+        \t"stop" => "sortstop",
+        \t"update" => "sortupdate"
+    ]
     +itemOptions : array = []
     +items : array = []
     +options : array = []
@@ -120,7 +171,13 @@ class yii.jui.Sortable {
 }
 class yii.jui.Sortable extends yii.jui.Widget
 class yii.jui.Spinner {
-    #clientEventMap = ["spin", "spinchange", "spincreate", "spinstart", "spinstop"]
+    #clientEventMap = [
+        \t"spin" => "spin",
+        \t"change" => "spinchange",
+        \t"create" => "spincreate",
+        \t"start" => "spinstart",
+        \t"stop" => "spinstop"
+    ]
     +renderWidget() : string
     +run()
 }

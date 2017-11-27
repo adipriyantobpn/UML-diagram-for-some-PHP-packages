@@ -1,0 +1,261 @@
+@startuml
+skinparam handwritten true
+class yii.data.ActiveDataFilter {
+    +{static}TYPE_ARRAY = "array"
+    +{static}TYPE_BOOLEAN = "boolean"
+    +{static}TYPE_FLOAT = "float"
+    +{static}TYPE_INTEGER = "integer"
+    +{static}TYPE_STRING = "string"
+    +conditionBuilders : array = [
+        \t"AND" => "buildConjunctionCondition",
+        \t"OR" => "buildConjunctionCondition",
+        \t"NOT" => "buildBlockCondition",
+        \t"<" => "buildOperatorCondition",
+        \t">" => "buildOperatorCondition",
+        \t"<=" => "buildOperatorCondition",
+        \t">=" => "buildOperatorCondition",
+        \t"=" => "buildOperatorCondition",
+        \t"!=" => "buildOperatorCondition",
+        \t"IN" => "buildOperatorCondition",
+        \t"NOT IN" => "buildOperatorCondition",
+        \t"LIKE" => "buildOperatorCondition"
+    ]
+    +queryOperatorMap : array = []
+    #buildAttributeCondition(attribute : string, condition : mixed) : array
+    #buildBlockCondition(operator : string, condition : mixed) : array
+    #buildCondition(condition : array) : array
+    #buildConjunctionCondition(operator : string, condition : mixed) : array
+    #buildInternal()
+    #buildOperatorCondition(operator : string, condition : mixed, attribute : string) : array
+}
+class yii.data.ActiveDataFilter extends yii.data.DataFilter
+class yii.data.ActiveDataProvider {
+    +db : Connection|array|string
+    +key : string|callable
+    +query : yii.db.QueryInterface
+    +init()
+    #prepareKeys(models)
+    #prepareModels()
+    #prepareTotalCount()
+    +setSort(value)
+}
+class yii.data.ActiveDataProvider extends yii.data.BaseDataProvider
+class yii.data.ArrayDataProvider {
+    +allModels : array
+    +key : string|callable
+    +modelClass : string
+    #prepareKeys(models)
+    #prepareModels()
+    #prepareTotalCount()
+    #sortModels(models : array, sort : Sort) : array
+}
+class yii.data.ArrayDataProvider extends yii.data.BaseDataProvider
+abstract class yii.data.BaseDataProvider {
+    -counter : int = 0
+    +id : string
+    -_keys
+    -_models
+    -_pagination
+    -_sort
+    -_totalCount
+    +getCount() : int
+    +getKeys() : array
+    +getModels() : array
+    +getPagination() : Pagination|false
+    +getSort() : Sort|bool
+    +getTotalCount() : int
+    +init()
+    +prepare(forcePrepare : bool = false)
+    #prepareKeys(models : array) : array
+    #prepareModels() : array
+    #prepareTotalCount() : int
+    +refresh()
+    +setKeys(keys : array)
+    +setModels(models : array)
+    +setPagination(value : array|Pagination|bool)
+    +setSort(value : array|Sort|bool)
+    +setTotalCount(value : int)
+}
+class yii.data.BaseDataProvider extends yii.base.Component
+class yii.data.BaseDataProvider implements yii.data.DataProviderInterface
+class yii.data.DataFilter {
+    +{static}TYPE_ARRAY = "array"
+    +{static}TYPE_BOOLEAN = "boolean"
+    +{static}TYPE_FLOAT = "float"
+    +{static}TYPE_INTEGER = "integer"
+    +{static}TYPE_STRING = "string"
+    +attributeMap : array = []
+    +conditionValidators : array = [
+        \t"AND" => "validateConjunctionCondition",
+        \t"OR" => "validateConjunctionCondition",
+        \t"NOT" => "validateBlockCondition",
+        \t"<" => "validateOperatorCondition",
+        \t">" => "validateOperatorCondition",
+        \t"<=" => "validateOperatorCondition",
+        \t">=" => "validateOperatorCondition",
+        \t"=" => "validateOperatorCondition",
+        \t"!=" => "validateOperatorCondition",
+        \t"IN" => "validateOperatorCondition",
+        \t"NOT IN" => "validateOperatorCondition",
+        \t"LIKE" => "validateOperatorCondition"
+    ]
+    +filterAttributeLabel : string
+    +filterAttributeName : string = "filter"
+    +filterControls : array = [
+        \t"and" => "AND",
+        \t"or" => "OR",
+        \t"not" => "NOT",
+        \t"lt" => "<",
+        \t"gt" => ">",
+        \t"lte" => "<=",
+        \t"gte" => ">=",
+        \t"eq" => "=",
+        \t"neq" => "!=",
+        \t"in" => "IN",
+        \t"nin" => "NOT IN",
+        \t"like" => "LIKE"
+    ]
+    +multiValueOperators : array = [
+        \t0 => "IN",
+        \t1 => "NOT IN"
+    ]
+    +operatorTypes : array = [
+        \t"<" => [
+        \t    \t0 => "~~NOT RESOLVED~~",
+        \t    \t1 => "~~NOT RESOLVED~~"
+        \t],
+        \t">" => [
+        \t    \t0 => "~~NOT RESOLVED~~",
+        \t    \t1 => "~~NOT RESOLVED~~"
+        \t],
+        \t"<=" => [
+        \t    \t0 => "~~NOT RESOLVED~~",
+        \t    \t1 => "~~NOT RESOLVED~~"
+        \t],
+        \t">=" => [
+        \t    \t0 => "~~NOT RESOLVED~~",
+        \t    \t1 => "~~NOT RESOLVED~~"
+        \t],
+        \t"=" => "*",
+        \t"!=" => "*",
+        \t"IN" => "*",
+        \t"NOT IN" => "*",
+        \t"LIKE" => [
+        \t    \t0 => "string"
+        \t]
+    ]
+    -_errorMessages : array|.Closure
+    -_filter : mixed
+    -_searchAttributeTypes : array
+    -_searchModel : Model|array|string|callable
+    +attributeLabels()
+    +attributes()
+    +build(runValidation : bool = true) : mixed|false
+    #buildInternal() : mixed
+    +canGetProperty(name, checkVars = true, checkBehaviors = true)
+    +canSetProperty(name, checkVars = true, checkBehaviors = true)
+    #defaultErrorMessages() : array
+    #detectSearchAttributeTypes() : array
+    #filterAttributeValue(attribute : string, value : mixed) : mixed
+    +formName()
+    +getErrorMessages() : array
+    +getFilter() : mixed
+    +getSearchAttributeTypes() : array
+    +getSearchModel() : yii.base.Model
+    +normalize(runValidation : bool = true) : array|bool
+    -normalizeComplexFilter(filter : array) : array
+    #parseErrorMessage(messageKey : string, params : array = []) : string
+    +rules()
+    +setErrorMessages(errorMessages : array|.Closure)
+    +setFilter(filter : mixed)
+    +setSearchAttributeTypes(searchAttributeTypes : array|null)
+    +setSearchModel(model : Model|array|string|callable)
+    #validateAttributeCondition(attribute : string, condition : mixed)
+    #validateAttributeValue(attribute : string, value : mixed)
+    #validateBlockCondition(operator : string, condition : mixed)
+    #validateCondition(condition : mixed)
+    #validateConjunctionCondition(operator : string, condition : mixed)
+    +validateFilter()
+    #validateOperatorCondition(operator : string, condition : mixed, attribute : string = null)
+    +__get(name)
+    +__isset(name)
+    +__set(name, value)
+    +__unset(name)
+}
+class yii.data.DataFilter extends yii.base.Model
+interface yii.data.DataProviderInterface {
+    +getCount() : int
+    +getKeys() : array
+    +getModels() : array
+    +getPagination() : Pagination|false
+    +getSort() : Sort
+    +getTotalCount() : int
+    +prepare(forcePrepare : bool = false)
+}
+class yii.data.Pagination {
+    +{static}LINK_FIRST = "first"
+    +{static}LINK_LAST = "last"
+    +{static}LINK_NEXT = "next"
+    +{static}LINK_PREV = "prev"
+    +defaultPageSize : int = 20
+    +forcePageParam : bool = true
+    +pageParam : string = "page"
+    +pageSizeLimit : array|false = [
+        \t0 => 1,
+        \t1 => 50
+    ]
+    +pageSizeParam : string = "per-page"
+    +params : array
+    +route : string
+    +totalCount : int = 0
+    +urlManager : yii.web.UrlManager
+    +validatePage : bool = true
+    -_page
+    -_pageSize : int
+    +createUrl(page : int, pageSize : int = null, absolute : bool = false) : string
+    +getLimit() : int
+    +getLinks(absolute : bool = false) : array
+    +getOffset() : int
+    +getPage(recalculate : bool = false) : int
+    +getPageCount() : int
+    +getPageSize() : int
+    #getQueryParam(name : string, defaultValue : string = null) : string
+    +setPage(value : int, validatePage : bool = false)
+    +setPageSize(value : int, validatePageSize : bool = false)
+}
+class yii.data.Pagination extends yii.base.BaseObject
+class yii.data.Pagination implements yii.web.Linkable
+class yii.data.Sort {
+    +attributes : array = []
+    +defaultOrder : array
+    +enableMultiSort : bool = false
+    +params : array
+    +route : string
+    +separator : string = ","
+    +sortParam : string = "sort"
+    +urlManager : yii.web.UrlManager
+    -_attributeOrders : array
+    +createSortParam(attribute : string) : string
+    +createUrl(attribute : string, absolute : bool = false) : string
+    +getAttributeOrder(attribute : string) : bool|null
+    +getAttributeOrders(recalculate : bool = false) : array
+    +getOrders(recalculate : bool = false) : array
+    +hasAttribute(name : string) : bool
+    +init()
+    +link(attribute : string, options : array = []) : string
+    #parseSortParam(param : string) : array
+    +setAttributeOrders(attributeOrders : array|null, validate : bool = true)
+}
+class yii.data.Sort extends yii.base.BaseObject
+class yii.data.SqlDataProvider {
+    +db : Connection|array|string = "db"
+    +key : string|callable
+    +params : array = []
+    +sql : string
+    +init()
+    #prepareKeys(models)
+    #prepareModels()
+    #prepareTotalCount()
+}
+class yii.data.SqlDataProvider extends yii.data.BaseDataProvider
+@enduml

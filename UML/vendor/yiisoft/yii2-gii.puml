@@ -50,14 +50,26 @@ abstract class yii.gii.Generator {
 }
 class yii.gii.Generator extends yii.base.Model
 class yii.gii.GiiAsset {
-    +css = ["main.css"]
-    +depends = ["yii\web\YiiAsset", "yii\bootstrap\BootstrapAsset", "yii\bootstrap\BootstrapPluginAsset", "yii\gii\TypeAheadAsset"]
-    +js = ["gii.js"]
+    +css = [
+        \t0 => "main.css"
+    ]
+    +depends = [
+        \t0 => "yii\web\YiiAsset",
+        \t1 => "yii\bootstrap\BootstrapAsset",
+        \t2 => "yii\bootstrap\BootstrapPluginAsset",
+        \t3 => "yii\gii\TypeAheadAsset"
+    ]
+    +js = [
+        \t0 => "gii.js"
+    ]
     +sourcePath = "@yii/gii/assets"
 }
 class yii.gii.GiiAsset extends yii.web.AssetBundle
 class yii.gii.Module {
-    +allowedIPs : array = ["127.0.0.1", "::1"]
+    +allowedIPs : array = [
+        \t0 => "127.0.0.1",
+        \t1 => "::1"
+    ]
     +controllerNamespace = "yii\gii\controllers"
     +generators : array|Generator[] = []
     +newDirMode : integer = 511
@@ -71,8 +83,13 @@ class yii.gii.Module {
 class yii.gii.Module extends yii.base.Module
 class yii.gii.Module implements yii.base.BootstrapInterface
 class yii.gii.TypeAheadAsset {
-    +depends = ["yii\bootstrap\BootstrapAsset", "yii\bootstrap\BootstrapPluginAsset"]
-    +js = ["typeahead.bundle.js"]
+    +depends = [
+        \t0 => "yii\bootstrap\BootstrapAsset",
+        \t1 => "yii\bootstrap\BootstrapPluginAsset"
+    ]
+    +js = [
+        \t0 => "typeahead.bundle.js"
+    ]
     +sourcePath = "@bower/typeahead.js/dist"
 }
 class yii.gii.TypeAheadAsset extends yii.web.AssetBundle

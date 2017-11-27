@@ -52,19 +52,30 @@ class yii.bootstrap.BaseHtml {
 }
 class yii.bootstrap.BaseHtml extends yii.helpers.Html
 class yii.bootstrap.BootstrapAsset {
-    +css = ["css/bootstrap.css"]
+    +css = [
+        \t0 => "css/bootstrap.css"
+    ]
     +sourcePath = "@bower/bootstrap/dist"
 }
 class yii.bootstrap.BootstrapAsset extends yii.web.AssetBundle
 class yii.bootstrap.BootstrapPluginAsset {
-    +depends = ["yii\web\JqueryAsset", "yii\bootstrap\BootstrapAsset"]
-    +js = ["js/bootstrap.js"]
+    +depends = [
+        \t0 => "yii\web\JqueryAsset",
+        \t1 => "yii\bootstrap\BootstrapAsset"
+    ]
+    +js = [
+        \t0 => "js/bootstrap.js"
+    ]
     +sourcePath = "@bower/bootstrap/dist"
 }
 class yii.bootstrap.BootstrapPluginAsset extends yii.web.AssetBundle
 class yii.bootstrap.BootstrapThemeAsset {
-    +css = ["css/bootstrap-theme.css"]
-    +depends = ["yii\bootstrap\BootstrapAsset"]
+    +css = [
+        \t0 => "css/bootstrap-theme.css"
+    ]
+    +depends = [
+        \t0 => "yii\bootstrap\BootstrapAsset"
+    ]
     +sourcePath = "@bower/bootstrap/dist"
 }
 class yii.bootstrap.BootstrapThemeAsset extends yii.web.AssetBundle
@@ -107,7 +118,10 @@ class yii.bootstrap.ButtonGroup {
 }
 class yii.bootstrap.ButtonGroup extends yii.bootstrap.Widget
 class yii.bootstrap.Carousel {
-    +controls : array|boolean = ["&lsaquo;", "&rsaquo;"]
+    +controls : array|boolean = [
+        \t0 => "&lsaquo;",
+        \t1 => "&rsaquo;"
+    ]
     +items : array = []
     +showIndicators : boolean = true
     +init()
@@ -147,7 +161,9 @@ class yii.bootstrap.Modal {
     +{static}SIZE_DEFAULT = ""
     +{static}SIZE_LARGE = "modal-lg"
     +{static}SIZE_SMALL = "modal-sm"
-    +bodyOptions : array = ["modal-body"]
+    +bodyOptions : array = [
+        \t"class" => "modal-body"
+    ]
     +closeButton : array|false = []
     +footer : string
     +footerOptions : string

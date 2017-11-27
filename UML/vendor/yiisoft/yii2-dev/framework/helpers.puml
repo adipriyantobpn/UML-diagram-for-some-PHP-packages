@@ -1,0 +1,760 @@
+@startuml
+skinparam handwritten true
+class yii.helpers.ArrayHelper {
+}
+class yii.helpers.ArrayHelper extends yii.helpers.BaseArrayHelper
+class yii.helpers.BaseArrayHelper {
+    +{static}filter(array : array, filters : array) : array
+    +{static}getColumn(array : array, name : string|.Closure, keepKeys : bool = true) : array
+    +{static}getValue(array : array|object, key : string|.Closure|array, default : mixed = null) : mixed
+    +{static}htmlDecode(data : array, valuesOnly : bool = true) : array
+    +{static}htmlEncode(data : array, valuesOnly : bool = true, charset : string = null) : array
+    +{static}index(array : array, key : string|.Closure|null, groups : string|string[]|.Closure[]|null = []) : array
+    +{static}isAssociative(array : array, allStrings : bool = true) : bool
+    +{static}isIn(needle : mixed, haystack : array|.Traversable, strict : bool = false) : bool
+    +{static}isIndexed(array : array, consecutive : bool = false) : bool
+    +{static}isSubset(needles : array|.Traversable, haystack : array|.Traversable, strict : bool = false) : bool
+    +{static}isTraversable(var : mixed) : bool
+    +{static}keyExists(key : string, array : array, caseSensitive : bool = true) : bool
+    +{static}map(array : array, from : string|.Closure, to : string|.Closure, group : string|.Closure = null) : array
+    +{static}merge(a : array, b : array) : array
+    +{static}multisort(array : array, key : string|.Closure|array, direction : int|array = 4, sortFlag : int|array = 0)
+    +{static}remove(array : array, key : string, default : mixed = null) : mixed|null
+    +{static}removeValue(array : array, value : string) : array
+    +{static}setValue(array : array, path : string|array|null, value : mixed)
+    +{static}toArray(object : object|array|string, properties : array = [], recursive : bool = true) : array
+}
+class yii.helpers.BaseConsole {
+    +{static}BG_BLACK = 40
+    +{static}BG_BLUE = 44
+    +{static}BG_CYAN = 46
+    +{static}BG_GREEN = 42
+    +{static}BG_GREY = 47
+    +{static}BG_PURPLE = 45
+    +{static}BG_RED = 41
+    +{static}BG_YELLOW = 43
+    +{static}BLINK = 5
+    +{static}BOLD = 1
+    +{static}CONCEALED = 8
+    +{static}CROSSED_OUT = 9
+    +{static}ENCIRCLED = 52
+    +{static}FG_BLACK = 30
+    +{static}FG_BLUE = 34
+    +{static}FG_CYAN = 36
+    +{static}FG_GREEN = 32
+    +{static}FG_GREY = 37
+    +{static}FG_PURPLE = 35
+    +{static}FG_RED = 31
+    +{static}FG_YELLOW = 33
+    +{static}FRAMED = 51
+    +{static}ITALIC = 3
+    +{static}NEGATIVE = 7
+    +{static}NORMAL = 0
+    +{static}OVERLINED = 53
+    +{static}RESET = 0
+    +{static}UNDERLINE = 4
+    -_progressEta
+    -_progressEtaLastDone = 0
+    -_progressEtaLastUpdate
+    -_progressPrefix
+    -_progressStart
+    -_progressWidth
+    +{static}ansiFormat(string : string, format : array = []) : string
+    +{static}ansiFormatCode(format : array) : string
+    +{static}ansiStrlen(string : string) : int
+    +{static}ansiToHtml(string : string, styleMap : array = []) : string
+    +{static}beginAnsiFormat(format : array)
+    +{static}clearLine()
+    +{static}clearLineAfterCursor()
+    +{static}clearLineBeforeCursor()
+    +{static}clearScreen()
+    +{static}clearScreenAfterCursor()
+    +{static}clearScreenBeforeCursor()
+    +{static}confirm(message : string, default : bool = false) : bool
+    +{static}endAnsiFormat()
+    +{static}endProgress(remove : string|bool = false, keepPrefix : bool = true)
+    +{static}error(string : string = null) : int|bool
+    +{static}escape(string : string) : string
+    +{static}getScreenSize(refresh : bool = false) : array|bool
+    +{static}hideCursor()
+    +{static}input(prompt : string = null) : string
+    +{static}isRunningOnWindows() : bool
+    +{static}markdownToAnsi(markdown : string) : string
+    +{static}moveCursorBackward(steps : int = 1)
+    +{static}moveCursorDown(rows : int = 1)
+    +{static}moveCursorForward(steps : int = 1)
+    +{static}moveCursorNextLine(lines : int = 1)
+    +{static}moveCursorPrevLine(lines : int = 1)
+    +{static}moveCursorTo(column : int, row : int|null = null)
+    +{static}moveCursorUp(rows : int = 1)
+    +{static}output(string : string = null) : int|bool
+    +{static}prompt(text : string, options : array = []) : string
+    +{static}renderColoredString(string : string, colored : bool = true) : string
+    +{static}restoreCursorPosition()
+    +{static}saveCursorPosition()
+    +{static}scrollDown(lines : int = 1)
+    +{static}scrollUp(lines : int = 1)
+    +{static}select(prompt : string, options : array = []) : string
+    +{static}showCursor()
+    +{static}startProgress(done : int, total : int, prefix : string = "", width : int|bool = null)
+    +{static}stderr(string : string) : int|bool
+    +{static}stdin(raw : bool = false) : string
+    +{static}stdout(string : string) : int|bool
+    +{static}streamSupportsAnsiColors(stream : mixed) : bool
+    +{static}stripAnsiFormat(string : string) : string
+    +{static}updateProgress(done : int, total : int, prefix : string = null)
+    +{static}wrapText(text : string, indent : int = 0, refresh : bool = false) : string
+    +{static}xtermBgColor(colorCode : int) : string
+    +{static}xtermFgColor(colorCode : int) : string
+}
+class yii.helpers.BaseFileHelper {
+    +{static}PATTERN_CASE_INSENSITIVE = 32
+    +{static}PATTERN_ENDSWITH = 4
+    +{static}PATTERN_MUSTBEDIR = 8
+    +{static}PATTERN_NEGATIVE = 16
+    +{static}PATTERN_NODIR = 1
+    +mimeMagicFile : string = "@yii/helpers/mimeTypes.php"
+    -_mimeTypes = []
+    +{static}copyDirectory(src : string, dst : string, options : array = [])
+    +{static}createDirectory(path : string, mode : int = 509, recursive : bool = true) : bool
+    +{static}filterPath(path : string, options : array) : bool
+    +{static}findFiles(dir : string, options : array = []) : array
+    -{static}firstWildcardInPattern(pattern : string) : int|bool
+    +{static}getExtensionsByMimeType(mimeType : string, magicFile : string = null) : array
+    +{static}getMimeType(file : string, magicFile : string = null, checkExtension : bool = true) : string
+    +{static}getMimeTypeByExtension(file : string, magicFile : string = null) : string|null
+    -{static}lastExcludeMatchingFromList(basePath : string, path : string, excludes : array) : array|null
+    #{static}loadMimeTypes(magicFile : string) : array
+    +{static}localize(file : string, language : string = null, sourceLanguage : string = null) : string
+    -{static}matchBasename(baseName : string, pattern : string, firstWildcard : int|bool, flags : int) : bool
+    -{static}matchPathname(path : string, basePath : string, pattern : string, firstWildcard : int|bool, flags : int) : bool
+    #{static}normalizeOptions(options : array) : array
+    +{static}normalizePath(path : string, ds : string = "\") : string
+    -{static}parseExcludePattern(pattern : string, caseSensitive : bool) : array
+    +{static}removeDirectory(dir : string, options : array = [])
+}
+class yii.helpers.BaseFormatConverter {
+    +juiFallbackDatePatterns : array = [
+        \t"short" => [
+        \t    \t"date" => "d/m/y",
+        \t    \t"time" => "",
+        \t    \t"datetime" => "d/m/y"
+        \t],
+        \t"medium" => [
+        \t    \t"date" => "M d, yy",
+        \t    \t"time" => "",
+        \t    \t"datetime" => "M d, yy"
+        \t],
+        \t"long" => [
+        \t    \t"date" => "MM d, yy",
+        \t    \t"time" => "",
+        \t    \t"datetime" => "MM d, yy"
+        \t],
+        \t"full" => [
+        \t    \t"date" => "DD, MM d, yy",
+        \t    \t"time" => "",
+        \t    \t"datetime" => "DD, MM d, yy"
+        \t]
+    ]
+    +phpFallbackDatePatterns : array = [
+        \t"short" => [
+        \t    \t"date" => "n/j/y",
+        \t    \t"time" => "H:i",
+        \t    \t"datetime" => "n/j/y H:i"
+        \t],
+        \t"medium" => [
+        \t    \t"date" => "M j, Y",
+        \t    \t"time" => "g:i:s A",
+        \t    \t"datetime" => "M j, Y g:i:s A"
+        \t],
+        \t"long" => [
+        \t    \t"date" => "F j, Y",
+        \t    \t"time" => "g:i:sA",
+        \t    \t"datetime" => "F j, Y g:i:sA"
+        \t],
+        \t"full" => [
+        \t    \t"date" => "l, F j, Y",
+        \t    \t"time" => "g:i:sA T",
+        \t    \t"datetime" => "l, F j, Y g:i:sA T"
+        \t]
+    ]
+    -_icuShortFormats = [
+        \t"short" => 3,
+        \t"medium" => 2,
+        \t"long" => 1,
+        \t"full" => 0
+    ]
+    +{static}convertDateIcuToJui(pattern : string, type : string = "date", locale : string = null) : string
+    +{static}convertDateIcuToPhp(pattern : string, type : string = "date", locale : string = null) : string
+    +{static}convertDatePhpToIcu(pattern : string) : string
+    +{static}convertDatePhpToJui(pattern : string) : string
+}
+class yii.helpers.BaseHtml {
+    +attributeOrder : array = [
+        \t0 => "type",
+        \t1 => "id",
+        \t2 => "class",
+        \t3 => "name",
+        \t4 => "value",
+        \t5 => "href",
+        \t6 => "src",
+        \t7 => "srcset",
+        \t8 => "form",
+        \t9 => "action",
+        \t10 => "method",
+        \t11 => "selected",
+        \t12 => "checked",
+        \t13 => "readonly",
+        \t14 => "disabled",
+        \t15 => "multiple",
+        \t16 => "size",
+        \t17 => "maxlength",
+        \t18 => "width",
+        \t19 => "height",
+        \t20 => "rows",
+        \t21 => "cols",
+        \t22 => "alt",
+        \t23 => "title",
+        \t24 => "rel",
+        \t25 => "media"
+    ]
+    +attributeRegex : string = "/(^|.*\])([\w\.\+]+)(\[.*|$)/u"
+    +dataAttributes : array = [
+        \t0 => "data",
+        \t1 => "data-ng",
+        \t2 => "ng"
+    ]
+    +voidElements : array = [
+        \t"area" => 1,
+        \t"base" => 1,
+        \t"br" => 1,
+        \t"col" => 1,
+        \t"command" => 1,
+        \t"embed" => 1,
+        \t"hr" => 1,
+        \t"img" => 1,
+        \t"input" => 1,
+        \t"keygen" => 1,
+        \t"link" => 1,
+        \t"meta" => 1,
+        \t"param" => 1,
+        \t"source" => 1,
+        \t"track" => 1,
+        \t"wbr" => 1
+    ]
+    +{static}a(text : string, url : array|string|null = null, options : array = []) : string
+    #{static}activeBooleanInput(type : string, model : Model, attribute : string, options : array = []) : string
+    +{static}activeCheckbox(model : Model, attribute : string, options : array = []) : string
+    +{static}activeCheckboxList(model : Model, attribute : string, items : array, options : array = []) : string
+    +{static}activeDropDownList(model : Model, attribute : string, items : array, options : array = []) : string
+    +{static}activeFileInput(model : Model, attribute : string, options : array = []) : string
+    +{static}activeHiddenInput(model : Model, attribute : string, options : array = []) : string
+    +{static}activeHint(model : Model, attribute : string, options : array = []) : string
+    +{static}activeInput(type : string, model : Model, attribute : string, options : array = []) : string
+    +{static}activeLabel(model : Model, attribute : string, options : array = []) : string
+    +{static}activeListBox(model : Model, attribute : string, items : array, options : array = []) : string
+    #{static}activeListInput(type : string, model : Model, attribute : string, items : array, options : array = []) : string
+    +{static}activePasswordInput(model : Model, attribute : string, options : array = []) : string
+    +{static}activeRadio(model : Model, attribute : string, options : array = []) : string
+    +{static}activeRadioList(model : Model, attribute : string, items : array, options : array = []) : string
+    +{static}activeTextarea(model : Model, attribute : string, options : array = []) : string
+    +{static}activeTextInput(model : Model, attribute : string, options : array = []) : string
+    +{static}addCssClass(options : array, class : string|array)
+    +{static}addCssStyle(options : array, style : string|array, overwrite : bool = true)
+    +{static}beginForm(action : array|string = "", method : string = "post", options : array = []) : string
+    +{static}beginTag(name : string|bool|null, options : array = []) : string
+    #{static}booleanInput(type : string, name : string, checked : bool = false, options : array = []) : string
+    +{static}button(content : string = "Button", options : array = []) : string
+    +{static}buttonInput(label : string = "Button", options : array = []) : string
+    +{static}checkbox(name : string, checked : bool = false, options : array = []) : string
+    +{static}checkboxList(name : string, selection : string|array|null = null, items : array = [], options : array = []) : string
+    +{static}csrfMetaTags() : string
+    +{static}cssFile(url : array|string, options : array = []) : string
+    +{static}cssStyleFromArray(style : array) : string
+    +{static}cssStyleToArray(style : string) : array
+    +{static}decode(content : string) : string
+    +{static}dropDownList(name : string, selection : string|array|null = null, items : array = [], options : array = []) : string
+    +{static}encode(content : string, doubleEncode : bool = true) : string
+    +{static}endForm() : string
+    +{static}endTag(name : string|bool|null) : string
+    +{static}error(model : Model, attribute : string, options : array = []) : string
+    +{static}errorSummary(models : Model|Model[], options : array = []) : string
+    +{static}escapeJsRegularExpression(regexp : string) : string
+    +{static}fileInput(name : string, value : string = null, options : array = []) : string
+    +{static}getAttributeName(attribute : string) : string
+    +{static}getAttributeValue(model : Model, attribute : string) : string|array
+    +{static}getInputId(model : Model, attribute : string) : string
+    +{static}getInputName(model : Model, attribute : string) : string
+    +{static}hiddenInput(name : string, value : string = null, options : array = []) : string
+    +{static}img(src : array|string, options : array = []) : string
+    +{static}input(type : string, name : string = null, value : string = null, options : array = []) : string
+    +{static}jsFile(url : string, options : array = []) : string
+    +{static}label(content : string, for : string = null, options : array = []) : string
+    +{static}listBox(name : string, selection : string|array|null = null, items : array = [], options : array = []) : string
+    +{static}mailto(text : string, email : string = null, options : array = []) : string
+    -{static}mergeCssClasses(existingClasses : array, additionalClasses : array) : array
+    -{static}normalizeMaxLength(model : Model, attribute : string, options : array)
+    +{static}ol(items : array|.Traversable, options : array = []) : string
+    +{static}passwordInput(name : string, value : string = null, options : array = []) : string
+    +{static}radio(name : string, checked : bool = false, options : array = []) : string
+    +{static}radioList(name : string, selection : string|array|null = null, items : array = [], options : array = []) : string
+    +{static}removeCssClass(options : array, class : string|array)
+    +{static}removeCssStyle(options : array, properties : string|array)
+    +{static}renderSelectOptions(selection : string|array|null, items : array, tagOptions : array = []) : string
+    +{static}renderTagAttributes(attributes : array) : string
+    +{static}resetButton(content : string = "Reset", options : array = []) : string
+    +{static}resetInput(label : string = "Reset", options : array = []) : string
+    +{static}script(content : string, options : array = []) : string
+    +{static}style(content : string, options : array = []) : string
+    +{static}submitButton(content : string = "Submit", options : array = []) : string
+    +{static}submitInput(label : string = "Submit", options : array = []) : string
+    +{static}tag(name : string|bool|null, content : string = "", options : array = []) : string
+    +{static}textarea(name : string, value : string = "", options : array = []) : string
+    +{static}textInput(name : string, value : string = null, options : array = []) : string
+    +{static}ul(items : array|.Traversable, options : array = []) : string
+    -{static}wrapIntoCondition(content : string, condition : string) : string
+}
+class yii.helpers.BaseHtmlPurifier {
+    #{static}configure(config : HTMLPurifier_Config)
+    +{static}process(content : string, config : array|.Closure|null = null) : string
+}
+class yii.helpers.BaseInflector {
+    +{static}TRANSLITERATE_LOOSE = "Any-Latin; Latin-ASCII; [\u0080-\uffff] remove"
+    +{static}TRANSLITERATE_MEDIUM = "Any-Latin; Latin-ASCII"
+    +{static}TRANSLITERATE_STRICT = "Any-Latin; NFKD"
+    +plurals : array = [
+        \t"/([nrlm]ese|deer|fish|sheep|measles|ois|pox|media)$/i" => "\1",
+        \t"/^(sea[- ]bass)$/i" => "\1",
+        \t"/(m)ove$/i" => "\1oves",
+        \t"/(f)oot$/i" => "\1eet",
+        \t"/(h)uman$/i" => "\1umans",
+        \t"/(s)tatus$/i" => "\1tatuses",
+        \t"/(s)taff$/i" => "\1taff",
+        \t"/(t)ooth$/i" => "\1eeth",
+        \t"/(quiz)$/i" => "\1zes",
+        \t"/^(ox)$/i" => "\1\2en",
+        \t"/([m|l])ouse$/i" => "\1ice",
+        \t"/(matr|vert|ind)(ix|ex)$/i" => "\1ices",
+        \t"/(x|ch|ss|sh)$/i" => "\1es",
+        \t"/([^aeiouy]|qu)y$/i" => "\1ies",
+        \t"/(hive)$/i" => "\1s",
+        \t"/(?:([^f])fe|([lr])f)$/i" => "\1\2ves",
+        \t"/sis$/i" => "ses",
+        \t"/([ti])um$/i" => "\1a",
+        \t"/(p)erson$/i" => "\1eople",
+        \t"/(m)an$/i" => "\1en",
+        \t"/(c)hild$/i" => "\1hildren",
+        \t"/(buffal|tomat|potat|ech|her|vet)o$/i" => "\1oes",
+        \t"/(alumn|bacill|cact|foc|fung|nucle|radi|stimul|syllab|termin|vir)us$/i" => "\1i",
+        \t"/us$/i" => "uses",
+        \t"/(alias)$/i" => "\1es",
+        \t"/(ax|cris|test)is$/i" => "\1es",
+        \t"/(currenc)y$/" => "\1ies",
+        \t"/s$/" => "s",
+        \t"/^$/" => "",
+        \t"/$/" => "s"
+    ]
+    +singulars : array = [
+        \t"/([nrlm]ese|deer|fish|sheep|measles|ois|pox|media|ss)$/i" => "\1",
+        \t"/^(sea[- ]bass)$/i" => "\1",
+        \t"/(s)tatuses$/i" => "\1tatus",
+        \t"/(f)eet$/i" => "\1oot",
+        \t"/(t)eeth$/i" => "\1ooth",
+        \t"/^(.*)(menu)s$/i" => "\1\2",
+        \t"/(quiz)zes$/i" => "\1",
+        \t"/(matr)ices$/i" => "\1ix",
+        \t"/(vert|ind)ices$/i" => "\1ex",
+        \t"/^(ox)en/i" => "\1",
+        \t"/(alias)(es)*$/i" => "\1",
+        \t"/(alumn|bacill|cact|foc|fung|nucle|radi|stimul|syllab|termin|viri?)i$/i" => "\1us",
+        \t"/([ftw]ax)es/i" => "\1",
+        \t"/(cris|ax|test)es$/i" => "\1is",
+        \t"/(shoe|slave)s$/i" => "\1",
+        \t"/(o)es$/i" => "\1",
+        \t"/ouses$/" => "ouse",
+        \t"/([^a])uses$/" => "\1us",
+        \t"/([m|l])ice$/i" => "\1ouse",
+        \t"/(x|ch|ss|sh)es$/i" => "\1",
+        \t"/(m)ovies$/i" => "\1\2ovie",
+        \t"/(s)eries$/i" => "\1\2eries",
+        \t"/([^aeiouy]|qu)ies$/i" => "\1y",
+        \t"/([lr])ves$/i" => "\1f",
+        \t"/(tive)s$/i" => "\1",
+        \t"/(hive)s$/i" => "\1",
+        \t"/(drive)s$/i" => "\1",
+        \t"/([^fo])ves$/i" => "\1fe",
+        \t"/(^analy)ses$/i" => "\1sis",
+        \t"/(analy|diagno|^ba|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$/i" => "\1\2sis",
+        \t"/([ti])a$/i" => "\1um",
+        \t"/(p)eople$/i" => "\1\2erson",
+        \t"/(m)en$/i" => "\1an",
+        \t"/(c)hildren$/i" => "\1\2hild",
+        \t"/(n)ews$/i" => "\1\2ews",
+        \t"/(n)etherlands$/i" => "\1\2etherlands",
+        \t"/eaus$/" => "eau",
+        \t"/(currenc)ies$/" => "\1y",
+        \t"/^(.*us)$/" => "\1",
+        \t"/s$/i" => ""
+    ]
+    +specials : array = [
+        \t"atlas" => "atlases",
+        \t"beef" => "beefs",
+        \t"brother" => "brothers",
+        \t"cafe" => "cafes",
+        \t"child" => "children",
+        \t"cookie" => "cookies",
+        \t"corpus" => "corpuses",
+        \t"cow" => "cows",
+        \t"curve" => "curves",
+        \t"foe" => "foes",
+        \t"ganglion" => "ganglions",
+        \t"genie" => "genies",
+        \t"genus" => "genera",
+        \t"graffito" => "graffiti",
+        \t"hoof" => "hoofs",
+        \t"loaf" => "loaves",
+        \t"man" => "men",
+        \t"money" => "monies",
+        \t"mongoose" => "mongooses",
+        \t"move" => "moves",
+        \t"mythos" => "mythoi",
+        \t"niche" => "niches",
+        \t"numen" => "numina",
+        \t"occiput" => "occiputs",
+        \t"octopus" => "octopuses",
+        \t"opus" => "opuses",
+        \t"ox" => "oxen",
+        \t"pasta" => "pasta",
+        \t"penis" => "penises",
+        \t"sex" => "sexes",
+        \t"soliloquy" => "soliloquies",
+        \t"testis" => "testes",
+        \t"trilby" => "trilbys",
+        \t"turf" => "turfs",
+        \t"wave" => "waves",
+        \t"Amoyese" => "Amoyese",
+        \t"bison" => "bison",
+        \t"Borghese" => "Borghese",
+        \t"bream" => "bream",
+        \t"breeches" => "breeches",
+        \t"britches" => "britches",
+        \t"buffalo" => "buffalo",
+        \t"cantus" => "cantus",
+        \t"carp" => "carp",
+        \t"chassis" => "chassis",
+        \t"clippers" => "clippers",
+        \t"cod" => "cod",
+        \t"coitus" => "coitus",
+        \t"Congoese" => "Congoese",
+        \t"contretemps" => "contretemps",
+        \t"corps" => "corps",
+        \t"debris" => "debris",
+        \t"diabetes" => "diabetes",
+        \t"djinn" => "djinn",
+        \t"eland" => "eland",
+        \t"elk" => "elk",
+        \t"equipment" => "equipment",
+        \t"Faroese" => "Faroese",
+        \t"flounder" => "flounder",
+        \t"Foochowese" => "Foochowese",
+        \t"gallows" => "gallows",
+        \t"Genevese" => "Genevese",
+        \t"Genoese" => "Genoese",
+        \t"Gilbertese" => "Gilbertese",
+        \t"graffiti" => "graffiti",
+        \t"headquarters" => "headquarters",
+        \t"herpes" => "herpes",
+        \t"hijinks" => "hijinks",
+        \t"Hottentotese" => "Hottentotese",
+        \t"information" => "information",
+        \t"innings" => "innings",
+        \t"jackanapes" => "jackanapes",
+        \t"Kiplingese" => "Kiplingese",
+        \t"Kongoese" => "Kongoese",
+        \t"Lucchese" => "Lucchese",
+        \t"mackerel" => "mackerel",
+        \t"Maltese" => "Maltese",
+        \t"mews" => "mews",
+        \t"moose" => "moose",
+        \t"mumps" => "mumps",
+        \t"Nankingese" => "Nankingese",
+        \t"news" => "news",
+        \t"nexus" => "nexus",
+        \t"Niasese" => "Niasese",
+        \t"Pekingese" => "Pekingese",
+        \t"Piedmontese" => "Piedmontese",
+        \t"pincers" => "pincers",
+        \t"Pistoiese" => "Pistoiese",
+        \t"pliers" => "pliers",
+        \t"Portuguese" => "Portuguese",
+        \t"proceedings" => "proceedings",
+        \t"rabies" => "rabies",
+        \t"rice" => "rice",
+        \t"rhinoceros" => "rhinoceros",
+        \t"salmon" => "salmon",
+        \t"Sarawakese" => "Sarawakese",
+        \t"scissors" => "scissors",
+        \t"series" => "series",
+        \t"Shavese" => "Shavese",
+        \t"shears" => "shears",
+        \t"siemens" => "siemens",
+        \t"species" => "species",
+        \t"swine" => "swine",
+        \t"testes" => "testes",
+        \t"trousers" => "trousers",
+        \t"trout" => "trout",
+        \t"tuna" => "tuna",
+        \t"Vermontese" => "Vermontese",
+        \t"Wenchowese" => "Wenchowese",
+        \t"whiting" => "whiting",
+        \t"wildebeest" => "wildebeest",
+        \t"Yengeese" => "Yengeese"
+    ]
+    +transliteration : array = [
+        \t"À" => "A",
+        \t"Á" => "A",
+        \t"Â" => "A",
+        \t"Ã" => "A",
+        \t"Ä" => "A",
+        \t"Å" => "A",
+        \t"Æ" => "AE",
+        \t"Ç" => "C",
+        \t"È" => "E",
+        \t"É" => "E",
+        \t"Ê" => "E",
+        \t"Ë" => "E",
+        \t"Ì" => "I",
+        \t"Í" => "I",
+        \t"Î" => "I",
+        \t"Ï" => "I",
+        \t"Ð" => "D",
+        \t"Ñ" => "N",
+        \t"Ò" => "O",
+        \t"Ó" => "O",
+        \t"Ô" => "O",
+        \t"Õ" => "O",
+        \t"Ö" => "O",
+        \t"Ő" => "O",
+        \t"Ø" => "O",
+        \t"Ù" => "U",
+        \t"Ú" => "U",
+        \t"Û" => "U",
+        \t"Ü" => "U",
+        \t"Ű" => "U",
+        \t"Ý" => "Y",
+        \t"Þ" => "TH",
+        \t"ß" => "ss",
+        \t"à" => "a",
+        \t"á" => "a",
+        \t"â" => "a",
+        \t"ã" => "a",
+        \t"ä" => "a",
+        \t"å" => "a",
+        \t"æ" => "ae",
+        \t"ç" => "c",
+        \t"è" => "e",
+        \t"é" => "e",
+        \t"ê" => "e",
+        \t"ë" => "e",
+        \t"ì" => "i",
+        \t"í" => "i",
+        \t"î" => "i",
+        \t"ï" => "i",
+        \t"ð" => "d",
+        \t"ñ" => "n",
+        \t"ò" => "o",
+        \t"ó" => "o",
+        \t"ô" => "o",
+        \t"õ" => "o",
+        \t"ö" => "o",
+        \t"ő" => "o",
+        \t"ø" => "o",
+        \t"ù" => "u",
+        \t"ú" => "u",
+        \t"û" => "u",
+        \t"ü" => "u",
+        \t"ű" => "u",
+        \t"ý" => "y",
+        \t"þ" => "th",
+        \t"ÿ" => "y"
+    ]
+    +transliterator : mixed = "Any-Latin; Latin-ASCII; [\u0080-\uffff] remove"
+    +{static}camel2id(name : string, separator : string = "-", strict : bool|string = false) : string
+    +{static}camel2words(name : string, ucwords : bool = true) : string
+    +{static}camelize(word : string) : string
+    +{static}classify(tableName : string) : string
+    #{static}hasIntl() : bool
+    +{static}humanize(word : string, ucAll : bool = false) : string
+    +{static}id2camel(id : string, separator : string = "-") : string
+    +{static}ordinalize(number : int) : string
+    +{static}pluralize(word : string) : string
+    +{static}sentence(words : array, twoWordsConnector : string = null, lastWordConnector : string = null, connector : string = ", ") : string
+    +{static}singularize(word : string) : string
+    +{static}slug(string : string, replacement : string = "-", lowercase : bool = true) : string
+    +{static}tableize(className : string) : string
+    +{static}titleize(words : string, ucAll : bool = false) : string
+    +{static}transliterate(string : string, transliterator : string|.Transliterator = null) : string
+    +{static}underscore(words : string) : string
+    +{static}variablize(word : string) : string
+}
+class yii.helpers.BaseJson {
+    +jsonErrorMessages : array = [
+        \t"JSON_ERROR_DEPTH" => "The maximum stack depth has been exceeded.",
+        \t"JSON_ERROR_STATE_MISMATCH" => "Invalid or malformed JSON.",
+        \t"JSON_ERROR_CTRL_CHAR" => "Control character error, possibly incorrectly encoded.",
+        \t"JSON_ERROR_SYNTAX" => "Syntax error.",
+        \t"JSON_ERROR_UTF8" => "Malformed UTF-8 characters, possibly incorrectly encoded.",
+        \t"JSON_ERROR_RECURSION" => "One or more recursive references in the value to be encoded.",
+        \t"JSON_ERROR_INF_OR_NAN" => "One or more NAN or INF values in the value to be encoded",
+        \t"JSON_ERROR_UNSUPPORTED_TYPE" => "A value of a type that cannot be encoded was given"
+    ]
+    +{static}decode(json : string, asArray : bool = true) : mixed
+    +{static}encode(value : mixed, options : int = 320) : string
+    #{static}handleJsonError(lastError : int)
+    +{static}htmlEncode(value : mixed) : string
+    #{static}processData(data : mixed, expressions : array, expPrefix : string) : mixed
+}
+class yii.helpers.BaseMarkdown {
+    +defaultFlavor : string = "original"
+    +flavors : array = [
+        \t"original" => [
+        \t    \t"class" => "cebe\markdown\Markdown",
+        \t    \t"html5" => true
+        \t],
+        \t"gfm" => [
+        \t    \t"class" => "cebe\markdown\GithubMarkdown",
+        \t    \t"html5" => true
+        \t],
+        \t"gfm-comment" => [
+        \t    \t"class" => "cebe\markdown\GithubMarkdown",
+        \t    \t"html5" => true,
+        \t    \t"enableNewlines" => true
+        \t],
+        \t"extra" => [
+        \t    \t"class" => "cebe\markdown\MarkdownExtra",
+        \t    \t"html5" => true
+        \t]
+    ]
+    #{static}getParser(flavor : string) : cebe.markdown.Parser
+    +{static}process(markdown : string, flavor : string = null) : string
+    +{static}processParagraph(markdown : string, flavor : string = null) : string
+}
+class yii.helpers.BaseStringHelper {
+    +{static}base64UrlDecode(input : string) : string
+    +{static}base64UrlEncode(input : string) : string
+    +{static}basename(path : string, suffix : string = "") : string
+    +{static}byteLength(string : string) : int
+    +{static}byteSubstr(string : string, start : int, length : int = null) : string
+    +{static}countWords(string : string) : int
+    +{static}dirname(path : string) : string
+    +{static}endsWith(string : string, with : string, caseSensitive : bool = true) : bool
+    +{static}explode(string : string, delimiter : string = ",", trim : mixed = true, skipEmpty : bool = false) : array
+    +{static}floatToString(number : float|int) : string
+    +{static}normalizeNumber(value : int|float|string) : string
+    +{static}startsWith(string : string, with : string, caseSensitive : bool = true) : bool
+    +{static}truncate(string : string, length : int, suffix : string = "...", encoding : string = null, asHtml : bool = false) : string
+    #{static}truncateHtml(string : string, count : int, suffix : string, encoding : string|bool = false) : string
+    +{static}truncateWords(string : string, count : int, suffix : string = "...", asHtml : bool = false) : string
+}
+class yii.helpers.BaseUrl {
+    +urlManager : yii.web.UrlManager
+    +{static}base(scheme : bool|string = false) : string
+    +{static}canonical() : string
+    +{static}current(params : array = [], scheme : bool|string = false) : string
+    +{static}ensureScheme(url : string, scheme : string) : string
+    #{static}getUrlManager() : yii.web.UrlManager
+    +{static}home(scheme : bool|string = false) : string
+    +{static}isRelative(url : string) : bool
+    #{static}normalizeRoute(route : string) : string
+    +{static}previous(name : string = null) : string|null
+    +{static}remember(url : string|array = "", name : string = null)
+    +{static}to(url : array|string = "", scheme : bool|string = false) : string
+    +{static}toRoute(route : string|array, scheme : bool|string = false) : string
+}
+class yii.helpers.BaseVarDumper {
+    -_depth
+    -_objects
+    -_output
+    +{static}dump(var : mixed, depth : int = 10, highlight : bool = false)
+    +{static}dumpAsString(var : mixed, depth : int = 10, highlight : bool = false) : string
+    -{static}dumpInternal(var : mixed, level : int)
+    +{static}export(var : mixed) : string
+    -{static}exportClosure(closure : Closure) : string
+    -{static}exportInternal(var : mixed, level : int)
+}
+class yii.helpers.Console {
+    +{static}BG_BLACK = 40
+    +{static}BG_BLUE = 44
+    +{static}BG_CYAN = 46
+    +{static}BG_GREEN = 42
+    +{static}BG_GREY = 47
+    +{static}BG_PURPLE = 45
+    +{static}BG_RED = 41
+    +{static}BG_YELLOW = 43
+    +{static}BLINK = 5
+    +{static}BOLD = 1
+    +{static}CONCEALED = 8
+    +{static}CROSSED_OUT = 9
+    +{static}ENCIRCLED = 52
+    +{static}FG_BLACK = 30
+    +{static}FG_BLUE = 34
+    +{static}FG_CYAN = 36
+    +{static}FG_GREEN = 32
+    +{static}FG_GREY = 37
+    +{static}FG_PURPLE = 35
+    +{static}FG_RED = 31
+    +{static}FG_YELLOW = 33
+    +{static}FRAMED = 51
+    +{static}ITALIC = 3
+    +{static}NEGATIVE = 7
+    +{static}NORMAL = 0
+    +{static}OVERLINED = 53
+    +{static}RESET = 0
+    +{static}UNDERLINE = 4
+}
+class yii.helpers.Console extends yii.helpers.BaseConsole
+class yii.helpers.FileHelper {
+    +{static}PATTERN_CASE_INSENSITIVE = 32
+    +{static}PATTERN_ENDSWITH = 4
+    +{static}PATTERN_MUSTBEDIR = 8
+    +{static}PATTERN_NEGATIVE = 16
+    +{static}PATTERN_NODIR = 1
+}
+class yii.helpers.FileHelper extends yii.helpers.BaseFileHelper
+class yii.helpers.FormatConverter {
+}
+class yii.helpers.FormatConverter extends yii.helpers.BaseFormatConverter
+class yii.helpers.Html {
+}
+class yii.helpers.Html extends yii.helpers.BaseHtml
+class yii.helpers.HtmlPurifier {
+}
+class yii.helpers.HtmlPurifier extends yii.helpers.BaseHtmlPurifier
+class yii.helpers.Inflector {
+    +{static}TRANSLITERATE_LOOSE = "Any-Latin; Latin-ASCII; [\u0080-\uffff] remove"
+    +{static}TRANSLITERATE_MEDIUM = "Any-Latin; Latin-ASCII"
+    +{static}TRANSLITERATE_STRICT = "Any-Latin; NFKD"
+}
+class yii.helpers.Inflector extends yii.helpers.BaseInflector
+class yii.helpers.Json {
+}
+class yii.helpers.Json extends yii.helpers.BaseJson
+class yii.helpers.Markdown {
+}
+class yii.helpers.Markdown extends yii.helpers.BaseMarkdown
+class yii.helpers.ReplaceArrayValue {
+    +value : mixed
+    +__construct(value : mixed)
+}
+class yii.helpers.StringHelper {
+}
+class yii.helpers.StringHelper extends yii.helpers.BaseStringHelper
+class yii.helpers.UnsetArrayValue {
+}
+class yii.helpers.Url {
+}
+class yii.helpers.Url extends yii.helpers.BaseUrl
+class yii.helpers.VarDumper {
+}
+class yii.helpers.VarDumper extends yii.helpers.BaseVarDumper
+@enduml

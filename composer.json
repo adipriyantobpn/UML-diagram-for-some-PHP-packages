@@ -6,8 +6,10 @@
             "email": "adipriyanto.bpn@gmail.com"
         }
     ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "require": {
-        "yiisoft/yii2": "2.0.13.1",
+        "yiisoft/yii2-dev": "2.0.13.1",
         "yiisoft/yii2-authclient": "^2.1",
         "yiisoft/yii2-bootstrap": "^2.0",
         "yiisoft/yii2-debug": "^2.0",
@@ -18,20 +20,28 @@
         "yiisoft/yii2-imagine": "^2.1",
         "yiisoft/yii2-jui": "^2.0",
         "yiisoft/yii2-mongodb": "^2.1",
-        "yiisoft/yii2-queue": "^2.0",
+        "yiisoft/yii2-queue": "dev-adip-patch",
         "yiisoft/yii2-redis": "^2.0",
         "yiisoft/yii2-shell": "^2.0",
         "yiisoft/yii2-smarty": "^2.0",
         "yiisoft/yii2-sphinx": "^2.0",
         "yiisoft/yii2-swiftmailer": "^2.1",
         "yiisoft/yii2-twig": "^2.2",
-        "davidfuhr/php-plantumlwriter": "^1.6",
+        "davidfuhr/php-plantumlwriter": "dev-adip-patch",
         "bizley/migration": "^2.2"
     },
     "repositories": {
         "asset-packagist": {
             "type": "composer",
             "url": "https://asset-packagist.org"
+        },
+        "davidfuhr/php-plantumlwriter": {
+            "type": "git",
+            "url": "https://github.com/adipriyantobpn/php-plantumlwriter"
+        },
+        "yiisoft/yii2-queue": {
+            "type": "git",
+            "url": "https://github.com/adipriyantobpn/yii2-queue"
         }
     }
 }

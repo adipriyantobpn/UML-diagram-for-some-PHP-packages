@@ -1,0 +1,33 @@
+@startuml
+skinparam handwritten true
+class Yii {
+}
+class Yii extends yii.BaseYii
+class yii.BaseYii {
+    +aliases : array = [
+        \t"@yii" => "E:\project\\laboratorium\adipriyantobpn\freeform\vendor\yiisoft\yii2-dev\framework"
+    ]
+    +app : yii.console.Application|.yii.web.Application
+    +classMap : array = []
+    +container : yii.di.Container
+    -_logger
+    +{static}autoload(className : string)
+    +{static}beginProfile(token : string, category : string = "application")
+    +{static}configure(object : object, properties : array) : object
+    +{static}createObject(type : string|array|callable, params : array = []) : object
+    +{static}endProfile(token : string, category : string = "application")
+    +{static}error(message : string|array, category : string = "application")
+    +{static}getAlias(alias : string, throwException : bool = true) : string|bool
+    +{static}getLogger() : yii.log.Logger
+    +{static}getObjectVars(object : object) : array
+    +{static}getRootAlias(alias : string) : string|bool
+    +{static}getVersion() : string
+    +{static}info(message : string|array, category : string = "application")
+    +{static}powered() : string
+    +{static}setAlias(alias : string, path : string)
+    +{static}setLogger(logger : Logger)
+    +{static}t(category : string, message : string, params : array = [], language : string = null) : string
+    +{static}trace(message : string|array, category : string = "application")
+    +{static}warning(message : string|array, category : string = "application")
+}
+@enduml
